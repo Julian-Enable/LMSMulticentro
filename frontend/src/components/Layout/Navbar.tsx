@@ -1,11 +1,13 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Library, LogOut, User, Settings, GraduationCap } from 'lucide-react';
+import { Search, Library, LogOut, User, Settings, BookOpen, Menu, X } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
+import { useState } from 'react';
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -15,32 +17,29 @@ const Navbar = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="bg-gradient-to-r from-primary-600 via-primary-500 to-primary-600 shadow-strong sticky top-0 z-50 backdrop-blur-sm">
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 backdrop-blur-md bg-white/95">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo con diseño moderno */}
+        <div className="flex items-center justify-between h-16">
+          {/* Logo profesional */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="relative">
-              <div className="absolute inset-0 bg-accent-500 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity"></div>
-              <div className="relative bg-white rounded-xl p-2 shadow-lg transform group-hover:scale-110 transition-transform duration-300">
-                <GraduationCap className="w-7 h-7 text-primary-600" />
-              </div>
+            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+              <BookOpen className="w-6 h-6 text-white" />
             </div>
-            <div>
-              <span className="text-2xl font-black text-white tracking-tight block">Multicentro</span>
-              <span className="text-xs text-primary-100 font-medium tracking-wider uppercase">Learning Hub</span>
+            <div className="hidden sm:block">
+              <span className="text-xl font-bold text-gray-900 block leading-none">Multicentro</span>
+              <span className="text-xs text-gray-500 font-medium">Capacitación</span>
             </div>
           </Link>
 
-          {/* Navigation Links con estilo moderno */}
+          {/* Navigation Links */}
           {isAuthenticated && (
-            <div className="hidden md:flex items-center space-x-2">
+            <div className="hidden md:flex items-center space-x-1">
               <Link
                 to="/search"
-                className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
                   isActive('/search')
-                    ? 'bg-white text-primary-600 shadow-lg scale-105'
-                    : 'text-white hover:bg-white/20 hover:shadow-md'
+                    ? 'bg-primary-50 text-primary-700'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 <Search className="w-5 h-5" />
@@ -49,10 +48,10 @@ const Navbar = () => {
 
               <Link
                 to="/library"
-                className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
                   isActive('/library')
-                    ? 'bg-white text-primary-600 shadow-lg scale-105'
-                    : 'text-white hover:bg-white/20 hover:shadow-md'
+                    ? 'bg-primary-50 text-primary-700'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 <Library className="w-5 h-5" />
@@ -62,10 +61,10 @@ const Navbar = () => {
               {user?.role === 'ADMIN' && (
                 <Link
                   to="/admin"
-                  className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 ${
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
                     isActive('/admin')
-                      ? 'bg-accent-500 text-white shadow-lg scale-105'
-                      : 'text-white hover:bg-accent-500/30 hover:shadow-md'
+                      ? 'bg-accent-50 text-accent-700'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                 >
                   <Settings className="w-5 h-5" />
@@ -75,29 +74,36 @@ const Navbar = () => {
             </div>
           )}
 
-          {/* User Menu con diseño premium */}
-          {isAuthenticated ? (
-            <div className="flex items-center space-x-3">
-              <div className="hidden sm:flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/20">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent-400 to-accent-600 flex items-center justify-center shadow-md">
-                  <User className="w-5 h-5 text-white" />
+          {/* User Menu */}
+          <div className="flex items-center space-x-3">
+            {isAuthenticated ? (
+              <>
+                <div className="hidden md:flex items-center space-x-2 px-3 py-1.5 bg-gray-100 rounded-lg">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">{user?.username}</span>
                 </div>
-                <span className="text-white font-semibold">{user?.username}</span>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-accent-500 hover:bg-accent-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-              >
-                <LogOut className="w-5 h-5" />
-                <span className="hidden sm:inline">Salir</span>
-              </button>
-            </div>
-          ) : (
-            <Link to="/login" className="btn btn-accent shadow-xl hover:shadow-2xl">
-              <User className="w-5 h-5 mr-2" />
-              Iniciar Sesión
-            </Link>
-          )}
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 font-medium transition-colors"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="hidden sm:inline">Salir</span>
+                </button>
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+                >
+                  {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+              </>
+            ) : (
+              <Link to="/login" className="btn btn-primary">
+                Iniciar Sesión
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </nav>
