@@ -1,31 +1,46 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { categoryService } from '../services/category.service';
-import { Category } from '../types';
+import { videoService } from '../services/video.service';
+import { Category, Video } from '../types';
 import { useAuthStore } from '../store/authStore';
 
 const HomePage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuthStore();
 
   useEffect(() => {
-    loadCategories();
+    loadData();
   }, []);
 
-  const loadCategories = async () => {
+  const loadData = async () => {
     try {
-      const data = await categoryService.getAll(true);
-      setCategories(data);
+      const [categoriesData, videosData] = await Promise.all([
+        categoryService.getAll(true),
+        videoService.getAll(),
+      ]);
+      setCategories(categoriesData);
+      setVideos(videosData);
     } catch (error) {
-      console.error('Error loading categories:', error);
+      console.error('Error loading data:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const totalVideos = categories.reduce((sum, cat) => sum + (cat.videoCount || 0), 0);
-  const totalHours = Math.floor(totalVideos * 20 / 60);
+  // Calculate total duration from actual videos
+  const totalMinutes = videos.reduce((sum, video) => {
+    if (typeof video.duration === 'number') {
+      return sum + video.duration;
+    }
+    // Fallback: estimate 15 minutes per video if no duration
+    return sum + 15;
+  }, 0);
+
+  const totalVideos = videos.length;
+  const totalHours = Math.floor(totalMinutes / 60);
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#F8F8FA]">
