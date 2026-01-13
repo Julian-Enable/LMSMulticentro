@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { PlayCircle, CheckCircle, Clock } from 'lucide-react';
 import { categoryService } from '../services/category.service';
 import { Category, Video, Topic } from '../types';
@@ -7,7 +7,6 @@ import { formatTimestamp } from '../utils/helpers';
 
 const CoursePage = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const [category, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
   const [completedTopics, setCompletedTopics] = useState<Set<string>>(new Set());
@@ -58,7 +57,7 @@ const CoursePage = () => {
     if (!category?.videos) return [];
     
     const topics: Topic[] = [];
-    category.videos.forEach((video) => {
+    category.videos.forEach((video: Video) => {
       if (video.topics) {
         topics.push(...video.topics);
       }

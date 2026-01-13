@@ -13,6 +13,7 @@ export interface Category {
   order: number;
   isActive: boolean;
   videoCount?: number;
+  videos?: Video[];
   createdAt: string;
   updatedAt: string;
 }
@@ -30,8 +31,18 @@ export interface Video {
   order: number;
   isActive: boolean;
   topics?: Topic[];
+  topicCount?: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface VideoFormData {
+  title: string;
+  description?: string;
+  url: string;
+  platform: 'YOUTUBE' | 'DRIVE' | 'VIMEO' | 'OTHER';
+  categoryId: string;
+  isActive: boolean;
 }
 
 export interface Topic {

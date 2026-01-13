@@ -51,7 +51,7 @@ const LibraryPage = () => {
   const expandAll = () => {
     const allCategories = new Set(categories.map((c) => c.id));
     const allVideos = new Set(
-      categories.flatMap((c) => c.videos?.map((v: VideoType) => v.id) || [])
+      categories.flatMap((c) => (c.videos || []).map((v: VideoType) => v.id))
     );
     setExpandedCategories(allCategories);
     setExpandedVideos(allVideos);
@@ -87,7 +87,7 @@ const LibraryPage = () => {
       .filter(
         (video) =>
           !searchQuery ||
-          video.topics.length > 0 ||
+          (video.topics && video.topics.length > 0) ||
           video.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
   };
@@ -101,7 +101,7 @@ const LibraryPage = () => {
       .filter(
         (category) =>
           !searchQuery ||
-          category.videos.length > 0 ||
+          (category.videos && category.videos.length > 0) ||
           category.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
   };

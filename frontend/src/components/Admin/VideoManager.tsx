@@ -52,11 +52,16 @@ const VideoManager = () => {
 
   const handleEdit = (video: Video) => {
     setEditingId(video.id);
+    const platformMap: any = {
+      'GOOGLE_DRIVE': 'DRIVE',
+      'YOUTUBE': 'YOUTUBE',
+      'VIMEO': 'VIMEO'
+    };
     setFormData({
       title: video.title,
       description: video.description || '',
-      url: video.url,
-      platform: video.platform,
+      url: video.externalId,
+      platform: platformMap[video.platform] || 'OTHER',
       categoryId: video.categoryId,
       isActive: video.isActive,
     });
@@ -64,10 +69,21 @@ const VideoManager = () => {
 
   const handleSave = async () => {
     try {
+      const platformMap: any = {
+        'DRIVE': 'GOOGLE_DRIVE',
+        'YOUTUBE': 'YOUTUBE',
+        'VIMEO': 'VIMEO',
+        'OTHER': 'YOUTUBE'
+      };
+      const dataToSend = {
+        ...formData,
+        externalId: formData.url,
+        platform: platformMap[formData.platform]
+      };
       if (isCreating) {
-        await api.post('/videos', formData);
+        await api.post('/videos', dataToSend);
       } else if (editingId) {
-        await api.put(`/videos/${editingId}`, formData);
+        await api.put(`/videos/${editingId}`, dataToSend);
       }
 
       setIsCreating(false);
@@ -262,9 +278,9 @@ const VideoManager = () => {
                   )}
                   <div className="flex items-center space-x-4 text-xs text-gray-500">
                     <span>Categoría: {video.category?.name}</span>
-                    <span>{video.topicCount || 0} temas</span>
+                    <span>{video.topicCount || video.topics?.length || 0} temas</span>
                   </div>
-                  <p className="text-xs text-gray-400 mt-1 truncate">{video.url}</p>
+                  <p className="text-xs text-gray-400 mt-1 truncate">{video.externalId}</p>
                 </div>
 
                 {editingId !== video.id && (

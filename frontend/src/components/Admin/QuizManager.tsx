@@ -352,13 +352,13 @@ const QuizManager = () => {
             <div key={quiz.id} className="card hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 mb-1">{quiz.title}</h3>
-                  {quiz.description && (
-                    <p className="text-sm text-gray-600 mb-2">{quiz.description}</p>
+                  <h3 className="font-semibold text-gray-900 mb-1">{quiz.question}</h3>
+                  {quiz.explanation && (
+                    <p className="text-sm text-gray-600 mb-2">{quiz.explanation}</p>
                   )}
                   <div className="flex items-center space-x-4 text-xs text-gray-500">
                     <span>Tema: {quiz.topic?.code} - {quiz.topic?.title}</span>
-                    <span>{quiz.questions?.length || 0} preguntas</span>
+                    <span>{quiz.options?.length || 0} opciones</span>
                   </div>
                 </div>
 

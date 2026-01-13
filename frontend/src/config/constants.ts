@@ -1,9 +1,11 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+export const API_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api';
 
 export const VIDEO_PLATFORMS = {
   YOUTUBE: 'YOUTUBE',
   GOOGLE_DRIVE: 'GOOGLE_DRIVE',
-  VIMEO: 'VIMEO'
+  DRIVE: 'DRIVE',
+  VIMEO: 'VIMEO',
+  OTHER: 'OTHER'
 } as const;
 
 export const USER_ROLES = {

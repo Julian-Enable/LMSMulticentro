@@ -36,9 +36,11 @@ const TopicPage = () => {
     if (!id) return;
 
     try {
-      const navigationData = await topicService.navigate(id, direction);
-      if (navigationData && navigationData[`${direction}Topic`]) {
-        navigate(`/topic/${navigationData[`${direction}Topic`].id}`);
+      const navigationData = direction === 'next' 
+        ? await topicService.getNext(id)
+        : await topicService.getPrevious(id);
+      if (navigationData && navigationData.id) {
+        navigate(`/topic/${navigationData.id}`);
       }
     } catch (error) {
       console.error(`Error navigating to ${direction} topic:`, error);
@@ -57,13 +59,16 @@ const TopicPage = () => {
   };
 
   const getQuizScore = () => {
-    if (!topic?.quiz?.questions) return { correct: 0, total: 0 };
+    if (!topic?.quizzes || topic.quizzes.length === 0) return { correct: 0, total: 0 };
 
-    const correct = topic.quiz.questions.filter(
-      (q) => q.options.find((o) => o.id === quizAnswers[q.id])?.isCorrect
+    const correct = topic.quizzes.filter(
+      (q: any) => {
+        const answerIndex = parseInt(quizAnswers[q.id] || '-1');
+        return answerIndex === q.correctAnswer;
+      }
     ).length;
 
-    return { correct, total: topic.quiz.questions.length };
+    return { correct, total: topic.quizzes.length };
   };
 
   if (loading) {
@@ -86,7 +91,7 @@ const TopicPage = () => {
     );
   }
 
-  const videoUrl = getVideoUrl(topic.video);
+  const videoUrl = topic.video ? getVideoUrl(topic.video.platform, topic.video.externalId) : '';
   const score = showQuizResults ? getQuizScore() : null;
 
   return (
@@ -165,27 +170,27 @@ const TopicPage = () => {
       </div>
 
       {/* Quiz Section */}
-      {topic.quiz && topic.quiz.questions && topic.quiz.questions.length > 0 && (
+      {topic.quizzes && topic.quizzes.length > 0 && (
         <div className="card">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Evaluación</h2>
 
           <div className="space-y-6">
-            {topic.quiz.questions.map((question, qIndex) => (
+            {topic.quizzes.map((question: any, qIndex: number) => (
               <div key={question.id} className="border-b pb-6 last:border-b-0">
                 <h3 className="font-semibold text-gray-900 mb-3">
                   {qIndex + 1}. {question.question}
                 </h3>
 
                 <div className="space-y-2">
-                  {question.options.map((option) => {
-                    const isSelected = quizAnswers[question.id] === option.id;
-                    const showCorrect = showQuizResults && option.isCorrect;
-                    const showIncorrect = showQuizResults && isSelected && !option.isCorrect;
+                  {question.options.map((option: string, optionIndex: number) => {
+                    const isSelected = quizAnswers[question.id] === optionIndex.toString();
+                    const showCorrect = showQuizResults && optionIndex === question.correctAnswer;
+                    const showIncorrect = showQuizResults && isSelected && optionIndex !== question.correctAnswer;
 
                     return (
                       <button
-                        key={option.id}
-                        onClick={() => !showQuizResults && handleQuizAnswer(question.id, option.id)}
+                        key={optionIndex}
+                        onClick={() => !showQuizResults && handleQuizAnswer(question.id, optionIndex.toString())}
                         disabled={showQuizResults}
                         className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-colors ${
                           showCorrect
@@ -198,7 +203,7 @@ const TopicPage = () => {
                         } ${showQuizResults ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         <div className="flex items-center justify-between">
-                          <span>{option.text}</span>
+                          <span>{option}</span>
                           {showCorrect && <CheckCircle className="w-5 h-5 text-green-600" />}
                           {showIncorrect && <XCircle className="w-5 h-5 text-red-600" />}
                         </div>
@@ -213,7 +218,7 @@ const TopicPage = () => {
           {!showQuizResults ? (
             <button
               onClick={submitQuiz}
-              disabled={Object.keys(quizAnswers).length !== topic.quiz.questions.length}
+              disabled={Object.keys(quizAnswers).length !== topic.quizzes.length}
               className="btn btn-primary mt-6 w-full md:w-auto"
             >
               Enviar respuestas
