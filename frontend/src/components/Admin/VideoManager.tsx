@@ -15,9 +15,12 @@ const VideoManager = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    externalId: '',
     url: '',
     platform: 'YOUTUBE' as 'YOUTUBE' | 'DRIVE' | 'VIMEO' | 'OTHER',
     categoryId: '',
+    duration: '',
+    thumbnailUrl: '',
     isActive: true,
   });
   const [isCreating, setIsCreating] = useState(false);
@@ -54,9 +57,12 @@ const VideoManager = () => {
     setFormData({
       title: '',
       description: '',
+      externalId: '',
       url: '',
       platform: 'YOUTUBE',
       categoryId: categories[0]?.id || '',
+      duration: '',
+      thumbnailUrl: '',
       isActive: true,
     });
   };
@@ -71,9 +77,12 @@ const VideoManager = () => {
     setFormData({
       title: video.title,
       description: video.description || '',
+      externalId: video.externalId,
       url: video.externalId,
       platform: platformMap[video.platform] || 'OTHER',
       categoryId: video.categoryId,
+      duration: video.duration ? String(video.duration) : '',
+      thumbnailUrl: video.thumbnailUrl || '',
       isActive: video.isActive,
     });
   };
@@ -91,15 +100,16 @@ const VideoManager = () => {
             id: `video-${Date.now()}`,
             title: formData.title,
             description: formData.description,
-            externalId: formData.url,
+            externalId: formData.externalId || formData.url,
             platform: platformValue as 'YOUTUBE' | 'GOOGLE_DRIVE' | 'VIMEO',
             categoryId: formData.categoryId,
             category: categories.find(c => c.id === formData.categoryId),
             isActive: formData.isActive,
             order: videos.length + 1,
+            duration: formData.duration ? parseFloat(formData.duration) : undefined,
+            thumbnailUrl: formData.thumbnailUrl || `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000)}?w=400&h=225&fit=crop`,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            thumbnailUrl: `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000)}?w=400&h=225&fit=crop`,
             topics: [],
             topicCount: 0,
           };
@@ -114,11 +124,13 @@ const VideoManager = () => {
                   ...v, 
                   title: formData.title,
                   description: formData.description,
-                  externalId: formData.url,
+                  externalId: formData.externalId || formData.url,
                   platform: platformValue as 'YOUTUBE' | 'GOOGLE_DRIVE' | 'VIMEO',
                   categoryId: formData.categoryId,
                   category: categories.find(c => c.id === formData.categoryId),
                   isActive: formData.isActive,
+                  duration: formData.duration ? parseFloat(formData.duration) : v.duration,
+                  thumbnailUrl: formData.thumbnailUrl || v.thumbnailUrl,
                   updatedAt: new Date().toISOString(),
                 } 
               : v
@@ -267,6 +279,34 @@ const VideoManager = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Código/ID <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.externalId}
+                    onChange={(e) => setFormData({ ...formData, externalId: e.target.value })}
+                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono"
+                    placeholder="VID-001"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Duración
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.duration}
+                    onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    placeholder="15:30"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     URL del Video <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -298,6 +338,19 @@ const VideoManager = () => {
                     <option value="OTHER">Otro</option>
                   </select>
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  URL de Miniatura
+                </label>
+                <input
+                  type="text"
+                  value={formData.thumbnailUrl}
+                  onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
+                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  placeholder="https://images.unsplash.com/photo-..."
+                />
               </div>
 
               <div>
@@ -340,7 +393,7 @@ const VideoManager = () => {
               </button>
               <button
                 onClick={handleSave}
-                disabled={!formData.title || !formData.url || !formData.categoryId}
+                disabled={!formData.title || !formData.url || !formData.categoryId || !formData.externalId}
                 className="flex items-center gap-2 bg-accent hover:bg-red-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
