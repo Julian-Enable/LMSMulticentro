@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { categoryService } from '../services/categoryService';
+import { categoryService } from '../services/category.service';
 import { Category, Video } from '../types';
 import { useAuthStore } from '../store/authStore';
 
@@ -20,7 +20,7 @@ export default function CategoryCoursePage() {
 
   const loadCategory = async () => {
     try {
-      const data = await categoryService.getById(id!, true);
+      const data = await categoryService.getById(id!);
       setCategory(data);
       setVideos(data.videos || []);
     } catch (error) {
