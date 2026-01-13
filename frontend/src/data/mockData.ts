@@ -201,6 +201,13 @@ mockCategories[2].videos = [mockVideos[2], mockVideos[7]];
 mockCategories[3].videos = [mockVideos[3]];
 mockCategories[4].videos = [mockVideos[4]];
 
+// Add video counts to categories
+mockCategories[0].videoCount = 2;
+mockCategories[1].videoCount = 2;
+mockCategories[2].videoCount = 2;
+mockCategories[3].videoCount = 1;
+mockCategories[4].videoCount = 1;
+
 // Mock User
 export const mockUser: User = {
   id: '1',
