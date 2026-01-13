@@ -8,7 +8,7 @@
   }
   
   body {
-    @apply bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900 antialiased;
+    @apply bg-gray-50 text-gray-900 antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
   
@@ -18,87 +18,121 @@
 }
 
 @layer components {
-  /* Botones Profesionales */
+  /* Botones Ultra Profesionales */
   .btn {
-    @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-soft hover:shadow-medium active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply px-8 py-4 rounded-2xl font-bold transition-all duration-300 shadow-soft hover:shadow-strong active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center;
   }
   
   .btn-primary {
-    @apply bg-gradient-to-r from-primary-600 to-primary-500 text-white hover:from-primary-700 hover:to-primary-600 shadow-primary-500/20;
+    @apply bg-gradient-to-r from-primary-600 via-primary-500 to-primary-600 text-white hover:from-primary-700 hover:via-primary-600 hover:to-primary-700 bg-size-200 bg-pos-0 hover:bg-pos-100 shadow-primary-500/30;
   }
   
   .btn-secondary {
-    @apply bg-white text-primary-600 border-2 border-primary-200 hover:border-primary-300 hover:bg-primary-50;
+    @apply bg-white text-primary-700 border-2 border-primary-200 hover:border-primary-400 hover:bg-primary-50 hover:shadow-medium;
   }
   
   .btn-accent {
-    @apply bg-gradient-to-r from-accent-600 to-accent-500 text-white hover:from-accent-700 hover:to-accent-600;
+    @apply bg-gradient-to-r from-accent-600 via-accent-500 to-accent-600 text-white hover:from-accent-700 hover:via-accent-600 hover:to-accent-700 shadow-accent-500/30;
   }
   
   .btn-danger {
-    @apply bg-accent-500 text-white hover:bg-accent-600;
+    @apply bg-accent-500 text-white hover:bg-accent-600 shadow-accent-500/20;
   }
   
-  /* Inputs Modernos */
+  /* Inputs Premium */
   .input {
-    @apply w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-primary-500/20 focus:border-primary-400 transition-all duration-200 bg-white;
+    @apply w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-primary-500/20 focus:border-primary-400 transition-all duration-200 bg-white shadow-soft hover:shadow-medium;
   }
   
-  /* Cards Elegantes */
+  /* Cards Premium con efectos */
   .card {
-    @apply bg-white rounded-2xl shadow-soft hover:shadow-medium transition-all duration-300 p-6 border border-gray-100;
+    @apply bg-white rounded-3xl shadow-soft hover:shadow-medium transition-all duration-300 p-8 border border-gray-100;
   }
   
   .card-primary {
-    @apply bg-gradient-to-br from-primary-500 to-primary-600 text-white rounded-2xl shadow-strong p-6;
+    @apply bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 text-white rounded-3xl shadow-strong p-8 border-2 border-primary-400;
   }
   
   .card-accent {
-    @apply bg-gradient-to-br from-accent-500 to-accent-600 text-white rounded-2xl shadow-strong p-6;
+    @apply bg-gradient-to-br from-accent-500 via-accent-600 to-accent-700 text-white rounded-3xl shadow-strong p-8 border-2 border-accent-400;
   }
   
-  /* Badges Profesionales */
+  /* Badges Ultra Modernos */
   .badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+    @apply inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold shadow-sm;
   }
   
   .badge-primary {
-    @apply bg-primary-100 text-primary-700 border border-primary-200;
+    @apply bg-gradient-to-r from-primary-100 to-primary-200 text-primary-700 border border-primary-300;
   }
   
   .badge-accent {
-    @apply bg-accent-100 text-accent-700 border border-accent-200;
+    @apply bg-gradient-to-r from-accent-100 to-accent-200 text-accent-700 border border-accent-300;
   }
   
   .badge-success {
-    @apply bg-green-100 text-green-700 border border-green-200;
+    @apply bg-gradient-to-r from-green-100 to-green-200 text-green-700 border border-green-300;
   }
   
-  /* Navegación Moderna */
+  /* Navegación Premium */
   .nav-link {
-    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-primary-50 hover:text-primary-600;
+    @apply px-5 py-3 rounded-xl font-semibold transition-all duration-300 hover:bg-white/20 hover:shadow-lg;
   }
   
   .nav-link-active {
-    @apply bg-primary-500 text-white shadow-md;
+    @apply bg-white text-primary-600 shadow-strong scale-105;
   }
   
   /* Containers */
   .container-section {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12;
   }
   
-  /* Animaciones Sutiles */
+  /* Animaciones Profesionales */
   .hover-lift {
-    @apply transition-transform duration-300 hover:-translate-y-1;
+    @apply transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02];
+  }
+  
+  /* Grid de fondo decorativo */
+  .bg-grid-white\/5 {
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  
+  /* Utilidades de fondo animado */
+  .bg-size-200 {
+    background-size: 200% 100%;
+  }
+  
+  .bg-pos-0 {
+    background-position: 0% 0%;
+  }
+  
+  .bg-pos-100 {
+    background-position: 100% 0%;
   }
   
   /* Separadores Elegantes */
   .divider {
-    @apply border-t-2 border-gray-200 my-6;
+    @apply border-t-2 border-gray-200 my-8;
   }
   
-  .divider-primary {
-    @apply border-t-2 border-gradient-to-r from-primary-500 to-accent-500 my-6;
+  /* Scrollbar personalizado */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gradient-to-b from-primary-400 to-primary-600 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply from-primary-500 to-primary-700;
   }
 }
