@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo de Usuario para administración
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  email     String?  @unique
+  role      UserRole @default(EMPLOYEE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum UserRole {
+  EMPLOYEE
+  SUPERVISOR
+  ADMIN
+}
+
+// Modelo de Categoría (Ventas, Inventario, etc.)
+model Category {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  videos Video[]
+
+  @@map("categories")
+}
+
+// Modelo de Video (contiene múltiples temas)
+model Video {
+  id          String       @id @default(uuid())
+  title       String
+  description String?
+  externalId  String       // ID de YouTube, Drive, etc.
+  platform    VideoPlatform // YouTube, Drive, Vimeo
+  duration    Int?         // Duración en segundos
+  thumbnailUrl String?
+  categoryId  String
+  order       Int          @default(0)
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  topics   Topic[]
+
+  @@index([categoryId])
+  @@map("videos")
+}
+
+enum VideoPlatform {
+  YOUTUBE
+  GOOGLE_DRIVE
+  VIMEO
+}
+
+// Modelo de Tema (sección específica de un video con timestamp)
+model Topic {
+  id          String   @id @default(uuid())
+  code        String   @unique // Ej: "1.11", "1.12", "2.01"
+  title       String
+  description String?
+  videoId     String
+  timestamp   Int      // Tiempo en segundos donde inicia el tema
+  duration    Int?     // Duración del tema en segundos
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  video  Video      @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  tags   TopicTag[]
+  quizzes Quiz[]
+
+  @@index([videoId])
+  @@index([code])
+  @@map("topics")
+}
+
+// Modelo de Tag para búsqueda
+model Tag {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  topics TopicTag[]
+
+  @@map("tags")
+}
+
+// Relación muchos a muchos entre Topics y Tags
+model TopicTag {
+  topicId String
+  tagId   String
+
+  topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([topicId, tagId])
+  @@map("topic_tags")
+}
+
+// Modelo de Quiz/Evaluación
+model Quiz {
+  id          String   @id @default(uuid())
+  topicId     String
+  question    String
+  options     String[] // Array de opciones JSON
+  correctAnswer Int    // Índice de la respuesta correcta
+  explanation String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@index([topicId])
+  @@map("quizzes")
+}
