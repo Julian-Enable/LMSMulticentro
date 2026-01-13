@@ -68,8 +68,7 @@ export const authService = {
     if (import.meta.env.VITE_USE_MOCK === 'true') {
       await new Promise(resolve => setTimeout(resolve, 300));
       
-      // Get current user from localStorage (saved on login)
-      const storedAuth = localStorage.getItem('authToken');
+      // Get current user from localStorage
       const storedUsers = localStorage.getItem('mockUsers');
       
       if (storedUsers) {
