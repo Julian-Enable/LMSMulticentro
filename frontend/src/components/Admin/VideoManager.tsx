@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { Video, Category } from '../../types';
+import { mockVideos, mockCategories } from '../../data/mockData';
 
 const VideoManager = () => {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -27,12 +28,19 @@ const VideoManager = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [videosRes, categoriesRes] = await Promise.all([
-        api.get('/videos'),
-        api.get('/categories?includeInactive=true'),
-      ]);
-      setVideos(videosRes.data);
-      setCategories(categoriesRes.data);
+      if (import.meta.env.VITE_USE_MOCK === 'true') {
+        // Use mock data
+        await new Promise(resolve => setTimeout(resolve, 500));
+        setVideos(mockVideos);
+        setCategories(mockCategories);
+      } else {
+        const [videosRes, categoriesRes] = await Promise.all([
+          api.get('/videos'),
+          api.get('/categories?includeInactive=true'),
+        ]);
+        setVideos(videosRes.data);
+        setCategories(categoriesRes.data);
+      }
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -332,12 +340,12 @@ const VideoManager = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50/80 border-b border-slate-200">
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[120px]">Código</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Título del Video</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden md:table-cell">URL</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Categoría</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Temas</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Acciones</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[100px]">Código</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider min-w-[300px]">Video</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden lg:table-cell w-[140px]">Código</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[180px]">Categoría</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell text-center w-[100px]">Detalles</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center w-[120px]">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -359,60 +367,71 @@ const VideoManager = () => {
                 paginatedVideos.map((video) => (
                   <tr key={video.id} className="group hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-xs font-medium text-slate-400 font-mono bg-slate-100 px-2 py-1 rounded">
-                        #VID-{video.id.slice(-3).toUpperCase()}
+                      <span className="text-xs font-bold text-slate-600 font-mono bg-slate-100 px-2.5 py-1 rounded-md">
+                        {video.externalId.split('-')[0] || 'VID'}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-16 bg-slate-200 rounded overflow-hidden flex-shrink-0 relative">
+                        <div className="h-14 w-24 bg-slate-200 rounded-lg overflow-hidden flex-shrink-0 relative shadow-sm ring-1 ring-slate-900/5">
                           {video.thumbnailUrl ? (
-                            <div
-                              className="absolute inset-0 bg-cover bg-center opacity-90 group-hover:opacity-100 transition-opacity"
-                              style={{ backgroundImage: `url(${video.thumbnailUrl})` }}
+                            <img
+                              src={video.thumbnailUrl}
+                              alt={video.title}
+                              className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
                             />
                           ) : (
                             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-gray-400">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-gray-400">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
                               </svg>
                             </div>
                           )}
                         </div>
-                        <div className="flex flex-col">
-                          <span className="text-sm font-bold text-gray-900 group-hover:text-primary transition-colors">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-sm font-bold text-gray-900 group-hover:text-primary transition-colors line-clamp-1">
                             {video.title}
                           </span>
-                          <span className="text-xs text-slate-400 md:hidden truncate max-w-[150px]">
-                            {video.externalId}
-                          </span>
+                          {video.description && (
+                            <span className="text-xs text-slate-400 line-clamp-1 max-w-[300px]">
+                              {video.description}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 hidden md:table-cell">
-                      <div className="flex items-center gap-1 text-slate-500 hover:text-primary cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                        </svg>
-                        <span className="text-sm truncate max-w-[150px]">{video.externalId}</span>
-                      </div>
+                    <td className="px-6 py-4 hidden lg:table-cell">
+                      <span className="text-xs font-semibold text-slate-600 font-mono bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200">
+                        {video.externalId}
+                      </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${getCategoryColor(video.category?.name || '')}`}>
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border ${getCategoryColor(video.category?.name || '')}`}>
                         {video.category?.name || 'Sin categoría'}
                       </span>
                     </td>
                     <td className="px-6 py-4 hidden sm:table-cell">
-                      <span className="text-sm text-slate-600 font-mono">
-                        {video.topicCount || video.topics?.length || 0}
-                      </span>
+                      <div className="flex items-center justify-center gap-4">
+                        <div className="flex items-center gap-1.5 text-slate-600">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-slate-400">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.967 8.967 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.967 8.967 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                          </svg>
+                          <span className="text-sm font-semibold">{video.topicCount || video.topics?.length || 0}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-slate-600">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-slate-400">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span className="text-sm font-semibold">{video.duration || '4h 51m'}</span>
+                        </div>
+                      </div>
                     </td>
-                    <td className="px-6 py-4 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-2">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center justify-center gap-1">
                         <button
                           onClick={() => handleEdit(video)}
-                          className="p-2 text-slate-400 hover:text-primary hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-400 hover:text-white hover:bg-primary rounded-lg transition-all"
                           title="Editar"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -421,11 +440,19 @@ const VideoManager = () => {
                         </button>
                         <button
                           onClick={() => handleDelete(video.id)}
-                          className="p-2 text-slate-400 hover:text-accent hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-400 hover:text-white hover:bg-accent rounded-lg transition-all"
                           title="Eliminar"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                          </svg>
+                        </button>
+                        <button
+                          className="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg transition-all relative group/menu"
+                          title="Más opciones"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
                           </svg>
                         </button>
                       </div>
