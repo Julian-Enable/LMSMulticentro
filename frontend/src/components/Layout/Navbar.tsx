@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, BookOpen, Library, LogOut, User, Settings, GraduationCap } from 'lucide-react';
+import { Search, Library, LogOut, User, Settings, GraduationCap } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 
 const Navbar = () => {
