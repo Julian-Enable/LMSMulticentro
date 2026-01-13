@@ -1,21 +1,13 @@
-# Build stage for frontend
-FROM node:18-alpine AS frontend-build
-
-WORKDIR /app/frontend
-
-COPY frontend/package*.json ./
-RUN npm ci
-
-COPY frontend/ ./
-RUN npm run build
-
 # Build stage for backend
 FROM node:18-alpine AS backend-build
 
-WORKDIR /app/backend
+WORKDIR /app
 
 COPY backend/package*.json ./
 RUN npm ci
+
+COPY backend/prisma ./prisma
+RUN npx prisma generate
 
 COPY backend/ ./
 RUN npm run build
@@ -25,20 +17,16 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy backend
-COPY --from=backend-build /app/backend/dist ./backend/dist
-COPY --from=backend-build /app/backend/node_modules ./backend/node_modules
-COPY --from=backend-build /app/backend/package*.json ./backend/
-COPY --from=backend-build /app/backend/prisma ./backend/prisma
+# Copy package files and install production dependencies
+COPY backend/package*.json ./
+RUN npm ci --only=production
 
-# Copy frontend build
-COPY --from=frontend-build /app/frontend/dist ./frontend/dist
+# Copy prisma schema
+COPY backend/prisma ./prisma
 
-# Set working directory to backend
-WORKDIR /app/backend
-
-# Generate Prisma Client
-RUN npx prisma generate
+# Copy built files from build stage
+COPY --from=backend-build /app/dist ./dist
+COPY --from=backend-build /app/node_modules/.prisma ./node_modules/.prisma
 
 # Expose port
 EXPOSE 5000
