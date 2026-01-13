@@ -9,13 +9,17 @@ type TabType = 'categories' | 'videos' | 'topics' | 'tags' | 'quizzes';
 
 const AdminPage = () => {
   const [activeTab, setActiveTab] = useState<TabType>('videos');
+  const isMockMode = import.meta.env.VITE_USE_MOCK === 'true';
 
   const tabs = [
     { id: 'categories' as TabType, label: 'Categorías' },
     { id: 'videos' as TabType, label: 'Videos' },
-    { id: 'topics' as TabType, label: 'Temas' },
-    { id: 'tags' as TabType, label: 'Etiquetas' },
-    { id: 'quizzes' as TabType, label: 'Cuestionarios' },
+    // Hide these tabs in mock mode for now (not fully implemented)
+    ...(!isMockMode ? [
+      { id: 'topics' as TabType, label: 'Temas' },
+      { id: 'tags' as TabType, label: 'Etiquetas' },
+      { id: 'quizzes' as TabType, label: 'Cuestionarios' },
+    ] : []),
   ];
 
   return (

@@ -80,26 +80,74 @@ const VideoManager = () => {
 
   const handleSave = async () => {
     try {
-      const platformMap: any = {
-        'DRIVE': 'GOOGLE_DRIVE',
-        'YOUTUBE': 'YOUTUBE',
-        'VIMEO': 'VIMEO',
-        'OTHER': 'YOUTUBE'
-      };
-      const dataToSend = {
-        ...formData,
-        externalId: formData.url,
-        platform: platformMap[formData.platform]
-      };
-      if (isCreating) {
-        await api.post('/videos', dataToSend);
-      } else if (editingId) {
-        await api.put(`/videos/${editingId}`, dataToSend);
-      }
+      if (import.meta.env.VITE_USE_MOCK === 'true') {
+        // Mock mode - just simulate save
+        await new Promise(resolve => setTimeout(resolve, 500));
+        if (isCreating) {
+          const platformValue = formData.platform === 'DRIVE' ? 'GOOGLE_DRIVE' : 
+                               formData.platform === 'OTHER' ? 'YOUTUBE' : 
+                               formData.platform;
+          const newVideo: Video = {
+            id: `video-${Date.now()}`,
+            title: formData.title,
+            description: formData.description,
+            externalId: formData.url,
+            platform: platformValue as 'YOUTUBE' | 'GOOGLE_DRIVE' | 'VIMEO',
+            categoryId: formData.categoryId,
+            category: categories.find(c => c.id === formData.categoryId),
+            isActive: formData.isActive,
+            order: videos.length + 1,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            thumbnailUrl: `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000)}?w=400&h=225&fit=crop`,
+            topics: [],
+            topicCount: 0,
+          };
+          setVideos(prev => [newVideo, ...prev]);
+        } else if (editingId) {
+          const platformValue = formData.platform === 'DRIVE' ? 'GOOGLE_DRIVE' : 
+                               formData.platform === 'OTHER' ? 'YOUTUBE' : 
+                               formData.platform;
+          setVideos(prev => prev.map(v => 
+            v.id === editingId 
+              ? { 
+                  ...v, 
+                  title: formData.title,
+                  description: formData.description,
+                  externalId: formData.url,
+                  platform: platformValue as 'YOUTUBE' | 'GOOGLE_DRIVE' | 'VIMEO',
+                  categoryId: formData.categoryId,
+                  category: categories.find(c => c.id === formData.categoryId),
+                  isActive: formData.isActive,
+                  updatedAt: new Date().toISOString(),
+                } 
+              : v
+          ));
+        }
+        setIsCreating(false);
+        setEditingId(null);
+      } else {
+        const platformMap: any = {
+          'DRIVE': 'GOOGLE_DRIVE',
+          'YOUTUBE': 'YOUTUBE',
+          'VIMEO': 'VIMEO',
+          'OTHER': 'YOUTUBE'
+        };
+        const dataToSend = {
+          ...formData,
+          externalId: formData.url,
+          platform: platformMap[formData.platform]
+        };
+        if (isCreating) {
+          await api.post('/videos', dataToSend);
+        } else if (editingId) {
+          await api.put(`/videos/${editingId}`, dataToSend);
+        }
 
-      setIsCreating(false);
-      setEditingId(null);
-      await loadData();
+        setIsCreating(false);
+        setEditingId(null);
+        await loadData();
+      }
     } catch (error) {
       console.error('Error saving video:', error);
       alert('Error al guardar el video');
@@ -112,8 +160,14 @@ const VideoManager = () => {
     }
 
     try {
-      await api.delete(`/videos/${id}`);
-      await loadData();
+      if (import.meta.env.VITE_USE_MOCK === 'true') {
+        // Mock mode - just remove from state
+        await new Promise(resolve => setTimeout(resolve, 300));
+        setVideos(prev => prev.filter(v => v.id !== id));
+      } else {
+        await api.delete(`/videos/${id}`);
+        await loadData();
+      }
     } catch (error) {
       console.error('Error deleting video:', error);
       alert('Error al eliminar el video');
