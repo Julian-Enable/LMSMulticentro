@@ -9,8 +9,8 @@ RUN apt-get update -y && apt-get install -y openssl
 COPY backend/package*.json ./
 RUN npm ci
 
-# Copy prisma folder including migrations
-COPY backend/prisma ./prisma
+# Copy ALL prisma folder including migrations subdirectory
+COPY backend/prisma/ ./prisma/
 RUN npx prisma generate
 
 COPY backend/ ./
@@ -28,8 +28,8 @@ RUN apt-get update -y && apt-get install -y openssl
 COPY backend/package*.json ./
 RUN npm ci --only=production
 
-# Copy prisma schema AND migrations folder
-COPY backend/prisma ./prisma
+# Copy ALL prisma schema AND migrations folder
+COPY backend/prisma/ ./prisma/
 
 # Copy built files from build stage
 COPY --from=backend-build /app/dist ./dist
