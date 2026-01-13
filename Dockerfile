@@ -1,7 +1,10 @@
 # Build stage for backend
-FROM node:18-alpine AS backend-build
+FROM node:18-slim AS backend-build
 
 WORKDIR /app
+
+# Install OpenSSL
+RUN apt-get update -y && apt-get install -y openssl
 
 COPY backend/package*.json ./
 RUN npm ci
@@ -13,9 +16,12 @@ COPY backend/ ./
 RUN npm run build
 
 # Production stage
-FROM node:18-alpine
+FROM node:18-slim
 
 WORKDIR /app
+
+# Install OpenSSL
+RUN apt-get update -y && apt-get install -y openssl
 
 # Copy package files and install production dependencies
 COPY backend/package*.json ./
