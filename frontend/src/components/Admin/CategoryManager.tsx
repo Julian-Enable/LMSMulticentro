@@ -17,7 +17,7 @@ const CategoryManager = () => {
   const loadCategories = async () => {
     setLoading(true);
     try {
-      const data = await categoryService.getAll(false);
+      const data = await categoryService.getAll();
       setCategories(data);
     } catch (error) {
       console.error('Error loading categories:', error);
