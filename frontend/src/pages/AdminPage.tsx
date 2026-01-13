@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Folder, Video, FileText, Tag, HelpCircle } from 'lucide-react';
 import CategoryManager from '../components/Admin/CategoryManager';
 import VideoManager from '../components/Admin/VideoManager';
 import TopicManager from '../components/Admin/TopicManager';
@@ -9,62 +8,60 @@ import QuizManager from '../components/Admin/QuizManager';
 type TabType = 'categories' | 'videos' | 'topics' | 'tags' | 'quizzes';
 
 const AdminPage = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('categories');
+  const [activeTab, setActiveTab] = useState<TabType>('videos');
 
   const tabs = [
-    { id: 'categories' as TabType, label: 'Categorías', icon: Folder },
-    { id: 'videos' as TabType, label: 'Videos', icon: Video },
-    { id: 'topics' as TabType, label: 'Temas', icon: FileText },
-    { id: 'tags' as TabType, label: 'Tags', icon: Tag },
-    { id: 'quizzes' as TabType, label: 'Quizzes', icon: HelpCircle },
+    { id: 'categories' as TabType, label: 'Categorías' },
+    { id: 'videos' as TabType, label: 'Videos' },
+    { id: 'topics' as TabType, label: 'Temas' },
+    { id: 'tags' as TabType, label: 'Etiquetas' },
+    { id: 'quizzes' as TabType, label: 'Cuestionarios' },
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Panel de Administración</h1>
-        <p className="text-gray-600">Gestiona todo el contenido del sistema de capacitación</p>
-      </div>
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#f9f9fb]">
+      {/* Scrollable Area */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="container mx-auto max-w-7xl p-6 lg:p-10 flex flex-col gap-8">
+          {/* Page Header & Tabs */}
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-1">
+              <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Gestión de Contenido</h1>
+              <p className="text-slate-500">Administra los videos, categorías y materiales de entrenamiento de la plataforma.</p>
+            </div>
 
-      {/* Tabs */}
-      <div className="card">
-        <div className="border-b border-gray-200">
-          <nav className="flex space-x-4 overflow-x-auto" aria-label="Tabs">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
+            {/* Tabs */}
+            <div className="border-b border-slate-200">
+              <div className="flex gap-8 overflow-x-auto">
+                {tabs.map((tab) => {
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`pb-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+                        isActive
+                          ? 'font-bold text-primary border-primary'
+                          : 'font-medium text-slate-500 hover:text-primary border-transparent hover:border-slate-300'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
 
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`
-                    flex items-center space-x-2 px-4 py-3 border-b-2 font-medium text-sm whitespace-nowrap
-                    transition-colors
-                    ${
-                      isActive
-                        ? 'border-primary-600 text-primary-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }
-                  `}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </nav>
+          {/* Tab Content */}
+          <div>
+            {activeTab === 'categories' && <CategoryManager />}
+            {activeTab === 'videos' && <VideoManager />}
+            {activeTab === 'topics' && <TopicManager />}
+            {activeTab === 'tags' && <TagManager />}
+            {activeTab === 'quizzes' && <QuizManager />}
+          </div>
         </div>
-      </div>
-
-      {/* Tab Content */}
-      <div>
-        {activeTab === 'categories' && <CategoryManager />}
-        {activeTab === 'videos' && <VideoManager />}
-        {activeTab === 'topics' && <TopicManager />}
-        {activeTab === 'tags' && <TagManager />}
-        {activeTab === 'quizzes' && <QuizManager />}
       </div>
     </div>
   );
