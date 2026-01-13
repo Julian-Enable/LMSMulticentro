@@ -20,9 +20,15 @@ export const authService = {
       const users = storedUsers ? JSON.parse(storedUsers) : [];
       
       // Find user by username
-      const user = users.find((u: User) => u.username === credentials.username);
+      let user = users.find((u: User) => u.username === credentials.username);
       
-      // Validate credentials (mock: just check username exists)
+      // If no user found in localStorage, check default credentials
+      if (!user && credentials.username === MOCK_CREDENTIALS.username && 
+          credentials.password === MOCK_CREDENTIALS.password) {
+        user = { ...mockUser, role: 'ADMIN' };
+      }
+      
+      // Validate credentials (mock: just check username exists or default creds)
       if (user) {
         const mockToken = 'mock-jwt-token-' + Date.now();
         return {
