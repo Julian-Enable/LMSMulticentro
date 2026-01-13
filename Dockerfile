@@ -38,5 +38,5 @@ COPY --from=backend-build /app/node_modules/.prisma ./node_modules/.prisma
 # Expose port
 EXPOSE 5000
 
-# Start command - run migrations and start server
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/index.js"]
+# Start command - push schema instead of migrate
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && node dist/index.js"]
