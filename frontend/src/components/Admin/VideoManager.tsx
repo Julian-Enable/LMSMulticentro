@@ -3,6 +3,7 @@ import api from '../../services/api';
 import { Video, Category } from '../../types';
 import { mockVideos, mockCategories } from '../../data/mockData';
 
+// Admin Video Manager Component
 const VideoManager = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -130,6 +131,14 @@ const VideoManager = () => {
     video.externalId.toLowerCase().includes(searchQuery.toLowerCase()) ||
     video.category?.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Format duration from topics
+  const formatDuration = (video: Video) => {
+    const topicCount = video.topicCount || video.topics?.length || 0;
+    const hours = Math.floor(topicCount * 0.4);
+    const minutes = Math.floor((topicCount * 0.4 - hours) * 60) + (topicCount * 5);
+    return `${hours}h ${minutes}m`;
+  };
 
   // Pagination
   const totalPages = Math.ceil(filteredVideos.length / itemsPerPage);
@@ -423,7 +432,7 @@ const VideoManager = () => {
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-slate-400">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          <span className="text-sm font-semibold">{video.duration || '4h 51m'}</span>
+                          <span className="text-sm font-semibold">{formatDuration(video)}</span>
                         </div>
                       </div>
                     </td>
