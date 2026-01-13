@@ -48,7 +48,7 @@ export const login = async (req: Request, res: Response) => {
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { username, password, email, role } = req.body;
+    const { username, password, email } = req.body;
 
     if (!username || !password) {
       return res.status(400).json({ message: 'Username and password are required' });
@@ -64,12 +64,16 @@ export const register = async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Check if this is the first user (make them admin)
+    const userCount = await prisma.user.count();
+    const role = userCount === 0 ? 'ADMIN' : 'EMPLOYEE';
+
     const user = await prisma.user.create({
       data: {
         username,
         password: hashedPassword,
         email,
-        role: role || 'EMPLOYEE'
+        role
       }
     });
 
@@ -117,6 +121,34 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
     res.json(user);
   } catch (error) {
     console.error('Get profile error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Temporal: Update user to admin
+export const makeAdmin = async (req: Request, res: Response) => {
+  try {
+    const { username } = req.body;
+
+    if (!username) {
+      return res.status(400).json({ message: 'Username is required' });
+    }
+
+    const user = await prisma.user.update({
+      where: { username },
+      data: { role: 'ADMIN' }
+    });
+
+    res.json({
+      message: 'User role updated successfully',
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    console.error('Make admin error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
