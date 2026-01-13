@@ -32,7 +32,7 @@ export const getQuizById = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const quiz = await prisma.quiz.findUnique({
-      where: { id },
+      where: { id: String(id) },
       include: {
         topic: {
           include: {
@@ -89,7 +89,7 @@ export const updateQuiz = async (req: Request, res: Response) => {
     const { topicId, question, options, correctAnswer, explanation, order, isActive } = req.body;
 
     const quiz = await prisma.quiz.update({
-      where: { id },
+      where: { id: String(id) },
       data: {
         ...(topicId && { topicId }),
         ...(question && { question }),
@@ -116,7 +116,7 @@ export const deleteQuiz = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     await prisma.quiz.delete({
-      where: { id }
+      where: { id: String(id) }
     });
 
     res.status(204).send();

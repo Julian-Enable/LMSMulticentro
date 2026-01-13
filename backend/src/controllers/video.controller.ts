@@ -33,7 +33,7 @@ export const getVideoById = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const video = await prisma.video.findUnique({
-      where: { id },
+      where: { id: String(id) },
       include: {
         category: true,
         topics: {
@@ -99,7 +99,7 @@ export const updateVideo = async (req: Request, res: Response) => {
     const { title, description, externalId, platform, duration, thumbnailUrl, categoryId, order, isActive } = req.body;
 
     const video = await prisma.video.update({
-      where: { id },
+      where: { id: String(id) },
       data: {
         ...(title && { title }),
         ...(description !== undefined && { description }),
@@ -128,7 +128,7 @@ export const deleteVideo = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     await prisma.video.delete({
-      where: { id }
+      where: { id: String(id) }
     });
 
     res.status(204).send();

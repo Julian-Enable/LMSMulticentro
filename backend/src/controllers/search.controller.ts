@@ -68,16 +68,16 @@ export const searchContent = async (req: Request, res: Response) => {
     ]);
 
     // Calcular relevancia (cuántos términos coinciden)
-    const topicsWithRelevance = topics.map(topic => {
+    const topicsWithRelevance = topics.map((topic: any) => {
       let relevance = 0;
       const searchableText = [
         topic.code,
         topic.title,
         topic.description || '',
-        ...topic.tags.map(t => t.tag.name)
+        ...topic.tags.map((t: any) => t.tag.name)
       ].join(' ').toLowerCase();
 
-      searchTerms.forEach(term => {
+      searchTerms.forEach((term: string) => {
         if (searchableText.includes(term)) {
           relevance++;
         }
@@ -87,7 +87,7 @@ export const searchContent = async (req: Request, res: Response) => {
     });
 
     // Ordenar por relevancia
-    topicsWithRelevance.sort((a, b) => b.relevance - a.relevance);
+    topicsWithRelevance.sort((a: any, b: any) => b.relevance - a.relevance);
 
     res.json({
       results: topicsWithRelevance,

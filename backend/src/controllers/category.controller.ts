@@ -16,7 +16,7 @@ export const getCategories = async (req: Request, res: Response) => {
       orderBy: { order: 'asc' }
     });
 
-    const categoriesWithCount = categories.map(cat => ({
+    const categoriesWithCount = categories.map((cat: any) => ({
       ...cat,
       videoCount: cat.videos.length,
       videos: undefined
@@ -34,7 +34,7 @@ export const getCategoryById = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const category = await prisma.category.findUnique({
-      where: { id },
+      where: { id: String(id) },
       include: {
         videos: {
           where: { isActive: true },
@@ -90,7 +90,7 @@ export const updateCategory = async (req: Request, res: Response) => {
     const { name, description, order, isActive } = req.body;
 
     const category = await prisma.category.update({
-      where: { id },
+      where: { id: String(id) },
       data: {
         ...(name && { name }),
         ...(description !== undefined && { description }),
@@ -111,7 +111,7 @@ export const deleteCategory = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     await prisma.category.delete({
-      where: { id }
+      where: { id: String(id) }
     });
 
     res.status(204).send();

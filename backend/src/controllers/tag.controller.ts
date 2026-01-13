@@ -12,7 +12,7 @@ export const getTags = async (req: Request, res: Response) => {
       orderBy: { name: 'asc' }
     });
 
-    const tagsWithCount = tags.map(tag => ({
+    const tagsWithCount = tags.map((tag: any) => ({
       ...tag,
       topicCount: tag.topics.length,
       topics: undefined
@@ -30,7 +30,7 @@ export const getTagById = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const tag = await prisma.tag.findUnique({
-      where: { id },
+      where: { id: String(id) },
       include: {
         topics: {
           include: {
@@ -88,7 +88,7 @@ export const updateTag = async (req: Request, res: Response) => {
     }
 
     const tag = await prisma.tag.update({
-      where: { id },
+      where: { id: String(id) },
       data: { name }
     });
 
@@ -104,7 +104,7 @@ export const deleteTag = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     await prisma.tag.delete({
-      where: { id }
+      where: { id: String(id) }
     });
 
     res.status(204).send();

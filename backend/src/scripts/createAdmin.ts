@@ -28,10 +28,7 @@ async function createAdminUser() {
         username,
         email,
         password: hashedPassword,
-        firstName: 'Admin',
-        lastName: 'System',
         role: 'ADMIN',
-        isActive: true,
       },
     });
 

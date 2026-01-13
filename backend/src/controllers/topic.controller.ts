@@ -46,7 +46,7 @@ export const getTopicById = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const topic = await prisma.topic.findUnique({
-      where: { id },
+      where: { id: String(id) },
       include: {
         video: {
           include: {
@@ -129,12 +129,12 @@ export const updateTopic = async (req: Request, res: Response) => {
     // Si se actualizan los tags, primero eliminar los existentes
     if (tagIds !== undefined) {
       await prisma.topicTag.deleteMany({
-        where: { topicId: id }
+        where: { topicId: String(id) }
       });
     }
 
     const topic = await prisma.topic.update({
-      where: { id },
+      where: { id: String(id) },
       data: {
         ...(code && { code }),
         ...(title && { title }),
@@ -176,7 +176,7 @@ export const deleteTopic = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     await prisma.topic.delete({
-      where: { id }
+      where: { id: String(id) }
     });
 
     res.status(204).send();
@@ -192,7 +192,7 @@ export const getNextTopic = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const currentTopic = await prisma.topic.findUnique({
-      where: { id },
+      where: { id: String(id) },
       select: { videoId: true, order: true }
     });
 
@@ -233,7 +233,7 @@ export const getPreviousTopic = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const currentTopic = await prisma.topic.findUnique({
-      where: { id },
+      where: { id: String(id) },
       select: { videoId: true, order: true }
     });
 
