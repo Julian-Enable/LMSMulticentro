@@ -3,6 +3,10 @@
   command = "npm run build"
   publish = "dist"
 
+[build.environment]
+  VITE_USE_MOCK = "true"
+  VITE_API_URL = "https://api.multicentro.com"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
