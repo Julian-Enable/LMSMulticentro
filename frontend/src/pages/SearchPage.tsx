@@ -97,10 +97,10 @@ const SearchPage = () => {
               {selectedCategories.map(catId => {
                 const category = categories.find(c => c.id === catId);
                 return category ? (
-                  <span key={catId} className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/10">
+                  <span key={catId} className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-primary text-white border border-primary">
                     {category.name}
-                    <button onClick={() => toggleCategory(catId)} className="hover:text-red-500 ml-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
+                    <button onClick={() => toggleCategory(catId)} className="hover:text-accent ml-1 transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3 h-3">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
@@ -231,11 +231,11 @@ const SearchPage = () => {
                       {/* Content */}
                       <div className="flex flex-col flex-1 min-w-0">
                         <div className="flex items-center gap-3 mb-1">
-                          <span className="font-mono text-xs font-medium text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200">
+                          <span className="font-mono text-xs font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded border border-slate-300">
                             {video.externalId}
                           </span>
                           {index === 0 && (
-                            <span className="text-[10px] font-bold tracking-wide uppercase text-accent">Obligatorio</span>
+                            <span className="text-xs font-bold tracking-wide uppercase text-white bg-accent px-2 py-1 rounded">Obligatorio</span>
                           )}
                         </div>
                         <h3 className="text-lg font-bold text-primary group-hover:text-accent transition-colors leading-tight mb-2">
@@ -246,10 +246,10 @@ const SearchPage = () => {
                         </p>
                         <div className="mt-auto flex items-center justify-between">
                           <div className="flex flex-wrap gap-2">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
                               {video.category?.name || 'General'}
                             </span>
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-slate-200 text-slate-700 border border-slate-300">
                               {video.topicCount || video.topics?.length || 0} Temas
                             </span>
                           </div>
