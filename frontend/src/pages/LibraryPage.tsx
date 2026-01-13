@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { videoService } from '../services/videoService';
+import { videoService } from '../services/video.service';
 import { Video, Category } from '../types';
-import { categoryService } from '../services/categoryService';
+import { categoryService } from '../services/category.service';
 
 export default function LibraryPage() {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -40,7 +40,7 @@ export default function LibraryPage() {
         video.externalId?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         video.category?.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory =
-        selectedCategory === 'all' || video.categoryId === parseInt(selectedCategory);
+        selectedCategory === 'all' || String(video.categoryId) === selectedCategory;
       return matchesSearch && matchesCategory;
     })
     .sort((a, b) => {
