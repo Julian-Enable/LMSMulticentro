@@ -5,7 +5,7 @@
 
 [build.environment]
   VITE_USE_MOCK = "false"
-  VITE_API_URL = "https://api.multicentro.com"
+  VITE_API_URL = "https://lmsmulticentro-production.up.railway.app/api"
 
 [[redirects]]
   from = "/*"
