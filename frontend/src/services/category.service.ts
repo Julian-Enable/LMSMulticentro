@@ -25,7 +25,18 @@ export const categoryService = {
 
   create: async (data: Partial<Category>): Promise<Category> => {
     if (USE_MOCK_DATA) {
-      return Promise.resolve({ ...mockCategories[0], ...data, id: String(Date.now()) } as Category);
+      const newCategory: Category = {
+        id: String(Date.now()),
+        name: data.name || '',
+        description: data.description || '',
+        isActive: data.isActive !== undefined ? data.isActive : true,
+        videoCount: 0,
+        order: mockCategories.length + 1,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      mockCategories.push(newCategory);
+      return Promise.resolve(newCategory);
     }
     const response = await api.post('/categories', data);
     return response.data;
@@ -33,7 +44,16 @@ export const categoryService = {
 
   update: async (id: string, data: Partial<Category>): Promise<Category> => {
     if (USE_MOCK_DATA) {
-      return Promise.resolve({ ...mockCategories[0], ...data, id } as Category);
+      const index = mockCategories.findIndex(c => c.id === id);
+      if (index !== -1) {
+        mockCategories[index] = {
+          ...mockCategories[index],
+          ...data,
+          updatedAt: new Date().toISOString(),
+        };
+        return Promise.resolve(mockCategories[index]);
+      }
+      return Promise.reject(new Error('Category not found'));
     }
     const response = await api.put(`/categories/${id}`, data);
     return response.data;
@@ -41,6 +61,10 @@ export const categoryService = {
 
   delete: async (id: string): Promise<void> => {
     if (USE_MOCK_DATA) {
+      const index = mockCategories.findIndex(c => c.id === id);
+      if (index !== -1) {
+        mockCategories.splice(index, 1);
+      }
       return Promise.resolve();
     }
     await api.delete(`/categories/${id}`);
