@@ -35,8 +35,9 @@ Esta configuración despliega:
 1. Click en el servicio creado
 2. Ve a **"Settings"**:
    - **Root Directory**: `backend`
-   - **Build Command**: `npm install && npx prisma generate && npm run build`
-   - **Start Command**: `npx prisma migrate deploy && npm start`
+   - **Build Command**: (dejar en blanco, usará railway.json)
+   - **Start Command**: (dejar en blanco, usará railway.json)
+   - **Watch Paths**: `backend/**`
 
 3. Ve a **"Variables"** y agrega:
    ```
