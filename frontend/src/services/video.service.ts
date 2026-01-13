@@ -29,7 +29,6 @@ export const videoService = {
         title: data.title || '',
         description: data.description || '',
         externalId: data.externalId || '',
-        url: data.url || '',
         platform: data.platform || 'YOUTUBE',
         categoryId: data.categoryId || '',
         duration: data.duration || 0,
