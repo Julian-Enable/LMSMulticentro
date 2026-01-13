@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search as SearchIcon, Library, PlayCircle, Zap, Clock, BookOpen } from 'lucide-react';
+import { PlayCircle, Clock, TrendingUp, Sparkles } from 'lucide-react';
 import { categoryService } from '../services/category.service';
 import { Category } from '../types';
 
@@ -24,158 +24,167 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section Profesional */}
-      <section className="bg-gradient-to-br from-primary-600 to-primary-700 text-white py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Sistema de Capacitación<br />
-              <span className="text-primary-200">Multicentro</span>
-            </h1>
-            <p className="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">
-              Accede a contenido de capacitación organizado, búsqueda inteligente y aprende a tu propio ritmo
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link 
-                to="/search" 
-                className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors shadow-lg hover:shadow-xl"
-              >
-                <SearchIcon className="w-5 h-5 mr-2" />
-                Buscar Contenido
-              </Link>
-              
-              <Link 
-                to="/library" 
-                className="inline-flex items-center justify-center px-8 py-4 bg-primary-500 text-white rounded-xl font-semibold hover:bg-primary-400 transition-colors border-2 border-primary-400"
-              >
-                <Library className="w-5 h-5 mr-2" />
-                Explorar Biblioteca
-              </Link>
+    <div className="ml-64 min-h-screen bg-gray-50">
+      <div className="p-8">
+        {/* Header único */}
+        <div className="mb-8">
+          <div className="flex items-center space-x-2 mb-3">
+            <Sparkles className="w-5 h-5 text-accent-500" />
+            <span className="text-sm font-semibold text-accent-600 uppercase tracking-wide">Sistema de Capacitación</span>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Bienvenido de vuelta
+          </h1>
+          <p className="text-lg text-gray-600">
+            Continúa tu aprendizaje o explora nuevo contenido
+          </p>
+        </div>
+
+        {/* Stats rápidas */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="bg-white p-5 rounded-xl border-l-4 border-primary-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Total Categorías</p>
+                <p className="text-3xl font-bold text-gray-900">{categories.length}</p>
+              </div>
+              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-primary-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl border-l-4 border-accent-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Videos Disponibles</p>
+                <p className="text-3xl font-bold text-gray-900">
+                  {categories.reduce((sum, cat) => sum + (cat.videoCount || 0), 0)}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-accent-100 rounded-lg flex items-center justify-center">
+                <PlayCircle className="w-6 h-6 text-accent-600" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl border-l-4 border-primary-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Acceso</p>
+                <p className="text-3xl font-bold text-gray-900">24/7</p>
+              </div>
+              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                <Clock className="w-6 h-6 text-primary-600" />
+              </div>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Features Cards */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="text-center p-6">
-              <div className="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-7 h-7 text-primary-600" />
+        {/* Categorías en grid asimétrico */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">Explora por Categoría</h2>
+          <p className="text-gray-600 mb-6">Selecciona un área para comenzar</p>
+
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="relative">
+                <div className="w-16 h-16 border-4 border-gray-200 border-t-primary-600 rounded-full animate-spin"></div>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Búsqueda Inteligente</h3>
-              <p className="text-gray-600 text-sm">
-                Encuentra información rápidamente por código, título o tags
-              </p>
             </div>
-
-            <div className="text-center p-6">
-              <div className="w-14 h-14 bg-accent-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-7 h-7 text-accent-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Timestamps Precisos</h3>
-              <p className="text-gray-600 text-sm">
-                Salta directamente al momento exacto del video que necesitas
-              </p>
+          ) : categories.length === 0 ? (
+            <div className="bg-white rounded-xl p-12 text-center border border-dashed border-gray-300">
+              <PlayCircle className="w-16 h-16 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-600 font-medium">Sin categorías disponibles</p>
             </div>
-
-            <div className="text-center p-6">
-              <div className="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="w-7 h-7 text-primary-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Modo Curso</h3>
-              <p className="text-gray-600 text-sm">
-                Capacitación estructurada paso a paso para nuevos empleados
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Categories Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="mb-10">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Categorías de Capacitación
-              </h2>
-              <p className="text-gray-600">Selecciona una categoría para comenzar tu aprendizaje</p>
-            </div>
-
-            {loading ? (
-              <div className="flex flex-col items-center justify-center py-16">
-                <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mb-4"></div>
-                <p className="text-gray-600">Cargando categorías...</p>
-              </div>
-            ) : categories.length === 0 ? (
-              <div className="bg-gray-100 rounded-2xl p-12 text-center">
-                <Library className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No hay categorías disponibles</h3>
-                <p className="text-gray-600">Contacta al administrador para agregar contenido</p>
-              </div>
-            ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {categories.map((category) => (
+          ) : (
+            <div className="grid grid-cols-12 gap-4">
+              {categories.map((category, index) => {
+                // Crear patrón asimétrico
+                const isLarge = index % 5 === 0 || index % 5 === 3;
+                const colSpan = isLarge ? 'col-span-8' : 'col-span-4';
+                
+                return (
                   <Link
                     key={category.id}
                     to={`/course/${category.id}`}
-                    className="group bg-white rounded-2xl p-6 border border-gray-200 hover:border-primary-300 hover:shadow-lg transition-all duration-200"
+                    className={`${colSpan} group relative overflow-hidden bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl p-6 hover:shadow-xl transition-all duration-300 min-h-[180px] flex flex-col justify-between`}
                   >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <PlayCircle className="w-6 h-6 text-white" />
-                      </div>
-                      <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
-                        {category.videoCount || 0} videos
-                      </span>
+                    {/* Patrón de fondo */}
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="absolute inset-0" style={{
+                        backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+                        backgroundSize: '32px 32px'
+                      }}></div>
                     </div>
-                    
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
-                      {category.name}
-                    </h3>
-                    
-                    {category.description && (
-                      <p className="text-gray-600 text-sm line-clamp-2">
-                        {category.description}
-                      </p>
-                    )}
-                    
-                    <div className="mt-4 flex items-center text-primary-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
-                      <span>Ver contenido</span>
-                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="bg-primary-600 py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">¿Listo para comenzar?</h2>
-            <p className="text-primary-100 text-lg mb-8">
-              Accede a todo el contenido de capacitación y mejora tus habilidades hoy mismo
-            </p>
-            <Link 
-              to="/search" 
-              className="inline-flex items-center px-8 py-4 bg-white text-primary-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors shadow-lg"
-            >
-              <SearchIcon className="w-5 h-5 mr-2" />
-              Comenzar Ahora
-            </Link>
-          </div>
+                    <div className="relative z-10">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-lg flex items-center justify-center">
+                          <PlayCircle className="w-6 h-6 text-white" />
+                        </div>
+                        <span className="px-3 py-1 bg-white/20 backdrop-blur text-white rounded-full text-xs font-bold">
+                          {category.videoCount || 0} videos
+                        </span>
+                      </div>
+
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:translate-x-1 transition-transform">
+                        {category.name}
+                      </h3>
+
+                      {category.description && (
+                        <p className="text-primary-100 text-sm line-clamp-2">
+                          {category.description}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Hover effect */}
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-accent-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
-      </section>
+
+        {/* Acciones rápidas */}
+        <div className="grid grid-cols-2 gap-4 mt-8">
+          <Link 
+            to="/search"
+            className="bg-white p-6 rounded-xl border-2 border-gray-200 hover:border-primary-500 transition-colors group"
+          >
+            <div className="flex items-center space-x-4">
+              <div className="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center group-hover:bg-primary-200 transition-colors">
+                <svg className="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 text-lg mb-1">Buscar Contenido</h3>
+                <p className="text-gray-600 text-sm">Encuentra videos por código o tema</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link 
+            to="/library"
+            className="bg-white p-6 rounded-xl border-2 border-gray-200 hover:border-accent-500 transition-colors group"
+          >
+            <div className="flex items-center space-x-4">
+              <div className="w-14 h-14 bg-accent-100 rounded-xl flex items-center justify-center group-hover:bg-accent-200 transition-colors">
+                <svg className="w-7 h-7 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 text-lg mb-1">Ver Biblioteca</h3>
+                <p className="text-gray-600 text-sm">Explora todo el contenido disponible</p>
+              </div>
+            </div>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };
