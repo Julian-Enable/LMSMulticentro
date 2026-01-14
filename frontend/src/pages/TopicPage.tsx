@@ -6,7 +6,7 @@ import { formatTimestamp, getVideoUrl } from '../utils/helpers';
 import VideoPlayer from '../components/VideoPlayer/VideoPlayer';
 
 const TopicPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { topicId } = useParams<{ topicId: string }>();
   const navigate = useNavigate();
   const [topic, setTopic] = useState<Topic | null>(null);
   const [loading, setLoading] = useState(true);
@@ -17,15 +17,15 @@ const TopicPage = () => {
   const [expandedDescription, setExpandedDescription] = useState(false);
 
   useEffect(() => {
-    console.log('TopicPage mounted, id:', id);
-    if (id) {
-      loadTopic(id);
+    console.log('TopicPage mounted, id:', topicId);
+    if (topicId) {
+      loadTopic(topicId);
     } else {
       console.error('No topic ID provided');
       setError('No se proporcionó ID del tema');
       setLoading(false);
     }
-  }, [id]);
+  }, [topicId]);
 
   const loadTopic = async (topicId: string) => {
     console.log('Loading topic:', topicId);
@@ -44,12 +44,12 @@ const TopicPage = () => {
   };
 
   const handleNavigation = async (direction: 'previous' | 'next') => {
-    if (!id) return;
+    if (!topicId) return;
 
     try {
       const navigationData = direction === 'next' 
-        ? await topicService.getNext(id)
-        : await topicService.getPrevious(id);
+        ? await topicService.getNext(topicId)
+        : await topicService.getPrevious(topicId);
       if (navigationData && navigationData.id) {
         navigate(`/topic/${navigationData.id}`);
       }
