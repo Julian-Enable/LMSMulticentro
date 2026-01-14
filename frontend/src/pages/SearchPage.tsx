@@ -37,8 +37,22 @@ const SearchPage = () => {
       return false;
     }
     if (searchQuery) {
-      return video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        video.externalId.toLowerCase().includes(searchQuery.toLowerCase());
+      const query = searchQuery.toLowerCase();
+      
+      // Buscar en título y código del video
+      const matchesVideo = video.title.toLowerCase().includes(query) ||
+        video.externalId.toLowerCase().includes(query);
+      
+      // Buscar en temas y sus tags
+      const matchesTopics = video.topics?.some(topic => 
+        topic.title.toLowerCase().includes(query) ||
+        topic.code.toLowerCase().includes(query) ||
+        topic.tags?.some(topicTag => 
+          topicTag.tag?.name?.toLowerCase().includes(query)
+        )
+      );
+      
+      return matchesVideo || matchesTopics;
     }
     return true;
   });

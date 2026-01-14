@@ -14,7 +14,17 @@ export const getVideos = async (req: Request, res: Response) => {
         category: true,
         topics: {
           where: { isActive: true },
-          select: { id: true, code: true, title: true, timestamp: true },
+          select: { 
+            id: true, 
+            code: true, 
+            title: true, 
+            timestamp: true,
+            tags: {
+              include: {
+                tag: true
+              }
+            }
+          },
           orderBy: { order: 'asc' }
         }
       },
