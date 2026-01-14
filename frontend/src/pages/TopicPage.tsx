@@ -350,9 +350,9 @@ const TopicPage = () => {
                         <span className="text-primary text-xs font-mono font-bold mt-1 bg-white inline-block px-1.5 py-0.5 rounded shadow-sm w-fit">
                           {topic.duration 
                             ? formatTimestamp(topic.duration)
-                            : topic.video?.duration 
+                            : topic.video?.topics && topic.video.topics.length === 1 && topic.video.duration
                               ? formatTimestamp(topic.video.duration)
-                              : 'Sin duración'}
+                              : 'Ver tema'}
                         </span>
                       </div>
                     </div>
