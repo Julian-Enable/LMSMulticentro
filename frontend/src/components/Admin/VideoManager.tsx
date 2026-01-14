@@ -239,12 +239,18 @@ const VideoManager = () => {
     video.category?.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Format duration from topics
+  // Format duration from video duration field
   const formatDuration = (video: Video) => {
-    const topicCount = video.topicCount || video.topics?.length || 0;
-    const hours = Math.floor(topicCount * 0.4);
-    const minutes = Math.floor((topicCount * 0.4 - hours) * 60) + (topicCount * 5);
-    return `${hours}h ${minutes}m`;
+    if (!video.duration) return '0h 0m';
+    
+    const totalSeconds = typeof video.duration === 'number' ? video.duration : parseFloat(video.duration);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m`;
   };
 
   // Pagination
