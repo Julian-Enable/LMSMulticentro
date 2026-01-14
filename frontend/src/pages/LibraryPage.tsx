@@ -1,19 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { videoService } from '../services/video.service';
-import { Video, Category } from '../types';
+import { Link } from 'react-router-dom';
 import { categoryService } from '../services/category.service';
+import { Category } from '../types';
 
 export default function LibraryPage() {
-  const navigate = useNavigate();
-  const [videos, setVideos] = useState<Video[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [sortBy, setSortBy] = useState('recent');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
 
   useEffect(() => {
     loadData();
@@ -21,11 +14,7 @@ export default function LibraryPage() {
 
   const loadData = async () => {
     try {
-      const [videosData, categoriesData] = await Promise.all([
-        videoService.getAll(),
-        categoryService.getAll(),
-      ]);
-      setVideos(videosData);
+      const categoriesData = await categoryService.getAll();
       setCategories(categoriesData);
     } catch (error) {
       console.error('Error loading data:', error);
@@ -34,57 +23,26 @@ export default function LibraryPage() {
     }
   };
 
-  // Filter and sort videos
-  const filteredVideos = videos
-    .filter((video) => {
-      const matchesSearch =
-        video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        video.externalId?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        video.category?.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory =
-        selectedCategory === 'all' || String(video.categoryId) === selectedCategory;
-      return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
-      if (sortBy === 'recent') {
-        return new Date(b.updatedAt || b.createdAt).getTime() - new Date(a.updatedAt || a.createdAt).getTime();
-      }
-      return a.title.localeCompare(b.title);
-    });
-
-  // Pagination
-  const totalPages = Math.ceil(filteredVideos.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedVideos = filteredVideos.slice(startIndex, startIndex + itemsPerPage);
+  // Filter categories
+  const filteredCategories = categories.filter((category) => {
+    if (searchQuery) {
+      return category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        category.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    }
+    return true;
+  });
 
   const getCategoryColor = (categoryName: string) => {
     const colors: { [key: string]: string } = {
-      ventas: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-      compliance: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-      rh: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-      management: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-      tools: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+      manager: 'from-purple-500 to-purple-600',
+      ventas: 'from-green-500 to-green-600',
+      compliance: 'from-red-500 to-red-600',
+      rh: 'from-blue-500 to-blue-600',
+      management: 'from-purple-500 to-purple-600',
+      tools: 'from-amber-500 to-amber-600',
     };
     const key = categoryName.toLowerCase();
-    return colors[key] || 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300';
-  };
-
-  const formatDuration = (topics: any[] = []) => {
-    const totalMinutes = topics.reduce((acc, topic) => acc + (topic.duration || 0), 0);
-    if (totalMinutes < 60) return `${totalMinutes}m`;
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-    return `${hours}h ${minutes}m`;
-  };
-
-  const handleVideoClick = (video: Video) => {
-    // Navigate to first topic of the video
-    if (video.topics && video.topics.length > 0) {
-      const firstTopic = video.topics[0];
-      navigate(`/topic/${firstTopic.id}`);
-    } else {
-      alert('Este video no tiene temas disponibles');
-    }
+    return colors[key] || 'from-gray-500 to-gray-600';
   };
 
   if (loading) {
@@ -96,299 +54,119 @@ export default function LibraryPage() {
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#f9f9fb] relative">
-      {/* Header Section */}
-      <header className="flex-none px-8 py-6 pb-2">
-        <div className="max-w-7xl mx-auto w-full flex flex-col gap-6">
-          {/* Title Row */}
-          <div className="flex flex-wrap justify-between items-end gap-4">
-            <div className="flex flex-col gap-1">
-              <h1 className="text-[#121118] text-3xl font-black tracking-tight">
-                Biblioteca de Contenidos
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#f9f9fb]">
+      {/* Header */}
+      <header className="flex-none px-8 py-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-wrap justify-between items-end gap-4 mb-6">
+            <div>
+              <h1 className="text-3xl font-black text-primary tracking-tight">
+                Biblioteca de Cursos
               </h1>
-              <p className="text-[#636085] text-base">
-                Gestione el material de capacitación y recursos de aprendizaje.
+              <p className="text-slate-500 mt-1">
+                Explora los cursos disponibles organizados por categoría.
               </p>
             </div>
-            <button className="bg-accent hover:bg-red-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 shadow-lg shadow-red-900/10 transition-all hover:scale-105 active:scale-95">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              Crear Nuevo Contenido
-            </button>
           </div>
 
-          {/* Filters Row */}
-          <div className="flex flex-wrap items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-gray-100">
-            {/* Search */}
-            <div className="flex-1 min-w-[280px]">
-              <label className="flex items-center w-full bg-gray-50 rounded-lg px-3 py-2.5 border border-transparent focus-within:border-primary/20 focus-within:bg-white transition-all">
-                <svg className="w-5 h-5 text-[#636085]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {/* Search Bar */}
+          <div className="max-w-2xl">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                <input
-                  className="bg-transparent border-none text-sm w-full ml-2 focus:ring-0 text-[#121118] placeholder-[#636085] p-0"
-                  placeholder="Buscar por título, código o palabra clave..."
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                />
-              </label>
-            </div>
-
-            <div className="h-8 w-px bg-gray-200 mx-1 hidden md:block"></div>
-
-            {/* Filter Dropdowns */}
-            <div className="flex items-center gap-2 overflow-x-auto">
-              <div className="relative">
-                <select
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm font-medium text-[#636085] transition-colors border border-transparent hover:border-gray-200 appearance-none pr-8 cursor-pointer"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                >
-                  <option value="recent">Ordenar: Recientes</option>
-                  <option value="alphabetical">Ordenar: Alfabético</option>
-                </select>
-                <svg className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#636085]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
               </div>
-
-              <div className="relative">
-                <select
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm font-medium text-[#636085] transition-colors border border-transparent hover:border-gray-200 appearance-none pr-8 cursor-pointer"
-                  value={selectedCategory}
-                  onChange={(e) => {
-                    setSelectedCategory(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                >
-                  <option value="all">Categoría: Todas</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-                <svg className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#636085]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-
-              <div className="relative">
-                <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm font-medium text-[#636085] transition-colors border border-transparent hover:border-gray-200">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                  </svg>
-                  <span>Estado</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-              </div>
+              <input
+                className="block w-full pl-10 pr-3 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                placeholder="Buscar cursos por nombre..."
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
           </div>
         </div>
       </header>
 
-      {/* Grid/Table Area */}
-      <div className="flex-1 overflow-y-auto px-8 pb-8 pt-2 custom-scrollbar">
-        <div className="max-w-7xl mx-auto w-full flex flex-col gap-4">
-          {/* Table Header */}
-          <div className="grid grid-cols-12 gap-4 px-4 py-2 text-xs font-bold text-[#636085] uppercase tracking-wider items-center">
-            <div className="col-span-5 md:col-span-4 lg:col-span-4 pl-12">Contenido</div>
-            <div className="col-span-2 hidden md:block">Código</div>
-            <div className="col-span-2 hidden lg:block">Categoría</div>
-            <div className="col-span-3 md:col-span-4 lg:col-span-2">Detalles</div>
-            <div className="col-span-2 md:col-span-2 lg:col-span-2 text-right">Acciones</div>
-          </div>
-
-          {/* Content Rows */}
-          {paginatedVideos.map((video) => (
-            <div
-              key={video.id}
-              onClick={() => handleVideoClick(video)}
-              className="group relative bg-white rounded-xl p-3 shadow-sm hover:shadow-md border border-gray-100 transition-all hover:-translate-y-0.5 cursor-pointer"
-            >
-              <div className="grid grid-cols-12 gap-4 items-center">
-                {/* Content Column */}
-                <div className="col-span-5 md:col-span-4 lg:col-span-4 flex items-center gap-4">
-                  {/* Drag handle */}
-                  <div className="absolute left-3 text-gray-300 opacity-0 group-hover:opacity-100 cursor-grab">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M9 3h2v2H9V3zm0 4h2v2H9V7zm0 4h2v2H9v-2zm0 4h2v2H9v-2zm0 4h2v2H9v-2zM13 3h2v2h-2V3zm0 4h2v2h-2V7zm0 4h2v2h-2v-2zm0 4h2v2h-2v-2zm0 4h2v2h-2v-2z"/>
-                    </svg>
-                  </div>
-
-                  <div
-                    className="h-16 w-24 rounded-lg bg-gray-200 flex-shrink-0 bg-cover bg-center overflow-hidden relative ml-6"
-                    style={{ backgroundImage: video.thumbnailUrl ? `url(${video.thumbnailUrl})` : 'none' }}
-                  >
-                    {!video.thumbnailUrl && (
-                      <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z"/>
-                        </svg>
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-black/10"></div>
-                  </div>
-
-                  <div className="flex flex-col min-w-0 pr-4">
-                    <h3 className="text-[#121118] font-bold text-sm truncate leading-snug">
-                      {video.title}
-                    </h3>
-                    <p className="text-[#636085] text-xs mt-1 line-clamp-1">
-                      {video.description || 'Sin descripción'}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Code Column */}
-                <div className="col-span-2 hidden md:flex items-center">
-                  <span className="font-mono text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                    {video.externalId || 'N/A'}
-                  </span>
-                </div>
-
-                {/* Category Column */}
-                <div className="col-span-2 hidden lg:flex items-center">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColor(video.category?.name || '')}`}>
-                    {video.category?.name || 'Sin categoría'}
-                  </span>
-                </div>
-
-                {/* Details Column */}
-                <div className="col-span-3 md:col-span-4 lg:col-span-2 flex items-center gap-4 text-[#636085] text-xs">
-                  <div className="flex items-center gap-1.5" title="Topics">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                    <span>{video.topics?.length || 0}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5" title="Duration">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>{formatDuration(video.topics)}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5" title="Students">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    <span>-</span>
-                  </div>
-                </div>
-
-                {/* Actions Column */}
-                <div className="col-span-2 md:col-span-2 lg:col-span-2 flex items-center justify-end gap-2">
-                  <button className="p-2 rounded-lg text-[#636085] hover:bg-primary/10 hover:text-primary transition-colors">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  </button>
-                  <button className="p-2 rounded-lg text-[#636085] hover:bg-gray-100 transition-colors">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {/* Empty State */}
-          {paginatedVideos.length === 0 && (
+      {/* Categories Grid */}
+      <div className="flex-1 overflow-y-auto px-8 pb-8">
+        <div className="max-w-7xl mx-auto">
+          {filteredCategories.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <p className="text-[#636085] text-lg font-medium">No se encontraron contenidos</p>
-              <p className="text-[#636085] text-sm mt-1">Intenta ajustar los filtros de búsqueda</p>
+              <p className="text-slate-500 text-lg font-medium">No se encontraron cursos</p>
+              <p className="text-slate-400 text-sm mt-1">Intenta ajustar tu búsqueda</p>
             </div>
-          )}
-
-          {/* Pagination */}
-          {paginatedVideos.length > 0 && (
-            <div className="flex flex-wrap items-center justify-between gap-4 mt-6 pb-6 px-2">
-              <p className="text-sm text-[#636085]">
-                Mostrando <span className="font-bold text-[#121118]">{startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredVideos.length)}</span> de <span className="font-bold text-[#121118]">{filteredVideos.length}</span> resultados
-              </p>
-              <div className="flex items-center gap-1">
-                <button
-                  className="p-2 rounded-lg text-[#636085] hover:bg-gray-100 disabled:opacity-50"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCategories.map((category) => (
+                <Link
+                  key={category.id}
+                  to={`/course/${category.id}`}
+                  className="group"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
+                  <div className="bg-white rounded-xl shadow-sm hover:shadow-lg border border-gray-100 overflow-hidden transition-all hover:-translate-y-1">
+                    {/* Card Header with Gradient */}
+                    <div className={`h-32 bg-gradient-to-br ${getCategoryColor(category.name)} relative overflow-hidden`}>
+                      <div className="absolute inset-0 bg-black/5"></div>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <svg className="w-16 h-16 text-white/30" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18.5c-3.94-.98-7-5.06-7-9.5V8.52l7-3.11v15.09z"/>
+                        </svg>
+                      </div>
+                      <div className="absolute top-4 right-4">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold text-white bg-white/20 backdrop-blur-sm">
+                          {category.videos?.length || 0} videos
+                        </span>
+                      </div>
+                    </div>
 
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  let pageNum;
-                  if (totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (currentPage <= 3) {
-                    pageNum = i + 1;
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i;
-                  } else {
-                    pageNum = currentPage - 2 + i;
-                  }
+                    {/* Card Body */}
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
+                        {category.name}
+                      </h3>
+                      {category.description && (
+                        <p className="text-slate-600 text-sm line-clamp-2 mb-4">
+                          {category.description}
+                        </p>
+                      )}
+                      
+                      {/* Stats */}
+                      <div className="flex items-center gap-4 text-slate-500 text-sm pt-4 border-t border-gray-100">
+                        <div className="flex items-center gap-1.5">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
+                          <span>{category.videos?.length || 0}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                          </svg>
+                          <span>
+                            {category.videos?.reduce((acc, video) => acc + (video.topics?.length || 0), 0) || 0} temas
+                          </span>
+                        </div>
+                      </div>
+                    </div>
 
-                  return (
-                    <button
-                      key={pageNum}
-                      className={`w-9 h-9 flex items-center justify-center rounded-lg text-sm font-medium transition-colors ${
-                        currentPage === pageNum
-                          ? 'bg-primary text-white font-bold'
-                          : 'text-[#636085] hover:bg-gray-100'
-                      }`}
-                      onClick={() => setCurrentPage(pageNum)}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
-
-                {totalPages > 5 && currentPage < totalPages - 2 && (
-                  <>
-                    <span className="w-9 h-9 flex items-center justify-center text-[#636085]">...</span>
-                    <button
-                      className="w-9 h-9 flex items-center justify-center rounded-lg text-[#636085] hover:bg-gray-100 text-sm font-medium"
-                      onClick={() => setCurrentPage(totalPages)}
-                    >
-                      {totalPages}
-                    </button>
-                  </>
-                )}
-
-                <button
-                  className="p-2 rounded-lg text-[#636085] hover:bg-gray-100 disabled:opacity-50"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
+                    {/* Arrow indicator */}
+                    <div className="px-6 pb-4 flex items-center text-primary text-sm font-semibold group-hover:translate-x-1 transition-transform">
+                      <span>Ver curso</span>
+                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           )}
         </div>
-      </div>
-
-      {/* Floating Action Button for Mobile */}
-      <div className="md:hidden fixed bottom-6 right-6 z-50">
-        <button className="bg-accent text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-transform">
-          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-        </button>
       </div>
     </div>
   );
