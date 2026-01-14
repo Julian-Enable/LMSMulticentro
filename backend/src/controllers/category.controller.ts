@@ -10,19 +10,19 @@ export const getCategories = async (req: Request, res: Response) => {
       include: {
         videos: {
           where: { isActive: true },
-          select: { id: true }
+          select: { 
+            id: true,
+            topics: {
+              where: { isActive: true },
+              select: { id: true }
+            }
+          }
         }
       },
       orderBy: { order: 'asc' }
     });
 
-    const categoriesWithCount = categories.map((cat: any) => ({
-      ...cat,
-      videoCount: cat.videos.length,
-      videos: undefined
-    }));
-
-    res.json(categoriesWithCount);
+    res.json(categories);
   } catch (error) {
     console.error('Get categories error:', error);
     res.status(500).json({ message: 'Internal server error' });
