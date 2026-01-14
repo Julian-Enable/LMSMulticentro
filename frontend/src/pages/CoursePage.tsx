@@ -6,17 +6,17 @@ import { Category, Video, Topic } from '../types';
 import { formatTimestamp } from '../utils/helpers';
 
 const CoursePage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { categoryId } = useParams<{ categoryId: string }>();
   const [category, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
   const [completedTopics, setCompletedTopics] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    if (id) {
-      loadCategory(id);
-      loadProgress(id);
+    if (categoryId) {
+      loadCategory(categoryId);
+      loadProgress(categoryId);
     }
-  }, [id]);
+  }, [categoryId]);
 
   const loadCategory = async (categoryId: string) => {
     setLoading(true);
@@ -48,8 +48,8 @@ const CoursePage = () => {
     setCompletedTopics(newCompleted);
     
     // Save to localStorage
-    if (id) {
-      localStorage.setItem(`course-progress-${id}`, JSON.stringify(Array.from(newCompleted)));
+    if (categoryId) {
+      localStorage.setItem(`course-progress-${categoryId}`, JSON.stringify(Array.from(newCompleted)));
     }
   };
 
