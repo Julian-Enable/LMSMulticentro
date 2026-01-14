@@ -348,7 +348,11 @@ const TopicPage = () => {
                       <div className="flex flex-col">
                         <span className="text-primary text-sm font-bold">{topic.title}</span>
                         <span className="text-primary text-xs font-mono font-bold mt-1 bg-white inline-block px-1.5 py-0.5 rounded shadow-sm w-fit">
-                          {topic.duration ? formatTimestamp(topic.duration) : 'Sin duración'}
+                          {topic.duration 
+                            ? formatTimestamp(topic.duration)
+                            : topic.video?.duration 
+                              ? formatTimestamp(topic.video.duration)
+                              : 'Sin duración'}
                         </span>
                       </div>
                     </div>
