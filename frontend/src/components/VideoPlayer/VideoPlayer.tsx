@@ -29,7 +29,12 @@ const VideoPlayer = ({
           onEnded={onEnded}
           config={{
             youtube: {
-              playerVars: { start: startTime },
+              playerVars: {
+                start: startTime,
+                rel: 0, // No mostrar videos relacionados
+                modestbranding: 1, // Minimizar branding de YouTube
+                showinfo: 0, // No mostrar info del video
+              },
             },
             file: {
               attributes: {
