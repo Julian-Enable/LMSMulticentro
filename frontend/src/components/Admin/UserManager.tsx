@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { User } from '../../types';
+import { userService } from '../../services/user.service';
 
 const UserManager = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -21,26 +22,11 @@ const UserManager = () => {
   const loadUsers = async () => {
     setLoading(true);
     try {
-      // Mock mode - load from localStorage or start empty
-      const storedUsers = localStorage.getItem('mockUsers');
-      if (storedUsers) {
-        setUsers(JSON.parse(storedUsers));
-      } else {
-        // Default admin user
-        const defaultUsers: User[] = [
-          {
-            id: 'user-1',
-            username: 'admin',
-            email: 'admin@multicentro.com',
-            role: 'ADMIN',
-            createdAt: new Date().toISOString(),
-          }
-        ];
-        setUsers(defaultUsers);
-        localStorage.setItem('mockUsers', JSON.stringify(defaultUsers));
-      }
+      const data = await userService.getAll();
+      setUsers(data);
     } catch (error) {
       console.error('Error loading users:', error);
+      alert('Error al cargar los usuarios');
     } finally {
       setLoading(false);
     }
@@ -68,31 +54,48 @@ const UserManager = () => {
 
   const handleSave = async () => {
     try {
+      if (!formData.username || !formData.email) {
+        alert('Usuario y email son requeridos');
+        return;
+      }
+
+      if (isCreating && !formData.password) {
+        alert('La contraseña es requerida para crear un usuario');
+        return;
+      }
+
       if (isCreating) {
-        const newUser: User = {
-          id: `user-${Date.now()}`,
+        await userService.create({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+        });
+      } else if (editingId) {
+        const updateData: any = {
           username: formData.username,
           email: formData.email,
           role: formData.role,
-          createdAt: new Date().toISOString(),
         };
-        const updatedUsers = [...users, newUser];
-        setUsers(updatedUsers);
-        localStorage.setItem('mockUsers', JSON.stringify(updatedUsers));
-      } else if (editingId) {
-        const updatedUsers = users.map(u =>
-          u.id === editingId
-            ? { ...u, username: formData.username, email: formData.email, role: formData.role }
-            : u
-        );
-        setUsers(updatedUsers);
-        localStorage.setItem('mockUsers', JSON.stringify(updatedUsers));
+        if (formData.password) {
+          updateData.password = formData.password;
+        }
+        await userService.update(editingId, updateData);
       }
+
+      await loadUsers();
       setIsCreating(false);
       setEditingId(null);
-    } catch (error) {
+      setFormData({
+        username: '',
+        email: '',
+        password: '',
+        role: 'EMPLOYEE',
+      });
+    } catch (error: any) {
       console.error('Error saving user:', error);
-      alert('Error al guardar el usuario');
+      const message = error.response?.data?.message || 'Error al guardar el usuario';
+      alert(message);
     }
   };
 
@@ -102,9 +105,8 @@ const UserManager = () => {
     }
 
     try {
-      const updatedUsers = users.filter(u => u.id !== id);
-      setUsers(updatedUsers);
-      localStorage.setItem('mockUsers', JSON.stringify(updatedUsers));
+      await userService.delete(id);
+      await loadUsers();
     } catch (error) {
       console.error('Error deleting user:', error);
       alert('Error al eliminar el usuario');

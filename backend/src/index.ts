@@ -12,6 +12,7 @@ import topicRoutes from './routes/topic.routes';
 import tagRoutes from './routes/tag.routes';
 import quizRoutes from './routes/quiz.routes';
 import searchRoutes from './routes/search.routes';
+import userRoutes from './routes/user.routes';
 
 dotenv.config();
 
@@ -57,6 +58,7 @@ app.use('/api/topics', topicRoutes);
 app.use('/api/tags', tagRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/users', userRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
