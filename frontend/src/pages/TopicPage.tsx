@@ -327,10 +327,21 @@ const TopicPage = () => {
                 <div className="p-4 bg-gray-50 border-b border-gray-200">
                   <div className="flex justify-between items-end mb-2">
                     <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">Progreso del módulo</span>
-                    <span className="text-sm font-bold text-primary">35%</span>
+                    <span className="text-sm font-bold text-primary">
+                      {topic.video?.topics && topic.video.topics.length > 0
+                        ? Math.round(((topic.order + 1) / topic.video.topics.length) * 100)
+                        : 0}%
+                    </span>
                   </div>
                   <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div className="h-full bg-primary w-[35%] rounded-full"></div>
+                    <div 
+                      className="h-full bg-primary rounded-full transition-all duration-300" 
+                      style={{ 
+                        width: `${topic.video?.topics && topic.video.topics.length > 0 
+                          ? Math.round(((topic.order + 1) / topic.video.topics.length) * 100) 
+                          : 0}%` 
+                      }}
+                    ></div>
                   </div>
                 </div>
 
