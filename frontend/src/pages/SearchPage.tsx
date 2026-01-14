@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { categoryService } from '../services/category.service';
 import { videoService } from '../services/video.service';
 import { Video, Category } from '../types';
 
 const SearchPage = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [videos, setVideos] = useState<Video[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -197,17 +198,25 @@ const SearchPage = () => {
                 </div>
               ) : (
                 <>
-                  {filteredVideos.map((video, index) => (
-                    <Link
-                      key={video.id}
-                      to={`/topic/${video.topics?.[0]?.id || video.id}`}
-                      className="group bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col sm:flex-row gap-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer relative overflow-hidden"
-                    >
-                      {/* Selection Highlight */}
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  {filteredVideos.map((video, index) => {
+                    const topicId = video.topics?.[0]?.id;
+                    return (
+                      <div
+                        key={video.id}
+                        onClick={() => {
+                          if (topicId) {
+                            navigate(`/topic/${topicId}`);
+                          } else {
+                            alert('Este video aún no tiene temas. Ve a Administrar → Temas para crear temas para este video.');
+                          }
+                        }}
+                        className="group bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col sm:flex-row gap-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer relative overflow-hidden"
+                      >
+                        {/* Selection Highlight */}
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-                      {/* Thumbnail */}
-                      <div className="relative w-full sm:w-56 shrink-0 aspect-video rounded-lg overflow-hidden bg-slate-100">
+                        {/* Thumbnail */}
+                        <div className="relative w-full sm:w-56 shrink-0 aspect-video rounded-lg overflow-hidden bg-slate-100">
                         {video.thumbnailUrl ? (
                           <img
                             src={video.thumbnailUrl}
@@ -270,8 +279,8 @@ const SearchPage = () => {
                           </div>
                         </div>
                       </div>
-                    </Link>
-                  ))}
+                    );
+                  })}
 
                   {/* Load More */}
                   <div className="flex justify-center mt-4">

@@ -331,7 +331,14 @@ export default function CategoryCoursePage() {
                         <div className="shrink-0 mt-3 sm:mt-0 w-full sm:w-auto">
                           {isCompleted && (
                             <button
-                              onClick={() => navigate(`/topic/${video.topics?.[0]?.id || video.id}`)}
+                              onClick={() => {
+                                const topicId = video.topics?.[0]?.id;
+                                if (topicId) {
+                                  navigate(`/topic/${topicId}`);
+                                } else {
+                                  alert('Este video aún no tiene temas. Ve a Administrar → Temas para crear temas para este video.');
+                                }
+                              }}
                               className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-9 px-5 bg-[#ebeaf0] dark:bg-gray-800 text-[#121118] dark:text-white hover:bg-primary hover:text-white dark:hover:bg-primary transition-all text-sm font-bold shadow-sm"
                             >
                               <span>Repasar</span>
@@ -339,7 +346,14 @@ export default function CategoryCoursePage() {
                           )}
                           {isInProgress && (
                             <button
-                              onClick={() => navigate(`/topic/${video.topics?.[0]?.id || video.id}`)}
+                              onClick={() => {
+                                const topicId = video.topics?.[0]?.id;
+                                if (topicId) {
+                                  navigate(`/topic/${topicId}`);
+                                } else {
+                                  alert('Este video aún no tiene temas. Ve a Administrar → Temas para crear temas para este video.');
+                                }
+                              }}
                               className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-9 px-6 bg-accent text-white hover:bg-[#a0252c] transition-all text-sm font-bold shadow-md shadow-red-900/10"
                             >
                               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
