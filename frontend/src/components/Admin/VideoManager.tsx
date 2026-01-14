@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { Video, Category } from '../../types';
 import { mockVideos, mockCategories } from '../../data/mockData';
+import { youtubeService } from '../../services/youtube.service';
 
 // Admin Video Manager Component
 const VideoManager = () => {
@@ -24,6 +25,7 @@ const VideoManager = () => {
     isActive: true,
   });
   const [isCreating, setIsCreating] = useState(false);
+  const [loadingYoutubeInfo, setLoadingYoutubeInfo] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -65,6 +67,45 @@ const VideoManager = () => {
       thumbnailUrl: '',
       isActive: true,
     });
+  };
+
+  const handleLoadFromYouTube = async () => {
+    if (!formData.externalId && !formData.url) {
+      alert('Por favor ingresa el ID del video de YouTube primero');
+      return;
+    }
+
+    setLoadingYoutubeInfo(true);
+    try {
+      const videoId = formData.externalId || formData.url;
+      const info = await youtubeService.getVideoInfo(videoId);
+      
+      setFormData(prev => ({
+        ...prev,
+        title: info.title,
+        description: info.description,
+        duration: String(info.duration),
+        thumbnailUrl: info.thumbnailUrl,
+        externalId: videoId,
+        url: videoId,
+      }));
+
+      if (info.chapters.length > 0) {
+        const createTopics = confirm(
+          `Se encontraron ${info.chapters.length} capítulos en la descripción del video.\n\n` +
+          `¿Deseas crear automáticamente los temas después de guardar el video?`
+        );
+        if (createTopics) {
+          // Store chapters for later creation
+          (window as any).pendingYoutubeChapters = info.chapters;
+        }
+      }
+    } catch (error: any) {
+      console.error('Error loading YouTube info:', error);
+      alert(error.response?.data?.message || 'Error al cargar información del video. Verifica que la API key de YouTube esté configurada.');
+    } finally {
+      setLoadingYoutubeInfo(false);
+    }
   };
 
   const handleEdit = (video: Video) => {
@@ -281,26 +322,45 @@ const VideoManager = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Código/ID <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
-                    value={formData.externalId}
-                    onChange={(e) => setFormData({ ...formData, externalId: e.target.value })}
-                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono"
-                    placeholder="VID-001"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={formData.externalId}
+                      onChange={(e) => setFormData({ ...formData, externalId: e.target.value })}
+                      className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono"
+                      placeholder="dQw4w9WgXcQ"
+                    />
+                    {formData.platform === 'YOUTUBE' && (
+                      <button
+                        type="button"
+                        onClick={handleLoadFromYouTube}
+                        disabled={loadingYoutubeInfo || (!formData.externalId && !formData.url)}
+                        className="px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap text-sm font-medium"
+                      >
+                        {loadingYoutubeInfo ? '⏳' : '📺 Auto'}
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    ID del video de YouTube (ej: dQw4w9WgXcQ)
+                  </p>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Duración
+                    Duración (segundos)
                   </label>
                   <input
                     type="text"
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                     className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                    placeholder="15:30"
+                    placeholder="300"
+                    readOnly={loadingYoutubeInfo}
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Se autocompleta con el botón Auto
+                  </p>
                 </div>
               </div>
 
@@ -349,8 +409,12 @@ const VideoManager = () => {
                   value={formData.thumbnailUrl}
                   onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
                   className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  placeholder="https://images.unsplash.com/photo-..."
+                  placeholder="https://i.ytimg.com/vi/..."
+                  readOnly={loadingYoutubeInfo}
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  Se autocompleta con el botón Auto
+                </p>
               </div>
 
               <div>

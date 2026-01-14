@@ -13,6 +13,7 @@ import tagRoutes from './routes/tag.routes';
 import quizRoutes from './routes/quiz.routes';
 import searchRoutes from './routes/search.routes';
 import userRoutes from './routes/user.routes';
+import youtubeRoutes from './routes/youtube.routes';
 
 dotenv.config();
 
@@ -59,6 +60,7 @@ app.use('/api/tags', tagRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/youtube', youtubeRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
