@@ -6,7 +6,8 @@ import {
   updateTopic,
   deleteTopic,
   getNextTopic,
-  getPreviousTopic
+  getPreviousTopic,
+  incrementTopicViews
 } from '../controllers/topic.controller';
 import { authenticate, authorize } from '../middleware/auth.middleware';
 
@@ -17,6 +18,7 @@ router.get('/', getTopics);
 router.get('/:id', getTopicById);
 router.get('/:id/next', getNextTopic);
 router.get('/:id/previous', getPreviousTopic);
+router.post('/:id/view', incrementTopicViews);
 
 // Protected routes (Admin only)
 router.post('/', authenticate, authorize('ADMIN'), createTopic);

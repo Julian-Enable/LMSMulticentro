@@ -41,4 +41,8 @@ export const topicService = {
   delete: async (id: string): Promise<void> => {
     await api.delete(`/topics/${id}`);
   },
+
+  incrementViews: async (id: string): Promise<void> => {
+    await api.post(`/topics/${id}/view`);
+  },
 };

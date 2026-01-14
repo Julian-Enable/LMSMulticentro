@@ -55,6 +55,7 @@ export interface Topic {
   timestamp: number;
   duration?: number;
   order: number;
+  views: number;
   isActive: boolean;
   tags?: TopicTag[];
   quizzes?: Quiz[];

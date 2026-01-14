@@ -268,3 +268,27 @@ export const getPreviousTopic = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const incrementTopicViews = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const topic = await prisma.topic.update({
+      where: { id: String(id) },
+      data: {
+        views: {
+          increment: 1
+        }
+      },
+      select: {
+        id: true,
+        views: true
+      }
+    });
+
+    res.json(topic);
+  } catch (error) {
+    console.error('Increment topic views error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
