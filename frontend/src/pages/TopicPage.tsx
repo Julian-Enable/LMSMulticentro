@@ -17,16 +17,23 @@ const TopicPage = () => {
   const [expandedDescription, setExpandedDescription] = useState(false);
 
   useEffect(() => {
+    console.log('TopicPage mounted, id:', id);
     if (id) {
       loadTopic(id);
+    } else {
+      console.error('No topic ID provided');
+      setError('No se proporcionó ID del tema');
+      setLoading(false);
     }
   }, [id]);
 
   const loadTopic = async (topicId: string) => {
+    console.log('Loading topic:', topicId);
     setLoading(true);
     setError(null);
     try {
       const data = await topicService.getById(topicId);
+      console.log('Topic loaded successfully:', data);
       setTopic(data);
     } catch (error: any) {
       console.error('Error loading topic:', error);
