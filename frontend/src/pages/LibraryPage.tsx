@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { videoService } from '../services/video.service';
 import { Video, Category } from '../types';
 import { categoryService } from '../services/category.service';
 
 export default function LibraryPage() {
+  const navigate = useNavigate();
   const [videos, setVideos] = useState<Video[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,6 +75,16 @@ export default function LibraryPage() {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     return `${hours}h ${minutes}m`;
+  };
+
+  const handleVideoClick = (video: Video) => {
+    // Navigate to first topic of the video
+    if (video.topics && video.topics.length > 0) {
+      const firstTopic = video.topics[0];
+      navigate(`/topic/${firstTopic.id}`);
+    } else {
+      alert('Este video no tiene temas disponibles');
+    }
   };
 
   if (loading) {
@@ -198,7 +210,8 @@ export default function LibraryPage() {
           {paginatedVideos.map((video) => (
             <div
               key={video.id}
-              className="group relative bg-white rounded-xl p-3 shadow-sm hover:shadow-md border border-gray-100 transition-all hover:-translate-y-0.5"
+              onClick={() => handleVideoClick(video)}
+              className="group relative bg-white rounded-xl p-3 shadow-sm hover:shadow-md border border-gray-100 transition-all hover:-translate-y-0.5 cursor-pointer"
             >
               <div className="grid grid-cols-12 gap-4 items-center">
                 {/* Content Column */}
