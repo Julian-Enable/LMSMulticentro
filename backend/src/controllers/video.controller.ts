@@ -69,13 +69,16 @@ export const createVideo = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Title, externalId, platform, and categoryId are required' });
     }
 
+    // Convert duration to number if it's a string
+    const durationValue = duration ? (typeof duration === 'string' ? parseFloat(duration) : duration) : null;
+
     const video = await prisma.video.create({
       data: {
         title,
         description,
         externalId,
         platform,
-        duration,
+        duration: durationValue,
         thumbnailUrl,
         categoryId,
         order: order || 0,
@@ -98,6 +101,11 @@ export const updateVideo = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { title, description, externalId, platform, duration, thumbnailUrl, categoryId, order, isActive } = req.body;
 
+    // Convert duration to number if it's a string
+    const durationValue = duration !== undefined 
+      ? (duration === '' || duration === null ? null : (typeof duration === 'string' ? parseFloat(duration) : duration))
+      : undefined;
+
     const video = await prisma.video.update({
       where: { id: String(id) },
       data: {
@@ -105,7 +113,7 @@ export const updateVideo = async (req: Request, res: Response) => {
         ...(description !== undefined && { description }),
         ...(externalId && { externalId }),
         ...(platform && { platform }),
-        ...(duration !== undefined && { duration }),
+        ...(duration !== undefined && { duration: durationValue }),
         ...(thumbnailUrl !== undefined && { thumbnailUrl }),
         ...(categoryId && { categoryId }),
         ...(order !== undefined && { order }),
