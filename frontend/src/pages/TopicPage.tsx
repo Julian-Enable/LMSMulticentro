@@ -10,6 +10,7 @@ const TopicPage = () => {
   const navigate = useNavigate();
   const [topic, setTopic] = useState<Topic | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [showQuizResults, setShowQuizResults] = useState(false);
   const [activeTab, setActiveTab] = useState<'temario' | 'materiales'>('temario');
@@ -23,11 +24,13 @@ const TopicPage = () => {
 
   const loadTopic = async (topicId: string) => {
     setLoading(true);
+    setError(null);
     try {
       const data = await topicService.getById(topicId);
       setTopic(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading topic:', error);
+      setError(error?.response?.data?.message || 'No se pudo cargar el tema. Verifica que el tema existe y que tienes permisos para acceder.');
     } finally {
       setLoading(false);
     }
@@ -78,6 +81,39 @@ const TopicPage = () => {
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-primary"></div>
           <p className="mt-4 text-gray-600 font-medium">Cargando tema...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#f9f9fb]">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-16 h-16 text-red-500 mx-auto mb-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+            <h2 className="text-xl font-bold text-red-800 mb-2">Error al cargar el tema</h2>
+            <p className="text-red-600 mb-4">{error}</p>
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => navigate('/biblioteca')}
+                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover font-semibold"
+              >
+                Ir a Biblioteca
+              </button>
+              <button
+                onClick={() => navigate('/administrar')}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold"
+              >
+                Administrar Contenido
+              </button>
+            </div>
+          </div>
+          <p className="text-sm text-gray-500">
+            Asegúrate de crear temas para tus videos desde el panel de <strong>Administrar → Temas</strong>
+          </p>
         </div>
       </div>
     );
