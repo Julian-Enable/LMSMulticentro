@@ -210,7 +210,11 @@ const CoursePage = () => {
                           <span className="font-medium text-gray-900">{topic.title}</span>
                           <div className="flex items-center text-sm text-gray-500 ml-auto">
                             <Clock className="w-4 h-4 mr-1" />
-                            <span>{formatTimestamp(topic.timestamp)}</span>
+                            <span>
+                              {topic.duration
+                                ? formatTimestamp(topic.duration)
+                                : 'Ver tema'}
+                            </span>
                           </div>
                         </Link>
 
