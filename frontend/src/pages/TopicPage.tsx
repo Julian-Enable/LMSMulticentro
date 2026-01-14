@@ -51,6 +51,18 @@ const TopicPage = () => {
     }
   };
 
+  const handleVideoEnd = () => {
+    // Mark topic as completed when video ends
+    if (topicId && topic?.video?.category?.id) {
+      const categoryId = topic.video.category.id;
+      const saved = localStorage.getItem(`course-progress-${categoryId}`);
+      const completedTopics = saved ? new Set(JSON.parse(saved)) : new Set();
+      completedTopics.add(topicId);
+      localStorage.setItem(`course-progress-${categoryId}`, JSON.stringify(Array.from(completedTopics)));
+      console.log('Topic marked as completed:', topicId);
+    }
+  };
+
   const handleNavigation = async (direction: 'previous' | 'next') => {
     if (!topicId) return;
 
@@ -183,7 +195,11 @@ const TopicPage = () => {
             <div className="flex-1 min-w-0 flex flex-col gap-6">
               {/* Video Player Container */}
               <div className="bg-black rounded-xl overflow-hidden shadow-lg">
-                <VideoPlayer url={videoUrl} startTime={topic.timestamp} />
+                <VideoPlayer 
+                  url={videoUrl} 
+                  startTime={topic.timestamp}
+                  onEnded={handleVideoEnd}
+                />
               </div>
 
               {/* Video Info */}
