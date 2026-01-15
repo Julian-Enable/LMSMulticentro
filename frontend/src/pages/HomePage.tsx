@@ -83,7 +83,7 @@ const HomePage = () => {
           {/* Stat 1 */}
           <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-start justify-between hover:-translate-y-1 transition-transform">
             <div>
-              <p className="text-gray-500 text-sm font-medium mb-1">Total Categorías</p>
+              <p className="text-gray-500 text-sm font-medium mb-1">Total Cursos</p>
               <p className="text-3xl font-black text-primary tracking-tight">{categories.length}</p>
             </div>
             <div className="h-10 w-10 rounded-lg bg-blue-50 text-primary flex items-center justify-center">
@@ -125,7 +125,7 @@ const HomePage = () => {
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto px-8 pb-12">
         <div className="flex items-center justify-between mb-6 mt-4">
-          <h2 className="text-xl font-bold text-gray-900">Explorar Categorías</h2>
+          <h2 className="text-xl font-bold text-gray-900">Explorar Cursos</h2>
           <Link to="/library" className="text-sm font-semibold text-primary hover:underline">
             Ver todas
           </Link>

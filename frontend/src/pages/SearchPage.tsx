@@ -149,7 +149,7 @@ const SearchPage = () => {
               <div className="sticky top-0 flex flex-col gap-8 pb-10">
                 {/* Filter Group: Category */}
                 <div>
-                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Categoría</h3>
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Curso</h3>
                   <div className="flex flex-col gap-2">
                     {categories.map(category => (
                       <label key={category.id} className="flex items-center gap-3 cursor-pointer group">

@@ -64,7 +64,7 @@ export default function LibraryPage() {
                 Biblioteca de Cursos
               </h1>
               <p className="text-slate-500 mt-1">
-                Explora los cursos disponibles organizados por categoría.
+                Explora los cursos disponibles.
               </p>
             </div>
           </div>

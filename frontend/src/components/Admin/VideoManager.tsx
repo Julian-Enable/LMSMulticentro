@@ -425,7 +425,7 @@ const VideoManager = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Categoría <span className="text-red-500">*</span>
+                  Curso <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={formData.categoryId}
@@ -529,7 +529,7 @@ const VideoManager = () => {
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[100px]">Código</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider min-w-[300px]">Video</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden lg:table-cell w-[140px]">Código</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[180px]">Categoría</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[180px]">Curso</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell text-center w-[100px]">Detalles</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center w-[120px]">Acciones</th>
               </tr>
@@ -594,7 +594,7 @@ const VideoManager = () => {
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border ${getCategoryColor(video.category?.name || '')}`}>
-                        {video.category?.name || 'Sin categoría'}
+                        {video.category?.name || 'Sin curso'}
                       </span>
                     </td>
                     <td className="px-6 py-4 hidden sm:table-cell">

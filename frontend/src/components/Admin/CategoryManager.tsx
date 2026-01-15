@@ -89,11 +89,11 @@ const CategoryManager = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">Gestión de Categorías</h2>
+        <h2 className="text-xl font-bold text-gray-900">Gestión de Cursos</h2>
         {!isCreating && !editingId && (
           <button onClick={handleCreate} className="btn btn-primary flex items-center space-x-2">
             <Plus className="w-5 h-5" />
-            <span>Nueva Categoría</span>
+            <span>Nuevo Curso</span>
           </button>
         )}
       </div>
@@ -102,7 +102,7 @@ const CategoryManager = () => {
       {(isCreating || editingId) && (
         <div className="card bg-primary-50">
           <h3 className="font-semibold text-gray-900 mb-4">
-            {isCreating ? 'Crear Nueva Categoría' : 'Editar Categoría'}
+            {isCreating ? 'Crear Nuevo Curso' : 'Editar Curso'}
           </h3>
           <div className="space-y-4">
             <div>
@@ -125,7 +125,7 @@ const CategoryManager = () => {
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="input"
                 rows={3}
-                placeholder="Descripción de la categoría..."
+                placeholder="Descripción del curso..."
               />
             </div>
 
@@ -138,7 +138,7 @@ const CategoryManager = () => {
                 className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
               />
               <label htmlFor="isActive" className="ml-2 text-sm text-gray-700">
-                Categoría activa
+                Curso activo
               </label>
             </div>
 
@@ -163,7 +163,7 @@ const CategoryManager = () => {
       {/* Categories List */}
       <div className="space-y-2">
         {categories.length === 0 ? (
-          <div className="card text-center py-8 text-gray-500">No hay categorías creadas</div>
+          <div className="card text-center py-8 text-gray-500">No hay cursos creados</div>
         ) : (
           categories.map((category) => (
             <div key={category.id} className="card hover:shadow-md transition-shadow">

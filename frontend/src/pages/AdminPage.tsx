@@ -13,7 +13,7 @@ const AdminPage = () => {
   const isMockMode = import.meta.env.VITE_USE_MOCK === 'true';
 
   const tabs = [
-    { id: 'categories' as TabType, label: 'Categorías' },
+    { id: 'categories' as TabType, label: 'Cursos' },
     { id: 'videos' as TabType, label: 'Videos' },
     { id: 'users' as TabType, label: 'Usuarios' },
     // Hide these tabs in mock mode for now (not fully implemented)
@@ -33,7 +33,7 @@ const AdminPage = () => {
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-1">
               <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Gestión de Contenido</h1>
-              <p className="text-slate-500">Administra los videos, categorías y materiales de entrenamiento de la plataforma.</p>
+              <p className="text-slate-500">Administra los videos, cursos y materiales de entrenamiento de la plataforma.</p>
             </div>
 
             {/* Tabs */}
