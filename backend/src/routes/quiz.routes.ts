@@ -6,7 +6,7 @@ import {
   updateQuiz,
   deleteQuiz
 } from '../controllers/quiz.controller';
-import { authenticate, authorize } from '../middleware/auth.middleware';
+import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -15,8 +15,8 @@ router.get('/', getQuizzes);
 router.get('/:id', getQuizById);
 
 // Protected routes (Admin only)
-router.post('/', authenticate, authorize('ADMIN'), createQuiz);
-router.put('/:id', authenticate, authorize('ADMIN'), updateQuiz);
-router.delete('/:id', authenticate, authorize('ADMIN'), deleteQuiz);
+router.post('/', authenticate, createQuiz);
+router.put('/:id', authenticate, updateQuiz);
+router.delete('/:id', authenticate, deleteQuiz);
 
 export default router;

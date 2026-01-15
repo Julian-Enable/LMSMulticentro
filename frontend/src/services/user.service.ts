@@ -7,12 +7,12 @@ export const userService = {
     return response.data;
   },
 
-  async create(data: { username: string; email: string; password: string; role: string }): Promise<User> {
+  async create(data: { username: string; email: string; password: string; roleId: string }): Promise<User> {
     const response = await api.post('/users', data);
     return response.data;
   },
 
-  async update(id: string, data: { username?: string; email?: string; password?: string; role?: string }): Promise<User> {
+  async update(id: string, data: { username?: string; email?: string; password?: string; roleId?: string }): Promise<User> {
     const response = await api.put(`/users/${id}`, data);
     return response.data;
   },

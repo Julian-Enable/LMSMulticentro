@@ -82,7 +82,7 @@ const Navbar = () => {
           <span className="font-medium">Biblioteca</span>
         </Link>
 
-        {user?.role === 'ADMIN' && (
+        {user?.role?.code === 'ADMIN' && (
           <Link
             to="/admin"
             className={`flex items-center space-x-3 px-3 py-2 rounded transition-colors ${
@@ -105,7 +105,7 @@ const Navbar = () => {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-white truncate">{user?.username}</p>
-            <p className="text-xs text-primary-300">{user?.role}</p>
+            <p className="text-xs text-primary-300">{user?.role?.name || 'Sin rol'}</p>
           </div>
         </div>
         <button

@@ -10,28 +10,38 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Modelo de Rol (ahora dinámico y editable)
+model Role {
+  id          String   @id @default(uuid())
+  code        String   @unique // Ej: "CAJERO", "VENTAS"
+  name        String   // Nombre descriptivo: "Cajero", "Vendedor"
+  description String?
+  color       String   @default("#3B82F6") // Color para badges (hex)
+  isActive    Boolean  @default(true)
+  isSystem    Boolean  @default(false) // true para ADMIN, no se puede eliminar
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users              User[]
+  categoryRoles      CategoryRole[]
+
+  @@map("roles")
+}
+
 // Modelo de Usuario para administración
 model User {
   id        String   @id @default(uuid())
   username  String   @unique
   password  String
   email     String?  @unique
-  role      UserRole @default(EMPLOYEE)
+  roleId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("users")
-}
+  role Role @relation(fields: [roleId], references: [id])
 
-enum UserRole {
-  ADMIN
-  CAJERO
-  ADMINISTRADOR
-  GERENTE
-  VENTAS
-  INVENTARIO
-  SUPERVISOR
-  EMPLOYEE
+  @@index([roleId])
+  @@map("users")
 }
 
 // Modelo de Categoría (Ventas, Inventario, etc.)
@@ -41,13 +51,29 @@ model Category {
   description String?
   order       Int      @default(0)
   isActive    Boolean  @default(true)
-  allowedRoles String[] @default([]) // Roles que pueden ver este curso
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  videos Video[]
+  videos        Video[]
+  categoryRoles CategoryRole[]
 
   @@map("categories")
+}
+
+// Tabla intermedia para relación muchos a muchos entre Category y Role
+model CategoryRole {
+  id         String   @id @default(uuid())
+  categoryId String
+  roleId     String
+  createdAt  DateTime @default(now())
+
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  role     Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, roleId])
+  @@index([categoryId])
+  @@index([roleId])
+  @@map("category_roles")
 }
 
 // Modelo de Video (contiene múltiples temas)

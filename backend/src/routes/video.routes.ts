@@ -6,7 +6,7 @@ import {
   updateVideo,
   deleteVideo
 } from '../controllers/video.controller';
-import { authenticate, authorize } from '../middleware/auth.middleware';
+import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -15,8 +15,8 @@ router.get('/', getVideos);
 router.get('/:id', getVideoById);
 
 // Protected routes (Admin only)
-router.post('/', authenticate, authorize('ADMIN'), createVideo);
-router.put('/:id', authenticate, authorize('ADMIN'), updateVideo);
-router.delete('/:id', authenticate, authorize('ADMIN'), deleteVideo);
+router.post('/', authenticate, createVideo);
+router.put('/:id', authenticate, updateVideo);
+router.delete('/:id', authenticate, deleteVideo);
 
 export default router;

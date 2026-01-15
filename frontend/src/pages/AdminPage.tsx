@@ -5,8 +5,9 @@ import TopicManager from '../components/Admin/TopicManager';
 import TagManager from '../components/Admin/TagManager';
 import QuizManager from '../components/Admin/QuizManager';
 import UserManager from '../components/Admin/UserManager';
+import RoleManager from '../components/Admin/RoleManager';
 
-type TabType = 'categories' | 'videos' | 'topics' | 'tags' | 'quizzes' | 'users';
+type TabType = 'categories' | 'videos' | 'topics' | 'tags' | 'quizzes' | 'users' | 'roles';
 
 const AdminPage = () => {
   const [activeTab, setActiveTab] = useState<TabType>('videos');
@@ -16,6 +17,7 @@ const AdminPage = () => {
     { id: 'categories' as TabType, label: 'Cursos' },
     { id: 'videos' as TabType, label: 'Videos' },
     { id: 'users' as TabType, label: 'Usuarios' },
+    { id: 'roles' as TabType, label: 'Roles' },
     // Hide these tabs in mock mode for now (not fully implemented)
     ...(!isMockMode ? [
       { id: 'topics' as TabType, label: 'Temas' },
@@ -64,6 +66,7 @@ const AdminPage = () => {
             {activeTab === 'categories' && <CategoryManager />}
             {activeTab === 'videos' && <VideoManager />}
             {activeTab === 'users' && <UserManager />}
+            {activeTab === 'roles' && <RoleManager />}
             {activeTab === 'topics' && <TopicManager />}
             {activeTab === 'tags' && <TagManager />}
             {activeTab === 'quizzes' && <QuizManager />}

@@ -11,6 +11,7 @@ export const getUsers = async (req: Request, res: Response) => {
         id: true,
         username: true,
         email: true,
+        roleId: true,
         role: true,
         createdAt: true,
       },
@@ -28,10 +29,10 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { username, email, password, role } = req.body;
+    const { username, email, password, roleId } = req.body;
 
-    if (!username || !email || !password) {
-      return res.status(400).json({ message: 'Username, email, and password are required' });
+    if (!username || !email || !password || !roleId) {
+      return res.status(400).json({ message: 'Username, email, password, and role are required' });
     }
 
     // Check if user already exists
@@ -57,12 +58,13 @@ export const createUser = async (req: Request, res: Response) => {
         username,
         email,
         password: hashedPassword,
-        role: role || 'EMPLOYEE',
+        roleId,
       },
       select: {
         id: true,
         username: true,
         email: true,
+        roleId: true,
         role: true,
         createdAt: true,
       },
@@ -78,13 +80,13 @@ export const createUser = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { username, email, password, role } = req.body;
+    const { username, email, password, roleId } = req.body;
 
     const updateData: any = {};
     
     if (username) updateData.username = username;
     if (email) updateData.email = email;
-    if (role) updateData.role = role;
+    if (roleId) updateData.roleId = roleId;
     if (password) {
       updateData.password = await bcrypt.hash(password, 10);
     }
@@ -96,6 +98,7 @@ export const updateUser = async (req: Request, res: Response) => {
         id: true,
         username: true,
         email: true,
+        roleId: true,
         role: true,
         createdAt: true,
       },

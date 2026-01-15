@@ -22,18 +22,32 @@ async function createAdminUser() {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Get ADMIN role
+    const adminRole = await prisma.role.findFirst({
+      where: { code: 'ADMIN' }
+    });
+
+    if (!adminRole) {
+      console.log('❌ ADMIN role not found in database. Please run migrations first.');
+      process.exit(1);
+    }
+
     // Create admin user
     const adminUser = await prisma.user.create({
       data: {
         username,
         email,
         password: hashedPassword,
-        role: 'ADMIN',
+        roleId: adminRole.id,
       },
+      include: {
+        role: true
+      }
     });
 
     console.log('✅ Admin user created successfully!');
     console.log('📧 Username:', adminUser.username);
+    console.log('👤 Role:', adminUser.role.name);
     console.log('🔑 Password:', password);
     console.log('⚠️  Please change the password after first login!');
   } catch (error) {

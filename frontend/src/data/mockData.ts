@@ -39,6 +39,15 @@ export const mockUser: User = {
   id: 'user-1',
   username: 'Roberto Gómez',
   email: 'admin@multicentro.com',
-  role: 'EMPLOYEE',
+  roleId: 'role-1',
+  role: {
+    id: 'role-1',
+    code: 'EMPLOYEE',
+    name: 'Empleado',
+    description: 'Usuario regular',
+    color: '#6B7280',
+    isActive: true,
+    isSystem: false,
+  },
   createdAt: new Date('2024-01-01').toISOString(),
 };

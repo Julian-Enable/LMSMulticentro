@@ -4,7 +4,7 @@ import prisma from '../config/database';
 export const getCategories = async (req: Request, res: Response) => {
   try {
     const { isActive } = req.query;
-    const userRole = (req as any).user?.role; // Get user role from auth middleware
+    const userRoleId = (req as any).user?.roleId; // Get user role ID from auth middleware
 
     const categories = await prisma.category.findMany({
       where: isActive !== undefined ? { isActive: isActive === 'true' } : {},
@@ -18,19 +18,34 @@ export const getCategories = async (req: Request, res: Response) => {
               select: { id: true }
             }
           }
+        },
+        categoryRoles: {
+          include: {
+            role: true
+          }
         }
       },
       orderBy: { order: 'asc' }
     });
 
+    // Get user's role to check if ADMIN
+    let userRole = null;
+    if (userRoleId) {
+      userRole = await prisma.role.findUnique({
+        where: { id: userRoleId }
+      });
+    }
+
     // Filter categories by user role (unless user is ADMIN)
     const filteredCategories = categories.map(cat => ({
       ...cat,
-      videos: cat.videos.filter(v => v.isActive) // Filter active videos after query
+      videos: cat.videos.filter(v => v.isActive), // Filter active videos
+      allowedRoles: cat.categoryRoles.map(cr => cr.role.code) // For backward compatibility
     })).filter(cat => {
-      // Then filter by role
-      if (userRole === 'ADMIN') return true;
-      return cat.allowedRoles.length === 0 || cat.allowedRoles.includes(userRole);
+      // Filter by role access
+      if (userRole?.code === 'ADMIN') return true;
+      if (cat.categoryRoles.length === 0) return true; // No restrictions
+      return cat.categoryRoles.some(cr => cr.roleId === userRoleId);
     });
 
     res.json(filteredCategories);
@@ -73,7 +88,7 @@ export const getCategoryById = async (req: Request, res: Response) => {
 
 export const createCategory = async (req: Request, res: Response) => {
   try {
-    const { name, description, order, isActive } = req.body;
+    const { name, description, order, isActive, allowedRoles } = req.body;
 
     if (!name) {
       return res.status(400).json({ message: 'Name is required' });
@@ -84,7 +99,21 @@ export const createCategory = async (req: Request, res: Response) => {
         name,
         description,
         order: order || 0,
-        isActive: isActive !== undefined ? isActive : true
+        isActive: isActive !== undefined ? isActive : true,
+        ...(allowedRoles && allowedRoles.length > 0 && {
+          categoryRoles: {
+            create: allowedRoles.map((roleId: string) => ({
+              roleId
+            }))
+          }
+        })
+      },
+      include: {
+        categoryRoles: {
+          include: {
+            role: true
+          }
+        }
       }
     });
 
@@ -98,8 +127,9 @@ export const createCategory = async (req: Request, res: Response) => {
 export const updateCategory = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, description, order, isActive } = req.body;
+    const { name, description, order, isActive, allowedRoles } = req.body;
 
+    // Update basic fields
     const category = await prisma.category.update({
       where: { id: String(id) },
       data: {
@@ -110,7 +140,37 @@ export const updateCategory = async (req: Request, res: Response) => {
       }
     });
 
-    res.json(category);
+    // Update roles if provided
+    if (allowedRoles !== undefined) {
+      // Delete existing role assignments
+      await prisma.categoryRole.deleteMany({
+        where: { categoryId: String(id) }
+      });
+
+      // Create new role assignments
+      if (allowedRoles.length > 0) {
+        await prisma.categoryRole.createMany({
+          data: allowedRoles.map((roleId: string) => ({
+            categoryId: String(id),
+            roleId
+          }))
+        });
+      }
+    }
+
+    // Fetch updated category with roles
+    const updatedCategory = await prisma.category.findUnique({
+      where: { id: String(id) },
+      include: {
+        categoryRoles: {
+          include: {
+            role: true
+          }
+        }
+      }
+    });
+
+    res.json(updatedCategory);
   } catch (error) {
     console.error('Update category error:', error);
     res.status(500).json({ message: 'Internal server error' });

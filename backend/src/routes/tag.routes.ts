@@ -6,7 +6,7 @@ import {
   updateTag,
   deleteTag
 } from '../controllers/tag.controller';
-import { authenticate, authorize } from '../middleware/auth.middleware';
+import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -15,8 +15,8 @@ router.get('/', getTags);
 router.get('/:id', getTagById);
 
 // Protected routes (Admin only)
-router.post('/', authenticate, authorize('ADMIN'), createTag);
-router.put('/:id', authenticate, authorize('ADMIN'), updateTag);
-router.delete('/:id', authenticate, authorize('ADMIN'), deleteTag);
+router.post('/', authenticate, createTag);
+router.put('/:id', authenticate, updateTag);
+router.delete('/:id', authenticate, deleteTag);
 
 export default router;

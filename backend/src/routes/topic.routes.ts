@@ -9,7 +9,7 @@ import {
   getPreviousTopic,
   incrementTopicViews
 } from '../controllers/topic.controller';
-import { authenticate, authorize } from '../middleware/auth.middleware';
+import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -21,8 +21,8 @@ router.get('/:id/previous', getPreviousTopic);
 router.post('/:id/view', incrementTopicViews);
 
 // Protected routes (Admin only)
-router.post('/', authenticate, authorize('ADMIN'), createTopic);
-router.put('/:id', authenticate, authorize('ADMIN'), updateTopic);
-router.delete('/:id', authenticate, authorize('ADMIN'), deleteTopic);
+router.post('/', authenticate, createTopic);
+router.put('/:id', authenticate, updateTopic);
+router.delete('/:id', authenticate, deleteTopic);
 
 export default router;

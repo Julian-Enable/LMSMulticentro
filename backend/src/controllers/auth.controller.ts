@@ -13,7 +13,8 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const user = await prisma.user.findUnique({
-      where: { username }
+      where: { username },
+      include: { role: true }
     });
 
     if (!user) {
@@ -27,7 +28,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, username: user.username, role: user.role },
+      { id: user.id, username: user.username, roleId: user.roleId },
       process.env.JWT_SECRET || 'secret'
     );
 
@@ -66,19 +67,40 @@ export const register = async (req: Request, res: Response) => {
 
     // Check if this is the first user (make them admin)
     const userCount = await prisma.user.count();
-    const role = userCount === 0 ? 'ADMIN' : 'EMPLOYEE';
+    let roleId;
+    
+    if (userCount === 0) {
+      // First user gets ADMIN role
+      const adminRole = await prisma.role.findFirst({
+        where: { code: 'ADMIN' }
+      });
+      roleId = adminRole?.id;
+    } else {
+      // Default to EMPLOYEE role
+      const employeeRole = await prisma.role.findFirst({
+        where: { code: 'EMPLOYEE' }
+      });
+      roleId = employeeRole?.id;
+    }
+
+    if (!roleId) {
+      return res.status(500).json({ message: 'Default role not found in system' });
+    }
 
     const user = await prisma.user.create({
       data: {
         username,
         password: hashedPassword,
         email,
-        role
+        roleId
+      },
+      include: {
+        role: true
       }
     });
 
     const token = jwt.sign(
-      { id: user.id, username: user.username, role: user.role },
+      { id: user.id, username: user.username, roleId: user.roleId },
       process.env.JWT_SECRET || 'secret'
     );
 
@@ -134,9 +156,19 @@ export const makeAdmin = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Username is required' });
     }
 
+    // Get ADMIN role
+    const adminRole = await prisma.role.findFirst({
+      where: { code: 'ADMIN' }
+    });
+
+    if (!adminRole) {
+      return res.status(500).json({ message: 'ADMIN role not found in system' });
+    }
+
     const user = await prisma.user.update({
       where: { username },
-      data: { role: 'ADMIN' }
+      data: { roleId: adminRole.id },
+      include: { role: true }
     });
 
     res.json({

@@ -1,8 +1,25 @@
+export interface Role {
+  id: string;
+  code: string;
+  name: string;
+  description?: string;
+  color: string;
+  isActive: boolean;
+  isSystem: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  _count?: {
+    users: number;
+    categoryRoles: number;
+  };
+}
+
 export interface User {
   id: string;
   username: string;
   email?: string;
-  role: 'ADMIN' | 'CAJERO' | 'ADMINISTRADOR' | 'GERENTE' | 'VENTAS' | 'INVENTARIO' | 'SUPERVISOR' | 'EMPLOYEE';
+  roleId?: string;
+  role?: Role;
   createdAt?: string;
 }
 
@@ -12,7 +29,12 @@ export interface Category {
   description?: string;
   order: number;
   isActive: boolean;
-  allowedRoles?: string[]; // Roles que pueden ver este curso
+  allowedRoles?: string[]; // Array of role codes for backward compatibility
+  categoryRoles?: Array<{
+    id: string;
+    roleId: string;
+    role: Role;
+  }>;
   videoCount?: number;
   videos?: Video[];
   createdAt: string;
