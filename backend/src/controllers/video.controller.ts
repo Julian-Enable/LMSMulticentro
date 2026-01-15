@@ -19,6 +19,7 @@ export const getVideos = async (req: Request, res: Response) => {
             code: true, 
             title: true, 
             timestamp: true,
+            views: true,
             tags: {
               include: {
                 tag: true
