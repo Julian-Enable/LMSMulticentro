@@ -299,7 +299,7 @@ const SearchPage = () => {
 
                   {/* Load More */}
                   <div className="flex justify-center mt-4">
-                    <button className="px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 hover:text-primary transition-colors text-sm font-semibold shadow-sm w-full">
+                    <button className="px-6 py-3 bg-gray-50 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-primary transition-colors text-sm font-semibold shadow-sm w-full">
                       Cargar más resultados
                     </button>
                   </div>
