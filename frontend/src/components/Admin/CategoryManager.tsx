@@ -7,8 +7,24 @@ const CategoryManager = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ name: '', description: '', isActive: true });
+  const [formData, setFormData] = useState({ 
+    name: '', 
+    description: '', 
+    isActive: true,
+    allowedRoles: [] as string[]
+  });
   const [isCreating, setIsCreating] = useState(false);
+
+  const AVAILABLE_ROLES = [
+    { value: 'ADMIN', label: 'Administrador Sistema' },
+    { value: 'CAJERO', label: 'Cajero' },
+    { value: 'ADMINISTRADOR', label: 'Administrador Tienda' },
+    { value: 'GERENTE', label: 'Gerente' },
+    { value: 'VENTAS', label: 'Vendedor' },
+    { value: 'INVENTARIO', label: 'Inventario' },
+    { value: 'SUPERVISOR', label: 'Supervisor' },
+    { value: 'EMPLOYEE', label: 'Empleado General' },
+  ];
 
   useEffect(() => {
     loadCategories();
@@ -28,7 +44,7 @@ const CategoryManager = () => {
 
   const handleCreate = () => {
     setIsCreating(true);
-    setFormData({ name: '', description: '', isActive: true });
+    setFormData({ name: '', description: '', isActive: true, allowedRoles: [] });
   };
 
   const handleEdit = (category: Category) => {
@@ -37,6 +53,7 @@ const CategoryManager = () => {
       name: category.name,
       description: category.description || '',
       isActive: category.isActive,
+      allowedRoles: category.allowedRoles || [],
     });
   };
 
@@ -50,7 +67,7 @@ const CategoryManager = () => {
       
       setIsCreating(false);
       setEditingId(null);
-      setFormData({ name: '', description: '', isActive: true });
+      setFormData({ name: '', description: '', isActive: true, allowedRoles: [] });
       await loadCategories();
     } catch (error) {
       console.error('Error saving category:', error);
@@ -75,7 +92,16 @@ const CategoryManager = () => {
   const handleCancel = () => {
     setIsCreating(false);
     setEditingId(null);
-    setFormData({ name: '', description: '', isActive: true });
+    setFormData({ name: '', description: '', isActive: true, allowedRoles: [] });
+  };
+
+  const toggleRole = (role: string) => {
+    setFormData(prev => ({
+      ...prev,
+      allowedRoles: prev.allowedRoles.includes(role)
+        ? prev.allowedRoles.filter(r => r !== role)
+        : [...prev.allowedRoles, role]
+    }));
   };
 
   if (loading) {
@@ -127,6 +153,28 @@ const CategoryManager = () => {
                 rows={3}
                 placeholder="Descripción del curso..."
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Roles Permitidos <span className="text-gray-500 text-xs">(selecciona los roles que pueden ver este curso)</span>
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {AVAILABLE_ROLES.map(role => (
+                  <label key={role.value} className="flex items-center space-x-2 p-2 border rounded hover:bg-gray-50 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.allowedRoles.includes(role.value)}
+                      onChange={() => toggleRole(role.value)}
+                      className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                    />
+                    <span className="text-sm text-gray-700">{role.label}</span>
+                  </label>
+                ))}
+              </div>
+              {formData.allowedRoles.length === 0 && (
+                <p className="text-xs text-amber-600 mt-1">⚠️ Sin roles seleccionados, solo ADMIN podrá ver este curso</p>
+              )}
             </div>
 
             <div className="flex items-center">

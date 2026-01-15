@@ -4,6 +4,7 @@ import prisma from '../config/database';
 export const getCategories = async (req: Request, res: Response) => {
   try {
     const { isActive } = req.query;
+    const userRole = (req as any).user?.role; // Get user role from auth middleware
 
     const categories = await prisma.category.findMany({
       where: isActive !== undefined ? { isActive: isActive === 'true' } : {},
@@ -22,7 +23,15 @@ export const getCategories = async (req: Request, res: Response) => {
       orderBy: { order: 'asc' }
     });
 
-    res.json(categories);
+    // Filter categories by user role (unless user is ADMIN)
+    const filteredCategories = userRole === 'ADMIN' 
+      ? categories 
+      : categories.filter(cat => 
+          cat.allowedRoles.length === 0 || // No restrictions
+          cat.allowedRoles.includes(userRole) // User's role is allowed
+        );
+
+    res.json(filteredCategories);
   } catch (error) {
     console.error('Get categories error:', error);
     res.status(500).json({ message: 'Internal server error' });

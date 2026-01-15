@@ -24,9 +24,14 @@ model User {
 }
 
 enum UserRole {
-  EMPLOYEE
-  SUPERVISOR
   ADMIN
+  CAJERO
+  ADMINISTRADOR
+  GERENTE
+  VENTAS
+  INVENTARIO
+  SUPERVISOR
+  EMPLOYEE
 }
 
 // Modelo de Categoría (Ventas, Inventario, etc.)
@@ -36,6 +41,7 @@ model Category {
   description String?
   order       Int      @default(0)
   isActive    Boolean  @default(true)
+  allowedRoles String[] @default([]) // Roles que pueden ver este curso
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

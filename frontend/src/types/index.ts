@@ -2,7 +2,7 @@ export interface User {
   id: string;
   username: string;
   email?: string;
-  role: 'EMPLOYEE' | 'SUPERVISOR' | 'ADMIN';
+  role: 'ADMIN' | 'CAJERO' | 'ADMINISTRADOR' | 'GERENTE' | 'VENTAS' | 'INVENTARIO' | 'SUPERVISOR' | 'EMPLOYEE';
   createdAt?: string;
 }
 
@@ -12,6 +12,7 @@ export interface Category {
   description?: string;
   order: number;
   isActive: boolean;
+  allowedRoles?: string[]; // Roles que pueden ver este curso
   videoCount?: number;
   videos?: Video[];
   createdAt: string;
