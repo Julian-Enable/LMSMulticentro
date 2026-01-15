@@ -172,8 +172,15 @@ const CategoryManager = () => {
                   </label>
                 ))}
               </div>
-              {formData.allowedRoles.length === 0 && (
-                <p className="text-xs text-amber-600 mt-1">⚠️ Sin roles seleccionados, solo ADMIN podrá ver este curso</p>
+              {formData.allowedRoles.length === 0 ? (
+                <p className="text-xs text-green-600 mt-2 flex items-start">
+                  <span className="mr-1">✓</span>
+                  <span>Sin roles seleccionados = <strong>TODOS los usuarios podrán ver este curso</strong> (ideal para contenido general como errores comunes y soluciones)</span>
+                </p>
+              ) : (
+                <p className="text-xs text-blue-600 mt-2">
+                  ℹ️ Solo usuarios con los roles seleccionados podrán ver este curso
+                </p>
               )}
             </div>
 
