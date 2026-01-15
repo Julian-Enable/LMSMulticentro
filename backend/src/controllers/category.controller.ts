@@ -10,9 +10,9 @@ export const getCategories = async (req: Request, res: Response) => {
       where: isActive !== undefined ? { isActive: isActive === 'true' } : {},
       include: {
         videos: {
-          where: { isActive: true },
           select: { 
             id: true,
+            isActive: true,
             topics: {
               where: { isActive: true },
               select: { id: true }
@@ -24,12 +24,14 @@ export const getCategories = async (req: Request, res: Response) => {
     });
 
     // Filter categories by user role (unless user is ADMIN)
-    const filteredCategories = userRole === 'ADMIN' 
-      ? categories 
-      : categories.filter(cat => 
-          cat.allowedRoles.length === 0 || // No restrictions
-          cat.allowedRoles.includes(userRole) // User's role is allowed
-        );
+    const filteredCategories = categories.map(cat => ({
+      ...cat,
+      videos: cat.videos.filter(v => v.isActive) // Filter active videos after query
+    })).filter(cat => {
+      // Then filter by role
+      if (userRole === 'ADMIN') return true;
+      return cat.allowedRoles.length === 0 || cat.allowedRoles.includes(userRole);
+    });
 
     res.json(filteredCategories);
   } catch (error) {
