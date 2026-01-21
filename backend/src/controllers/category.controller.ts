@@ -37,11 +37,22 @@ export const getCategories = async (req: Request, res: Response) => {
     }
 
     // Filter categories by user role (unless user is ADMIN)
-    const filteredCategories = categories.map(cat => ({
-      ...cat,
-      videos: cat.videos.filter(v => v.isActive), // Filter active videos
-      allowedRoles: cat.categoryRoles.map(cr => cr.role.code) // For backward compatibility
-    })).filter(cat => {
+    const filteredCategories = categories.map(cat => {
+      const activeVideos = cat.videos.filter(v => v.isActive);
+      return {
+        id: cat.id,
+        name: cat.name,
+        description: cat.description,
+        order: cat.order,
+        isActive: cat.isActive,
+        createdAt: cat.createdAt,
+        updatedAt: cat.updatedAt,
+        videos: activeVideos, // Explicitly set filtered videos
+        videoCount: activeVideos.length, // Add count for convenience
+        allowedRoles: cat.categoryRoles.map(cr => cr.role.code), // For backward compatibility
+        categoryRoles: cat.categoryRoles
+      };
+    }).filter(cat => {
       // Filter by role access
       if (userRole?.code === 'ADMIN') return true;
       if (cat.categoryRoles.length === 0) return true; // No restrictions
