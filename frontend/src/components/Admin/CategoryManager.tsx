@@ -54,7 +54,7 @@ const CategoryManager = () => {
       name: category.name,
       description: category.description || '',
       isActive: category.isActive,
-      allowedRoles: category.allowedRoles || [],
+      allowedRoles: category.categoryRoles?.map(cr => cr.roleId) || [],
     });
   };
 
