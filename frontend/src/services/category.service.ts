@@ -8,6 +8,11 @@ export const categoryService = {
     return response.data;
   },
 
+  getAllAdmin: async (): Promise<Category[]> => {
+    const response = await api.get('/categories?admin=true');
+    return response.data;
+  },
+
   getById: async (id: string): Promise<Category> => {
     const response = await api.get(`/categories/${id}`);
     return response.data;

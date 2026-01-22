@@ -3,7 +3,7 @@ import prisma from '../config/database';
 
 export const getCategories = async (req: Request, res: Response) => {
   try {
-    const { isActive } = req.query;
+    const { isActive, admin } = req.query;
     const userRoleId = (req as any).user?.roleId; // Get user role ID from auth middleware
 
     const categories = await prisma.category.findMany({
@@ -53,6 +53,8 @@ export const getCategories = async (req: Request, res: Response) => {
         categoryRoles: cat.categoryRoles
       };
     }).filter(cat => {
+      // Skip filtering if admin mode is enabled
+      if (admin === 'true') return true;
       // Filter by role access
       if (userRole?.code === 'ADMIN') return true;
       if (cat.categoryRoles.length === 0) return true; // No restrictions
