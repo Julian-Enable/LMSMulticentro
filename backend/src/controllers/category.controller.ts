@@ -34,6 +34,7 @@ export const getCategories = async (req: Request, res: Response) => {
       userRole = await prisma.role.findUnique({
         where: { id: userRoleId }
       });
+      console.log('User role:', userRole?.code, 'User roleId:', userRoleId);
     }
 
     // Filter categories by user role (unless user is ADMIN)
@@ -56,9 +57,14 @@ export const getCategories = async (req: Request, res: Response) => {
       // Skip filtering if admin mode is enabled
       if (admin === 'true') return true;
       // Filter by role access
-      if (userRole?.code === 'ADMIN') return true;
-      if (cat.categoryRoles.length === 0) return true; // No restrictions
-      return cat.categoryRoles.some(cr => cr.roleId === userRoleId);
+      const isAdmin = userRole?.code === 'ADMIN';
+      const noRestrictions = cat.categoryRoles.length === 0;
+      const hasAccess = cat.categoryRoles.some(cr => cr.roleId === userRoleId);
+      console.log(`Category: ${cat.name}, isAdmin: ${isAdmin}, noRestrictions: ${noRestrictions}, hasAccess: ${hasAccess}, roles: ${cat.categoryRoles.map(cr => cr.roleId).join(',')}`);
+      
+      if (isAdmin) return true;
+      if (noRestrictions) return true;
+      return hasAccess;
     });
 
     res.json(filteredCategories);
