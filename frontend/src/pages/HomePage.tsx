@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { categoryService } from '../services/category.service';
-import { videoService } from '../services/video.service';
-import { Category, Video } from '../types';
+import { Category } from '../types';
 import { useAuthStore } from '../store/authStore';
 
 const HomePage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuthStore();
 
@@ -17,12 +15,8 @@ const HomePage = () => {
 
   const loadData = async () => {
     try {
-      const [categoriesData, videosData] = await Promise.all([
-        categoryService.getAll(true),
-        videoService.getAll(),
-      ]);
+      const categoriesData = await categoryService.getAll(true);
       setCategories(categoriesData);
-      setVideos(videosData);
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -30,16 +24,27 @@ const HomePage = () => {
     }
   };
 
-  // Calculate total duration from actual videos
-  const totalMinutes = videos.reduce((sum, video) => {
-    if (typeof video.duration === 'number') {
-      return sum + video.duration;
-    }
-    // Fallback: estimate 15 minutes per video if no duration
-    return sum + 15;
+  // Calculate total duration from topics in visible categories
+  const totalMinutes = categories.reduce((sum, category) => {
+    if (!category.videos) return sum;
+    
+    const categoryMinutes = category.videos.reduce((videoSum, video) => {
+      if (!video.topics) return videoSum;
+      
+      const videoTopicsMinutes = video.topics.reduce((topicSum, topic) => {
+        if (typeof topic.duration === 'number') {
+          return topicSum + topic.duration;
+        }
+        return topicSum;
+      }, 0);
+      
+      return videoSum + videoTopicsMinutes;
+    }, 0);
+    
+    return sum + categoryMinutes;
   }, 0);
 
-  const totalVideos = videos.length;
+  const totalVideos = categories.reduce((sum, cat) => sum + (cat.videoCount || 0), 0);
   const totalHours = Math.floor(totalMinutes / 60);
 
   return (
