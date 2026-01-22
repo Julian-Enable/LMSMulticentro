@@ -47,7 +47,17 @@ const HomePage = () => {
   const totalVideos = categories.reduce((sum, cat) => sum + (cat.videoCount || 0), 0);
   const totalHours = Math.floor(totalMinutes / 60);
   const remainingMinutes = totalMinutes % 60;
-  const totalTimeDisplay = remainingMinutes > 0 ? `${totalHours}h ${remainingMinutes}m` : `${totalHours}h`;
+  
+  let totalTimeDisplay = '';
+  if (totalHours > 0 && remainingMinutes > 0) {
+    totalTimeDisplay = `${totalHours}h ${remainingMinutes}m`;
+  } else if (totalHours > 0) {
+    totalTimeDisplay = `${totalHours}h`;
+  } else if (remainingMinutes > 0) {
+    totalTimeDisplay = `${remainingMinutes}m`;
+  } else {
+    totalTimeDisplay = '0m';
+  }
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#F8F8FA]">
