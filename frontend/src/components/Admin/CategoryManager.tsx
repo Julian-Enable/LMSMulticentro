@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { categoryService } from '../../services/category.service';
+import { roleService, Role } from '../../services/role.service';
 import { Category } from '../../types';
 
 const CategoryManager = () => {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ 
@@ -15,19 +17,9 @@ const CategoryManager = () => {
   });
   const [isCreating, setIsCreating] = useState(false);
 
-  const AVAILABLE_ROLES = [
-    { value: 'ADMIN', label: 'Administrador Sistema' },
-    { value: 'CAJERO', label: 'Cajero' },
-    { value: 'ADMINISTRADOR', label: 'Administrador Tienda' },
-    { value: 'GERENTE', label: 'Gerente' },
-    { value: 'VENTAS', label: 'Vendedor' },
-    { value: 'INVENTARIO', label: 'Inventario' },
-    { value: 'SUPERVISOR', label: 'Supervisor' },
-    { value: 'EMPLOYEE', label: 'Empleado General' },
-  ];
-
   useEffect(() => {
     loadCategories();
+    loadRoles();
   }, []);
 
   const loadCategories = async () => {
@@ -39,6 +31,15 @@ const CategoryManager = () => {
       console.error('Error loading categories:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadRoles = async () => {
+    try {
+      const data = await roleService.getAll(true); // Only active roles
+      setRoles(data);
+    } catch (error) {
+      console.error('Error loading roles:', error);
     }
   };
 
@@ -160,15 +161,15 @@ const CategoryManager = () => {
                 Roles Permitidos <span className="text-gray-500 text-xs">(selecciona los roles que pueden ver este curso)</span>
               </label>
               <div className="grid grid-cols-2 gap-2">
-                {AVAILABLE_ROLES.map(role => (
-                  <label key={role.value} className="flex items-center space-x-2 p-2 border rounded hover:bg-gray-50 cursor-pointer">
+                {roles.map(role => (
+                  <label key={role.id} className="flex items-center space-x-2 p-2 border rounded hover:bg-gray-50 cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={formData.allowedRoles.includes(role.value)}
-                      onChange={() => toggleRole(role.value)}
+                      checked={formData.allowedRoles.includes(role.id)}
+                      onChange={() => toggleRole(role.id)}
                       className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                     />
-                    <span className="text-sm text-gray-700">{role.label}</span>
+                    <span className="text-sm text-gray-700">{role.name}</span>
                   </label>
                 ))}
               </div>
