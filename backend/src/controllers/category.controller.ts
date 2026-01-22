@@ -5,6 +5,7 @@ export const getCategories = async (req: Request, res: Response) => {
   try {
     const { isActive, admin } = req.query;
     const userRoleId = (req as any).user?.roleId; // Get user role ID from auth middleware
+    console.log('getCategories - userRoleId from token:', userRoleId);
 
     const categories = await prisma.category.findMany({
       where: isActive !== undefined ? { isActive: isActive === 'true' } : {},
