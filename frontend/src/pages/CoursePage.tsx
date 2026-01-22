@@ -65,8 +65,8 @@ const CoursePage = () => {
     
     // Sort by code
     return topics.sort((a, b) => {
-      const [aMajor, aMinor] = a.code.split('.').map(Number);
-      const [bMajor, bMinor] = b.code.split('.').map(Number);
+      const [aMajor, aMinor] = a.code?.split('.').map(Number) || [0, 0];
+      const [bMajor, bMinor] = b.code?.split('.').map(Number) || [0, 0];
       
       if (aMajor !== bMajor) return aMajor - bMajor;
       return aMinor - bMinor;
@@ -177,8 +177,8 @@ const CoursePage = () => {
               <div className="space-y-2">
                 {video.topics
                   .sort((a, b) => {
-                    const [aMajor, aMinor] = a.code.split('.').map(Number);
-                    const [bMajor, bMinor] = b.code.split('.').map(Number);
+                    const [aMajor, aMinor] = a.code?.split('.').map(Number) || [0, 0];
+                    const [bMajor, bMinor] = b.code?.split('.').map(Number) || [0, 0];
                     if (aMajor !== bMajor) return aMajor - bMajor;
                     return aMinor - bMinor;
                   })
