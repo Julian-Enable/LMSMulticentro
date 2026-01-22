@@ -10,11 +10,11 @@ import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
 
-// Public routes
-router.get('/', getCategories);
-router.get('/:id', getCategoryById);
+// Protected routes - require authentication to get user role for filtering
+router.get('/', authenticate, getCategories);
+router.get('/:id', authenticate, getCategoryById);
 
-// Protected routes (Admin only)
+// Admin only routes
 router.post('/', authenticate, createCategory);
 router.put('/:id', authenticate, updateCategory);
 router.delete('/:id', authenticate, deleteCategory);
