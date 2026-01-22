@@ -100,6 +100,7 @@ export const getCategoryById = async (req: Request, res: Response) => {
 export const createCategory = async (req: Request, res: Response) => {
   try {
     const { name, description, order, isActive, allowedRoles } = req.body;
+    console.log('Creating category with data:', { name, description, order, isActive, allowedRoles });
 
     if (!name) {
       return res.status(400).json({ message: 'Name is required' });
@@ -128,6 +129,7 @@ export const createCategory = async (req: Request, res: Response) => {
       }
     });
 
+    console.log('Category created successfully:', category.id);
     res.status(201).json(category);
   } catch (error) {
     console.error('Create category error:', error);

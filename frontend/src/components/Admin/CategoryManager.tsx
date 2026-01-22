@@ -60,10 +60,13 @@ const CategoryManager = () => {
 
   const handleSave = async () => {
     try {
+      console.log('Guardando categoría:', formData);
       if (isCreating) {
-        await categoryService.create(formData);
+        const result = await categoryService.create(formData);
+        console.log('Categoría creada:', result);
       } else if (editingId) {
-        await categoryService.update(editingId, formData);
+        const result = await categoryService.update(editingId, formData);
+        console.log('Categoría actualizada:', result);
       }
       
       setIsCreating(false);
