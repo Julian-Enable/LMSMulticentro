@@ -46,6 +46,8 @@ const HomePage = () => {
 
   const totalVideos = categories.reduce((sum, cat) => sum + (cat.videoCount || 0), 0);
   const totalHours = Math.floor(totalMinutes / 60);
+  const remainingMinutes = totalMinutes % 60;
+  const totalTimeDisplay = remainingMinutes > 0 ? `${totalHours}h ${remainingMinutes}m` : `${totalHours}h`;
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#F8F8FA]">
@@ -116,7 +118,7 @@ const HomePage = () => {
           <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-start justify-between hover:-translate-y-1 transition-transform">
             <div>
               <p className="text-gray-500 text-sm font-medium mb-1">Horas de Contenido</p>
-              <p className="text-3xl font-black text-primary tracking-tight">{totalHours}h</p>
+              <p className="text-3xl font-black text-primary tracking-tight">{totalTimeDisplay}</p>
             </div>
             <div className="h-10 w-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
