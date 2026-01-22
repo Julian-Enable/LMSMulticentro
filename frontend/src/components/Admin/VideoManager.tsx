@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
+import { categoryService } from '../../services/category.service';
 import { Video, Category } from '../../types';
 import { mockVideos, mockCategories } from '../../data/mockData';
 import { youtubeService } from '../../services/youtube.service';
@@ -40,12 +41,12 @@ const VideoManager = () => {
         setVideos(mockVideos);
         setCategories(mockCategories);
       } else {
-        const [videosRes, categoriesRes] = await Promise.all([
+        const [videosRes, categoriesData] = await Promise.all([
           api.get('/videos'),
-          api.get('/categories?includeInactive=true'),
+          categoryService.getAllAdmin(),
         ]);
         setVideos(videosRes.data);
-        setCategories(categoriesRes.data);
+        setCategories(categoriesData);
       }
     } catch (error) {
       console.error('Error loading data:', error);
