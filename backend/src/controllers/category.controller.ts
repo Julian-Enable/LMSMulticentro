@@ -5,7 +5,6 @@ export const getCategories = async (req: Request, res: Response) => {
   try {
     const { isActive, admin } = req.query;
     const userRoleId = (req as any).user?.roleId; // Get user role ID from auth middleware
-    console.log('getCategories - userRoleId from token:', userRoleId);
 
     const categories = await prisma.category.findMany({
       where: isActive !== undefined ? { isActive: isActive === 'true' } : {},
@@ -39,7 +38,6 @@ export const getCategories = async (req: Request, res: Response) => {
       userRole = await prisma.role.findUnique({
         where: { id: userRoleId }
       });
-      console.log('User role:', userRole?.code, 'User roleId:', userRoleId);
     }
 
     // Filter categories by user role (unless user is ADMIN)
@@ -62,14 +60,9 @@ export const getCategories = async (req: Request, res: Response) => {
       // Skip filtering if admin mode is enabled
       if (admin === 'true') return true;
       // Filter by role access
-      const isAdmin = userRole?.code === 'ADMIN';
-      const noRestrictions = cat.categoryRoles.length === 0;
-      const hasAccess = cat.categoryRoles.some(cr => cr.roleId === userRoleId);
-      console.log(`Category: ${cat.name}, isAdmin: ${isAdmin}, noRestrictions: ${noRestrictions}, hasAccess: ${hasAccess}, roles: ${cat.categoryRoles.map(cr => cr.roleId).join(',')}`);
-      
-      if (isAdmin) return true;
-      if (noRestrictions) return true;
-      return hasAccess;
+      if (userRole?.code === 'ADMIN') return true;
+      if (cat.categoryRoles.length === 0) return true; // No restrictions
+      return cat.categoryRoles.some(cr => cr.roleId === userRoleId);
     });
 
     res.json(filteredCategories);
@@ -113,7 +106,6 @@ export const getCategoryById = async (req: Request, res: Response) => {
 export const createCategory = async (req: Request, res: Response) => {
   try {
     const { name, description, order, isActive, allowedRoles } = req.body;
-    console.log('Creating category with data:', { name, description, order, isActive, allowedRoles });
 
     if (!name) {
       return res.status(400).json({ message: 'Name is required' });
@@ -142,7 +134,6 @@ export const createCategory = async (req: Request, res: Response) => {
       }
     });
 
-    console.log('Category created successfully:', category.id);
     res.status(201).json(category);
   } catch (error) {
     console.error('Create category error:', error);
