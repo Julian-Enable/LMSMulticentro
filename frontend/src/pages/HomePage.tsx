@@ -24,23 +24,17 @@ const HomePage = () => {
     }
   };
 
-  // Calculate total duration from topics in visible categories
+  // Calculate total duration from videos in visible categories
   const totalMinutes = categories.reduce((sum, category) => {
     if (!category.videos) return sum;
     
     const categoryMinutes = category.videos.reduce((videoSum, video) => {
-      if (!video.topics) return videoSum;
-      
-      const videoTopicsMinutes = video.topics.reduce((topicSum, topic) => {
-        if (typeof topic.duration === 'number') {
-          // Convert duration from seconds to minutes
-          console.log('Topic duration:', topic.duration, 'seconds =', topic.duration / 60, 'minutes');
-          return topicSum + (topic.duration / 60);
-        }
-        return topicSum;
-      }, 0);
-      
-      return videoSum + videoTopicsMinutes;
+      if (typeof video.duration === 'number') {
+        // Convert duration from seconds to minutes
+        console.log('Video duration:', video.duration, 'seconds =', video.duration / 60, 'minutes');
+        return videoSum + (video.duration / 60);
+      }
+      return videoSum;
     }, 0);
     
     return sum + categoryMinutes;

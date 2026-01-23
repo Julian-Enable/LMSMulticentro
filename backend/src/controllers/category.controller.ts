@@ -14,6 +14,7 @@ export const getCategories = async (req: Request, res: Response) => {
           select: { 
             id: true,
             isActive: true,
+            duration: true,
             topics: {
               where: { isActive: true },
               select: { 
