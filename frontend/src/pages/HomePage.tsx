@@ -33,7 +33,8 @@ const HomePage = () => {
       
       const videoTopicsMinutes = video.topics.reduce((topicSum, topic) => {
         if (typeof topic.duration === 'number') {
-          return topicSum + topic.duration;
+          // Convert duration from seconds to minutes
+          return topicSum + (topic.duration / 60);
         }
         return topicSum;
       }, 0);
@@ -46,7 +47,7 @@ const HomePage = () => {
 
   const totalVideos = categories.reduce((sum, cat) => sum + (cat.videoCount || 0), 0);
   const totalHours = Math.floor(totalMinutes / 60);
-  const remainingMinutes = totalMinutes % 60;
+  const remainingMinutes = Math.floor(totalMinutes % 60);
   
   let totalTimeDisplay = '';
   if (totalHours > 0 && remainingMinutes > 0) {
