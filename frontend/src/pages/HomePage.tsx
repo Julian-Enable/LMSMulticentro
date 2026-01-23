@@ -34,6 +34,7 @@ const HomePage = () => {
       const videoTopicsMinutes = video.topics.reduce((topicSum, topic) => {
         if (typeof topic.duration === 'number') {
           // Convert duration from seconds to minutes
+          console.log('Topic duration:', topic.duration, 'seconds =', topic.duration / 60, 'minutes');
           return topicSum + (topic.duration / 60);
         }
         return topicSum;
@@ -44,6 +45,9 @@ const HomePage = () => {
     
     return sum + categoryMinutes;
   }, 0);
+
+  console.log('Total minutes calculated:', totalMinutes);
+  console.log('Categories data:', categories);
 
   const totalVideos = categories.reduce((sum, cat) => sum + (cat.videoCount || 0), 0);
   const totalHours = Math.floor(totalMinutes / 60);
