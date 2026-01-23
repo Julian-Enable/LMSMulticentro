@@ -83,8 +83,7 @@ export const getCategoryById = async (req: Request, res: Response) => {
           where: { isActive: true },
           include: {
             topics: {
-              where: { isActive: true },
-              select: { id: true }
+              where: { isActive: true }
             }
           },
           orderBy: { order: 'asc' }
