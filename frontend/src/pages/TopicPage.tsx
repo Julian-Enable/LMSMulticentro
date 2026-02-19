@@ -16,6 +16,8 @@ const TopicPage = () => {
   const [showQuizResults, setShowQuizResults] = useState(false);
   const [activeTab, setActiveTab] = useState<'temario' | 'materiales'>('temario');
   const [expandedDescription, setExpandedDescription] = useState(false);
+  const [hasPrevious, setHasPrevious] = useState<boolean | null>(null);
+  const [hasNext, setHasNext] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (topicId) {
@@ -32,7 +34,15 @@ const TopicPage = () => {
     try {
       const data = await topicService.getById(topicId);
       setTopic(data);
-      
+
+      // Check navigation availability
+      const [prevResult, nextResult] = await Promise.allSettled([
+        topicService.getPrevious(topicId),
+        topicService.getNext(topicId),
+      ]);
+      setHasPrevious(prevResult.status === 'fulfilled');
+      setHasNext(nextResult.status === 'fulfilled');
+
       // Increment views after loading
       try {
         await topicService.incrementViews(topicId);
@@ -109,7 +119,7 @@ const TopicPage = () => {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-primary"></div>
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-primary-600"></div>
           <p className="mt-4 text-gray-600 font-medium">Cargando tema...</p>
         </div>
       </div>
@@ -422,7 +432,8 @@ const TopicPage = () => {
                   <div className="flex items-center justify-between gap-2 mt-1">
                     <button 
                       onClick={() => handleNavigation('previous')}
-                      className="flex-1 py-2 px-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-700 hover:text-primary-700 hover:border-primary/30 hover:bg-gray-100 text-xs font-bold transition-colors flex items-center justify-center gap-1"
+                      disabled={hasPrevious === false}
+                      className="flex-1 py-2 px-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-700 hover:text-primary-700 hover:border-primary-600/30 hover:bg-gray-100 text-xs font-bold transition-colors flex items-center justify-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-gray-700 disabled:hover:bg-gray-50 disabled:hover:border-gray-300"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -431,7 +442,8 @@ const TopicPage = () => {
                     </button>
                     <button 
                       onClick={() => handleNavigation('next')}
-                      className="flex-1 py-2 px-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-700 hover:text-primary-700 hover:border-primary/30 hover:bg-gray-100 text-xs font-bold transition-colors flex items-center justify-center gap-1"
+                      disabled={hasNext === false}
+                      className="flex-1 py-2 px-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-700 hover:text-primary-700 hover:border-primary-600/30 hover:bg-gray-100 text-xs font-bold transition-colors flex items-center justify-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-gray-700 disabled:hover:bg-gray-50 disabled:hover:border-gray-300"
                     >
                       Siguiente
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
