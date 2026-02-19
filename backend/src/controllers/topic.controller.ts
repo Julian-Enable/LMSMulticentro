@@ -62,7 +62,7 @@ export const getTopicById = async (req: Request, res: Response) => {
                     topics: {
                       where: { isActive: true },
                       orderBy: { order: 'asc' },
-                      take: 1,
+
                       select: { id: true }
                     }
                   }

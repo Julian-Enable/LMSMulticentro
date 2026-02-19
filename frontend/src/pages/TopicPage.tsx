@@ -347,24 +347,28 @@ const TopicPage = () => {
 
                 {/* Progress Header */}
                 <div className="p-4 bg-gray-50 border-b border-gray-200">
-                  <div className="flex justify-between items-end mb-2">
-                    <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">Progreso del módulo</span>
-                    <span className="text-sm font-bold text-primary-600">
-                      {topic.video?.topics && topic.video.topics.length > 0
-                        ? Math.round(((topic.order + 1) / topic.video.topics.length) * 100)
-                        : 0}%
-                    </span>
-                  </div>
-                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-primary-600 rounded-full transition-all duration-300" 
-                      style={{ 
-                        width: `${topic.video?.topics && topic.video.topics.length > 0 
-                          ? Math.round(((topic.order + 1) / topic.video.topics.length) * 100) 
-                          : 0}%` 
-                      }}
-                    ></div>
-                  </div>
+                  {(() => {
+                    const categoryId = topic.video?.category?.id;
+                    const allTopics = topic.video?.category?.videos?.flatMap((v: any) => v.topics ?? []) ?? [];
+                    const total = allTopics.length;
+                    const saved = categoryId ? localStorage.getItem(`course-progress-${categoryId}`) : null;
+                    const completed = saved ? (JSON.parse(saved) as string[]).filter((id: string) => allTopics.some((t: any) => t.id === id)).length : 0;
+                    const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+                    return (
+                      <>
+                        <div className="flex justify-between items-end mb-2">
+                          <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">Progreso del curso</span>
+                          <span className="text-sm font-bold text-primary-600">{pct}%</span>
+                        </div>
+                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div className="h-full bg-primary-600 rounded-full transition-all duration-300" style={{ width: `${pct}%` }}></div>
+                        </div>
+                        {total > 0 && (
+                          <p className="text-xs text-gray-500 mt-1.5">{completed} de {total} temas completados</p>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
 
                 {/* Topics List */}
