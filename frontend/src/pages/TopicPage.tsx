@@ -16,6 +16,7 @@ const TopicPage = () => {
   const [showQuizResults, setShowQuizResults] = useState(false);
   const [activeTab, setActiveTab] = useState<'temario' | 'materiales'>('temario');
   const [expandedDescription, setExpandedDescription] = useState(false);
+  const [completedTopics, setCompletedTopics] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (topicId) {
@@ -32,6 +33,13 @@ const TopicPage = () => {
     try {
       const data = await topicService.getById(topicId);
       setTopic(data);
+
+      // Load completed topics from localStorage
+      const categoryId = data?.video?.category?.id;
+      if (categoryId) {
+        const saved = localStorage.getItem(`course-progress-${categoryId}`);
+        if (saved) setCompletedTopics(new Set(JSON.parse(saved)));
+      }
 
       // Increment views after loading
       try {
@@ -60,9 +68,10 @@ const TopicPage = () => {
     if (topic?.video?.category?.id) {
       const categoryId = topic.video.category.id;
       const saved = localStorage.getItem(`course-progress-${categoryId}`);
-      const completedTopics = saved ? new Set(JSON.parse(saved)) : new Set();
-      completedTopics.add(topicId);
-      localStorage.setItem(`course-progress-${categoryId}`, JSON.stringify(Array.from(completedTopics)));
+      const updated = saved ? new Set<string>(JSON.parse(saved)) : new Set<string>();
+      updated.add(topicId);
+      localStorage.setItem(`course-progress-${categoryId}`, JSON.stringify(Array.from(updated)));
+      setCompletedTopics(new Set(updated));
     }
   };
 
@@ -169,7 +178,12 @@ const TopicPage = () => {
     : [];
   const videoIdx = sortedVideos.findIndex(v => v.id === topic.videoId);
   const hasPrevious = videoIdx > 0;
-  const hasNext = videoIdx !== -1 && videoIdx < sortedVideos.length - 1;
+  // Siguiente solo si el módulo actual está completamente terminado
+  const currentVideoTopicIds: string[] = (topic.video as any)?.topics?.map((t: any) => t.id) ?? [];
+  const isCurrentModuleCompleted = currentVideoTopicIds.length > 0
+    ? currentVideoTopicIds.every(id => completedTopics.has(id))
+    : false;
+  const hasNext = videoIdx !== -1 && videoIdx < sortedVideos.length - 1 && isCurrentModuleCompleted;
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50">
@@ -454,12 +468,19 @@ const TopicPage = () => {
                     <button 
                       onClick={() => handleNavigation('next')}
                       disabled={hasNext === false}
+                      title={videoIdx !== -1 && videoIdx < sortedVideos.length - 1 && !isCurrentModuleCompleted ? 'Completá este módulo para continuar' : undefined}
                       className="flex-1 py-2 px-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-700 hover:text-primary-700 hover:border-primary-600/30 hover:bg-gray-100 text-xs font-bold transition-colors flex items-center justify-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-gray-700 disabled:hover:bg-gray-50 disabled:hover:border-gray-300"
                     >
+                      {videoIdx !== -1 && videoIdx < sortedVideos.length - 1 && !isCurrentModuleCompleted
+                        ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                        : null
+                      }
                       Siguiente
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                      </svg>
+                      {!(videoIdx !== -1 && videoIdx < sortedVideos.length - 1 && !isCurrentModuleCompleted) &&
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                      }
                     </button>
                   </div>
                 </div>

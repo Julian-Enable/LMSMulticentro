@@ -186,13 +186,26 @@ const CoursePage = () => {
 
       {/* Topics List by Video */}
       <div className="space-y-6">
-        {category.videos?.map((video: Video) => (
-          <div key={video.id} className="card">
+        {category.videos
+          ?.slice().sort((a: Video, b: Video) => a.order - b.order)
+          .map((video: Video, videoIndex: number, sortedVideos: Video[]) => {
+          // A module is locked if the previous module has incomplete topics
+          const isLocked = videoIndex > 0 && (() => {
+            const prevTopics = sortedVideos[videoIndex - 1].topics ?? [];
+            return prevTopics.some((t: Topic) => !completedTopics.has(t.id));
+          })();
+
+          return (
+          <div key={video.id} className={`card transition-opacity ${isLocked ? 'opacity-60' : ''}`}>
             <div className="flex items-start mb-4">
-              <PlayCircle className="w-6 h-6 text-primary-600 mr-3 flex-shrink-0 mt-1" />
+              {isLocked
+                ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-gray-400 mr-3 flex-shrink-0 mt-1"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                : <PlayCircle className="w-6 h-6 text-primary-600 mr-3 flex-shrink-0 mt-1" />
+              }
               <div>
                 <h3 className="text-xl font-semibold text-gray-900">{video.title}</h3>
                 {video.description && <p className="text-gray-600 mt-1">{video.description}</p>}
+                {isLocked && <p className="text-xs text-amber-600 font-medium mt-1">Completá el módulo anterior para desbloquear</p>}
               </div>
             </div>
 
@@ -212,11 +225,19 @@ const CoursePage = () => {
                       <div
                         key={topic.id}
                         className={`flex items-center justify-between p-3 rounded-lg border-2 transition-colors ${
-                          isCompleted
-                            ? 'border-green-500 bg-green-50'
-                            : 'border-gray-200 hover:border-primary-500'
+                          isLocked
+                            ? 'border-gray-200 bg-gray-50 cursor-not-allowed'
+                            : isCompleted
+                              ? 'border-green-500 bg-green-50'
+                              : 'border-gray-200 hover:border-primary-500'
                         }`}
                       >
+                        {isLocked ? (
+                          <div className="flex-1 flex items-center space-x-3 opacity-50">
+                            <span className="inline-block px-2 py-1 text-xs font-semibold rounded bg-gray-200 text-gray-500">{topic.code}</span>
+                            <span className="font-medium text-gray-500">{topic.title}</span>
+                          </div>
+                        ) : (
                         <Link
                           to={`/topic/${topic.id}`}
                           className="flex-1 flex items-center space-x-3"
@@ -240,20 +261,27 @@ const CoursePage = () => {
                             </span>
                           </div>
                         </Link>
+                        )}
 
                         <button
                           onClick={(e) => {
                             e.preventDefault();
-                            toggleTopicComplete(topic.id);
+                            if (!isLocked) toggleTopicComplete(topic.id);
                           }}
+                          disabled={isLocked}
                           className={`ml-4 p-2 rounded-full transition-colors ${
-                            isCompleted
-                              ? 'text-green-600 hover:bg-green-100'
-                              : 'text-gray-400 hover:bg-gray-100'
+                            isLocked
+                              ? 'text-gray-300 cursor-not-allowed'
+                              : isCompleted
+                                ? 'text-green-600 hover:bg-green-100'
+                                : 'text-gray-400 hover:bg-gray-100'
                           }`}
-                          title={isCompleted ? 'Marcar como pendiente' : 'Marcar como completado'}
+                          title={isLocked ? 'Módulo bloqueado' : isCompleted ? 'Marcar como pendiente' : 'Marcar como completado'}
                         >
-                          <CheckCircle className="w-5 h-5" />
+                          {isLocked
+                            ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                            : <CheckCircle className="w-5 h-5" />
+                          }
                         </button>
                       </div>
                     );
@@ -263,7 +291,8 @@ const CoursePage = () => {
               <p className="text-gray-500 text-sm">No hay temas disponibles para este video</p>
             )}
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Completion */}
