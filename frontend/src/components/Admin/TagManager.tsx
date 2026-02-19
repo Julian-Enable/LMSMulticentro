@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import api from '../../services/api';
 import { Tag } from '../../types';
@@ -55,7 +55,7 @@ const TagManager = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Â¿EstÃ¡s seguro de eliminar este tag?')) {
+    if (!confirm('¿Estás seguro de eliminar este tag?')) {
       return;
     }
 
@@ -85,7 +85,7 @@ const TagManager = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">GestiÃ³n de Tags</h2>
+        <h2 className="text-xl font-bold text-gray-900">Gestión de Tags</h2>
         {!isCreating && !editingId && (
           <button onClick={handleCreate} className="btn btn-primary flex items-center space-x-2">
             <Plus className="w-5 h-5" />

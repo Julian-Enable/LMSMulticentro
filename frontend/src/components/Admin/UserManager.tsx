@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { User, Role } from '../../types';
 import { userService } from '../../services/user.service';
 import { roleService } from '../../services/role.service';
@@ -78,7 +78,7 @@ const UserManager = () => {
       }
 
       if (isCreating && !formData.password) {
-        alert('La contraseÃ±a es requerida para crear un usuario');
+        alert('La contraseña es requerida para crear un usuario');
         return;
       }
 
@@ -119,7 +119,7 @@ const UserManager = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Â¿EstÃ¡s seguro de eliminar este usuario?')) {
+    if (!confirm('¿Estás seguro de eliminar este usuario?')) {
       return;
     }
 
@@ -197,14 +197,14 @@ const UserManager = () => {
               {isCreating && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    ContraseÃ±a <span className="text-red-500">*</span>
+                    Contraseña <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                    placeholder="••••••••"
                   />
                 </div>
               )}
@@ -282,7 +282,7 @@ const UserManager = () => {
                 <th className="px-6 py-4 text-left text-xs font-extrabold text-primary uppercase tracking-wider">Usuario</th>
                 <th className="px-6 py-4 text-left text-xs font-extrabold text-primary uppercase tracking-wider">Email</th>
                 <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase tracking-wider">Rol</th>
-                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase tracking-wider">Fecha CreaciÃ³n</th>
+                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase tracking-wider">Fecha Creación</th>
                 <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase tracking-wider w-32">Acciones</th>
               </tr>
             </thead>

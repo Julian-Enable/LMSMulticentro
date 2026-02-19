@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { PlayCircle, CheckCircle, Clock } from 'lucide-react';
 import { categoryService } from '../services/category.service';
@@ -247,12 +247,12 @@ const CoursePage = () => {
       {progress === 100 && (
         <div className="card text-center py-8 bg-green-50 border-2 border-green-500">
           <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">Â¡Curso Completado!</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">¡Curso Completado!</h3>
           <p className="text-gray-700 mb-4">
-            Has completado todos los temas de este curso. Â¡Excelente trabajo!
+            Has completado todos los temas de este curso. ¡Excelente trabajo!
           </p>
           <Link to="/" className="btn btn-primary">
-            Explorar mÃ¡s cursos
+            Explorar más cursos
           </Link>
         </div>
       )}

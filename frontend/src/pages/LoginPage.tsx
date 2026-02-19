@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+﻿import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/auth.service';
 import { useAuthStore } from '../store/authStore';
@@ -28,7 +28,7 @@ const LoginPage = () => {
       setAuth(response.token, response.user);
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Error al iniciar sesiÃ³n');
+      setError(err.response?.data?.message || 'Error al iniciar sesión');
     } finally {
       setLoading(false);
     }
@@ -93,12 +93,12 @@ const LoginPage = () => {
               {/* TextField: Password */}
               <label className="flex flex-col w-full">
                 <div className="flex justify-between items-center pb-2 ml-1">
-                  <p className="text-[#121118] text-sm font-semibold leading-normal">ContraseÃ±a</p>
+                  <p className="text-[#121118] text-sm font-semibold leading-normal">Contraseña</p>
                 </div>
                 <div className="flex w-full flex-1 items-stretch rounded-lg group focus-within:ring-1 focus-within:ring-primary">
                   <input
                     className="flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-l-lg text-[#121118] focus:outline-0 focus:ring-0 border border-[#d7d6e1] bg-[#f9f9fb] focus:border-primary border-r-0 h-12 placeholder:text-[#9CA3AF] p-[15px] text-base font-normal leading-normal transition-colors"
-                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                    placeholder="••••••••"
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -131,7 +131,7 @@ const LoginPage = () => {
                   disabled={loading}
                   className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-accent-500 hover:bg-[#a0252d] text-white text-base font-bold leading-normal tracking-[0.015em] shadow-md shadow-accent-500/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="truncate">{loading ? 'Iniciando sesiÃ³n...' : 'Iniciar SesiÃ³n'}</span>
+                  <span className="truncate">{loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}</span>
                 </button>
               </div>
 
@@ -141,7 +141,7 @@ const LoginPage = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                   </svg>
-                  Â¿Olvidaste tu contraseÃ±a?
+                  ¿Olvidaste tu contraseña?
                 </a>
               </div>
             </form>
@@ -161,7 +161,7 @@ const LoginPage = () => {
         <div className="mt-8 text-center px-4">
           <p className="text-xs text-gray-400 max-w-md mx-auto leading-relaxed">
             Este sistema es para uso exclusivo de personal autorizado de Multicentro. 
-            Cualquier acceso no autorizado serÃ¡ monitoreado y reportado.
+            Cualquier acceso no autorizado será monitoreado y reportado.
           </p>
         </div>
       </div>

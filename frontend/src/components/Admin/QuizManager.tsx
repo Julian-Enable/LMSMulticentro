@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import api from '../../services/api';
 import { Quiz, Topic } from '../../types';
@@ -103,7 +103,7 @@ const QuizManager = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Â¿EstÃ¡s seguro de eliminar este quiz?')) {
+    if (!confirm('¿Estás seguro de eliminar este quiz?')) {
       return;
     }
 
@@ -189,7 +189,7 @@ const QuizManager = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">GestiÃ³n de Quizzes</h2>
+        <h2 className="text-xl font-bold text-gray-900">Gestión de Quizzes</h2>
         {!isCreating && !editingId && (
           <button onClick={handleCreate} className="btn btn-primary flex items-center space-x-2">
             <Plus className="w-5 h-5" />
@@ -207,19 +207,19 @@ const QuizManager = () => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                TÃ­tulo <span className="text-red-500">*</span>
+                Título <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 className="input"
-                placeholder="Ej: EvaluaciÃ³n FacturaciÃ³n"
+                placeholder="Ej: Evaluación Facturación"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">DescripciÃ³n</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -299,7 +299,7 @@ const QuizManager = () => {
                             value={option.text}
                             onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
                             className="input flex-1"
-                            placeholder={`OpciÃ³n ${oIndex + 1}`}
+                            placeholder={`Opción ${oIndex + 1}`}
                           />
                           {question.options.length > 2 && (
                             <button
@@ -317,7 +317,7 @@ const QuizManager = () => {
                         onClick={() => addOption(qIndex)}
                         className="text-sm text-primary-600 hover:text-primary-700"
                       >
-                        + Agregar opciÃ³n
+                        + Agregar opción
                       </button>
                     </div>
                   </div>

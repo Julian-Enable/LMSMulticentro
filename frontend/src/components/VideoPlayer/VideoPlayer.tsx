@@ -1,4 +1,4 @@
-import ReactPlayer from 'react-player';
+﻿import ReactPlayer from 'react-player';
 import { OnProgressProps } from 'react-player/base';
 
 interface VideoPlayerProps {

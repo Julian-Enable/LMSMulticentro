@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { categoryService } from '../../services/category.service';
 import { Video, Category } from '../../types';
@@ -93,8 +93,8 @@ const VideoManager = () => {
 
       if (info.chapters.length > 0) {
         const createTopics = confirm(
-          `Se encontraron ${info.chapters.length} capÃ­tulos en la descripciÃ³n del video.\n\n` +
-          `Â¿Deseas crear automÃ¡ticamente los temas despuÃ©s de guardar el video?`
+          `Se encontraron ${info.chapters.length} capítulos en la descripción del video.\n\n` +
+          `¿Deseas crear automáticamente los temas después de guardar el video?`
         );
         if (createTopics) {
           // Store chapters for later creation
@@ -103,7 +103,7 @@ const VideoManager = () => {
       }
     } catch (error: any) {
       console.error('Error loading YouTube info:', error);
-      alert(error.response?.data?.message || 'Error al cargar informaciÃ³n del video. Verifica que la API key de YouTube estÃ© configurada.');
+      alert(error.response?.data?.message || 'Error al cargar información del video. Verifica que la API key de YouTube esté configurada.');
     } finally {
       setLoadingYoutubeInfo(false);
     }
@@ -209,7 +209,7 @@ const VideoManager = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Â¿EstÃ¡s seguro de eliminar este video? Se eliminarÃ¡n todos sus temas.')) {
+    if (!confirm('¿Estás seguro de eliminar este video? Se eliminarán todos sus temas.')) {
       return;
     }
 
@@ -302,32 +302,32 @@ const VideoManager = () => {
             <div className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  TÃ­tulo <span className="text-red-500">*</span>
+                  Título <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  placeholder="Ej: Tutorial de FacturaciÃ³n Parte 1"
+                  placeholder="Ej: Tutorial de Facturación Parte 1"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">DescripciÃ³n</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                   rows={3}
-                  placeholder="DescripciÃ³n del video..."
+                  placeholder="Descripción del video..."
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    CÃ³digo/ID <span className="text-red-500">*</span>
+                    Código/ID <span className="text-red-500">*</span>
                   </label>
                   <div className="flex gap-2">
                     <input
@@ -344,7 +344,7 @@ const VideoManager = () => {
                         disabled={loadingYoutubeInfo || (!formData.externalId && !formData.url)}
                         className="px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-accent-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap text-sm font-medium"
                       >
-                        {loadingYoutubeInfo ? 'â³' : 'ðŸ“º Auto'}
+                        {loadingYoutubeInfo ? '⏳' : '📺 Auto'}
                       </button>
                     )}
                   </div>
@@ -355,7 +355,7 @@ const VideoManager = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    DuraciÃ³n (segundos)
+                    Duración (segundos)
                   </label>
                   <input
                     type="text"
@@ -366,7 +366,7 @@ const VideoManager = () => {
                     readOnly={loadingYoutubeInfo}
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    Se autocompleta con el botÃ³n Auto
+                    Se autocompleta con el botón Auto
                   </p>
                 </div>
               </div>
@@ -420,7 +420,7 @@ const VideoManager = () => {
                   readOnly={loadingYoutubeInfo}
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Se autocompleta con el botÃ³n Auto
+                  Se autocompleta con el botón Auto
                 </p>
               </div>
 
@@ -491,7 +491,7 @@ const VideoManager = () => {
               </div>
               <input
                 className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-slate-700"
-                placeholder="Buscar por tÃ­tulo, ID o etiqueta..."
+                placeholder="Buscar por título, ID o etiqueta..."
                 type="text"
                 value={searchQuery}
                 onChange={(e) => {
@@ -527,9 +527,9 @@ const VideoManager = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50/80 border-b border-slate-200">
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[100px]">CÃ³digo</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[100px]">Código</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider min-w-[300px]">Video</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden lg:table-cell w-[140px]">CÃ³digo</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden lg:table-cell w-[140px]">Código</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[180px]">Curso</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell text-center w-[100px]">Detalles</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center w-[120px]">Acciones</th>
@@ -636,7 +636,7 @@ const VideoManager = () => {
                         </button>
                         <button
                           className="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg transition-all relative group/menu"
-                          title="MÃ¡s opciones"
+                          title="Más opciones"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />

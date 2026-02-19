@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { topicService } from '../services/topic.service';
 import { Topic } from '../types';
@@ -22,7 +22,7 @@ const TopicPage = () => {
       loadTopic(topicId);
     } else {
       console.error('No topic ID provided');
-      setError('No se proporcionÃ³ ID del tema');
+      setError('No se proporcionó ID del tema');
       setLoading(false);
     }
   }, [topicId]);
@@ -139,7 +139,7 @@ const TopicPage = () => {
             </div>
           </div>
           <p className="text-sm text-gray-500">
-            AsegÃºrate de crear temas para tus videos desde el panel de <strong>Administrar â†’ Temas</strong>
+            Asegúrate de crear temas para tus videos desde el panel de <strong>Administrar → Temas</strong>
           </p>
         </div>
       </div>
@@ -215,11 +215,11 @@ const TopicPage = () => {
                         </svg>
                         {topic.views || 0} vistas
                       </span>
-                      <span>â€¢</span>
+                      <span>•</span>
                       <span>Publicado {new Date(topic.createdAt || Date.now()).toLocaleDateString('es-ES', { month: 'long', day: 'numeric' })}</span>
                       {topic.video?.category && (
                         <>
-                          <span>â€¢</span>
+                          <span>•</span>
                           <span className="px-2 py-0.5 rounded bg-gray-200 text-gray-900 text-xs font-bold uppercase tracking-wide">
                             {topic.video.category.name}
                           </span>
@@ -260,7 +260,7 @@ const TopicPage = () => {
 
                 {/* Description */}
                 <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                  <h3 className="text-gray-900 text-lg font-bold mb-3">Sobre esta lecciÃ³n</h3>
+                  <h3 className="text-gray-900 text-lg font-bold mb-3">Sobre esta lección</h3>
                   <div className="prose prose-sm max-w-none text-gray-600">
                     {topic.description ? (
                       <p className={`leading-relaxed ${!expandedDescription ? 'line-clamp-3' : ''}`}>
@@ -268,7 +268,7 @@ const TopicPage = () => {
                       </p>
                     ) : (
                       <p className="leading-relaxed">
-                        En este mÃ³dulo aprenderÃ¡s sobre {topic.title}. Contenido diseÃ±ado para mejorar tus habilidades y conocimientos en el Ã¡rea.
+                        En este módulo aprenderás sobre {topic.title}. Contenido diseñado para mejorar tus habilidades y conocimientos en el área.
                       </p>
                     )}
 
@@ -288,7 +288,7 @@ const TopicPage = () => {
                     onClick={() => setExpandedDescription(!expandedDescription)}
                     className="text-primary text-sm font-bold flex items-center gap-1 mt-2 hover:underline"
                   >
-                    {expandedDescription ? 'Ver menos' : 'Ver mÃ¡s'}
+                    {expandedDescription ? 'Ver menos' : 'Ver más'}
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-[18px] h-[18px] transition-transform ${expandedDescription ? 'rotate-180' : ''}`}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
@@ -304,7 +304,7 @@ const TopicPage = () => {
                   </div>
                   <div className="flex-1">
                     <h4 className="text-gray-900 font-bold text-sm">Tus notas personales</h4>
-                    <p className="text-gray-600 text-xs">Agrega notas en momentos especÃ­ficos del video para repasar luego.</p>
+                    <p className="text-gray-600 text-xs">Agrega notas en momentos específicos del video para repasar luego.</p>
                   </div>
                   <button className="text-primary text-sm font-bold hover:underline">Abrir Notas</button>
                 </div>
@@ -342,7 +342,7 @@ const TopicPage = () => {
                 {/* Progress Header */}
                 <div className="p-4 bg-gray-50 border-b border-gray-200">
                   <div className="flex justify-between items-end mb-2">
-                    <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">Progreso del mÃ³dulo</span>
+                    <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">Progreso del módulo</span>
                     <span className="text-sm font-bold text-primary">
                       {topic.video?.topics && topic.video.topics.length > 0
                         ? Math.round(((topic.order + 1) / topic.video.topics.length) * 100)
@@ -386,7 +386,7 @@ const TopicPage = () => {
 
                     {/* Placeholder for other topics */}
                     <div className="text-center py-8 text-gray-500 text-sm">
-                      Otros temas del mÃ³dulo aparecerÃ¡n aquÃ­
+                      Otros temas del módulo aparecerán aquí
                     </div>
                   </div>
                 ) : (
@@ -395,7 +395,7 @@ const TopicPage = () => {
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 text-gray-300 mx-auto mb-3">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                       </svg>
-                      <p>Materiales disponibles prÃ³ximamente</p>
+                      <p>Materiales disponibles próximamente</p>
                     </div>
                   </div>
                 )}
@@ -442,8 +442,8 @@ const TopicPage = () => {
               {/* Optional Promo / Help Card */}
               <div className="bg-gradient-to-br from-primary to-gray-900 rounded-xl p-5 text-white shadow-lg relative overflow-hidden">
                 <div className="absolute top-0 right-0 -mt-2 -mr-2 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
-                <h4 className="font-bold text-lg relative z-10">Â¿Tienes dudas?</h4>
-                <p className="text-white/80 text-sm mt-1 mb-4 relative z-10">Consulta con tu instructor o revisa el foro de discusiÃ³n.</p>
+                <h4 className="font-bold text-lg relative z-10">¿Tienes dudas?</h4>
+                <p className="text-white/80 text-sm mt-1 mb-4 relative z-10">Consulta con tu instructor o revisa el foro de discusión.</p>
                 <button className="w-full py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-sm font-bold backdrop-blur-sm transition-colors">
                   Ir al Foro
                 </button>
@@ -455,7 +455,7 @@ const TopicPage = () => {
           {topic.quizzes && topic.quizzes.length > 0 && (
             <div id="quiz-section" className="px-4 md:px-6 pb-10 max-w-4xl">
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">EvaluaciÃ³n</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Evaluación</h2>
 
                 <div className="space-y-6">
                   {topic.quizzes.map((question: any, qIndex: number) => (

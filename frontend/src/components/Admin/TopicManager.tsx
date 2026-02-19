@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import api from '../../services/api';
 import { Topic, Video, Tag } from '../../types';
@@ -93,7 +93,7 @@ const TopicManager = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Â¿EstÃ¡s seguro de eliminar este tema?')) {
+    if (!confirm('¿Estás seguro de eliminar este tema?')) {
       return;
     }
 
@@ -146,7 +146,7 @@ const TopicManager = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">GestiÃ³n de Temas</h2>
+        <h2 className="text-xl font-bold text-gray-900">Gestión de Temas</h2>
         {!isCreating && !editingId && (
           <button onClick={handleCreate} className="btn btn-primary flex items-center space-x-2">
             <Plus className="w-5 h-5" />
@@ -165,7 +165,7 @@ const TopicManager = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  CÃ³digo <span className="text-red-500">*</span>
+                  Código <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -194,7 +194,7 @@ const TopicManager = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                TÃ­tulo <span className="text-red-500">*</span>
+                Título <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -206,13 +206,13 @@ const TopicManager = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">DescripciÃ³n</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="input"
                 rows={3}
-                placeholder="DescripciÃ³n del tema..."
+                placeholder="Descripción del tema..."
               />
             </div>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import CategoryManager from '../components/Admin/CategoryManager';
 import VideoManager from '../components/Admin/VideoManager';
 import TopicManager from '../components/Admin/TopicManager';
@@ -34,7 +34,7 @@ const AdminPage = () => {
           {/* Page Header & Tabs */}
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-1">
-              <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">GestiÃ³n de Contenido</h1>
+              <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Gestión de Contenido</h1>
               <p className="text-slate-500">Administra los videos, cursos y materiales de entrenamiento de la plataforma.</p>
             </div>
 

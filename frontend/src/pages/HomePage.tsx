@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { categoryService } from '../services/category.service';
 import { Category } from '../types';
@@ -64,7 +64,7 @@ const HomePage = () => {
             <h1 className="text-3xl font-extrabold text-[#121118] tracking-tight">
               Bienvenido de vuelta, {user?.username}
             </h1>
-            <p className="text-[#636085] mt-1">AquÃ­ estÃ¡ el resumen de tu aprendizaje hoy.</p>
+            <p className="text-[#636085] mt-1">Aquí está el resumen de tu aprendizaje hoy.</p>
           </div>
           <div className="flex gap-3">
             {/* Secondary Actions */}
