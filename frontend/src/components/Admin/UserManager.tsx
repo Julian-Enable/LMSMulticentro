@@ -176,7 +176,7 @@ const UserManager = () => {
                   type="text"
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   placeholder="roberto.gomez"
                 />
               </div>
@@ -189,7 +189,7 @@ const UserManager = () => {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   placeholder="roberto@multicentro.com"
                 />
               </div>
@@ -203,7 +203,7 @@ const UserManager = () => {
                     type="password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                     placeholder="••••••••"
                   />
                 </div>
@@ -216,7 +216,7 @@ const UserManager = () => {
                 <select
                   value={formData.roleId}
                   onChange={(e) => setFormData({ ...formData, roleId: e.target.value })}
-                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                 >
                   <option value="">Seleccionar rol...</option>
                   {roles.filter(r => r.isActive).map(role => (
@@ -236,7 +236,7 @@ const UserManager = () => {
               <button
                 onClick={handleSave}
                 disabled={!formData.username || !formData.email || (isCreating && !formData.password)}
-                className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-lg text-sm font-bold shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg text-sm font-bold shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -259,7 +259,7 @@ const UserManager = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar usuarios..."
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
           />
         </div>
         <button
@@ -277,13 +277,13 @@ const UserManager = () => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gradient-to-r from-primary/5 to-purple-50 border-b-2 border-primary/20">
+            <thead className="bg-gradient-to-r from-primary-600/5 to-purple-50 border-b-2 border-primary-600/20">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary uppercase tracking-wider">Usuario</th>
-                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary uppercase tracking-wider">Email</th>
-                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase tracking-wider">Rol</th>
-                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase tracking-wider">Fecha Creación</th>
-                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase tracking-wider w-32">Acciones</th>
+                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 uppercase tracking-wider">Usuario</th>
+                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 uppercase tracking-wider">Rol</th>
+                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 uppercase tracking-wider">Fecha Creación</th>
+                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 uppercase tracking-wider w-32">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -344,7 +344,7 @@ const UserManager = () => {
                       <div className="flex items-center justify-center gap-1">
                         <button
                           onClick={() => handleEdit(user)}
-                          className="p-2.5 text-white bg-primary hover:bg-primary-hover rounded-lg transition-all shadow-sm hover:shadow-md"
+                          className="p-2.5 text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-all shadow-sm hover:shadow-md"
                           title="Editar usuario"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
