@@ -25,7 +25,7 @@ const Navbar = () => {
         </Link>
         <div className="ml-auto">
           <Link to="/login" className="px-4 py-2 bg-accent-500 text-white rounded font-medium hover:bg-accent-600">
-            Iniciar Sesión
+            Iniciar SesiÃ³n
           </Link>
         </div>
       </nav>
@@ -113,7 +113,7 @@ const Navbar = () => {
           className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-primary-600 hover:bg-primary-500 rounded text-sm font-medium transition-colors"
         >
           <LogOut className="w-4 h-4" />
-          <span>Cerrar Sesión</span>
+          <span>Cerrar SesiÃ³n</span>
         </button>
       </div>
     </aside>

@@ -60,7 +60,7 @@ const RoleManager = () => {
   const handleSave = async () => {
     try {
       if (!formData.code || !formData.name) {
-        alert('Código y nombre son requeridos');
+        alert('CÃ³digo y nombre son requeridos');
         return;
       }
 
@@ -110,7 +110,7 @@ const RoleManager = () => {
       return;
     }
 
-    if (!confirm(`¿Estás seguro de eliminar el rol "${role.name}"?`)) {
+    if (!confirm(`Â¿EstÃ¡s seguro de eliminar el rol "${role.name}"?`)) {
       return;
     }
 
@@ -137,7 +137,7 @@ const RoleManager = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Gestión de Roles</h2>
+          <h2 className="text-2xl font-bold text-gray-900">GestiÃ³n de Roles</h2>
           <p className="text-sm text-gray-500 mt-1">Crea y administra los roles del sistema</p>
         </div>
         {!isCreating && !editingId && (
@@ -160,8 +160,8 @@ const RoleManager = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Código <span className="text-red-500">*</span>
-                <span className="text-xs text-gray-500 ml-2">(ej: CONTADOR, sin espacios, mayúsculas)</span>
+                CÃ³digo <span className="text-red-500">*</span>
+                <span className="text-xs text-gray-500 ml-2">(ej: CONTADOR, sin espacios, mayÃºsculas)</span>
               </label>
               <input
                 type="text"
@@ -187,13 +187,13 @@ const RoleManager = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">DescripciÃ³n</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="input"
                 rows={2}
-                placeholder="Descripción del rol..."
+                placeholder="DescripciÃ³n del rol..."
               />
             </div>
 
@@ -258,9 +258,9 @@ const RoleManager = () => {
           <table className="w-full">
             <thead className="bg-gradient-to-r from-primary/5 to-purple-50 border-b-2 border-primary/20">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary uppercase">Código</th>
+                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary uppercase">CÃ³digo</th>
                 <th className="px-6 py-4 text-left text-xs font-extrabold text-primary uppercase">Nombre</th>
-                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary uppercase">Descripción</th>
+                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary uppercase">DescripciÃ³n</th>
                 <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase">Color</th>
                 <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase">Usuarios</th>
                 <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase">Estado</th>

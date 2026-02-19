@@ -60,13 +60,13 @@ const CategoryManager = () => {
 
   const handleSave = async () => {
     try {
-      console.log('Guardando categoría:', formData);
+      console.log('Guardando categorÃ­a:', formData);
       if (isCreating) {
         const result = await categoryService.create(formData);
-        console.log('Categoría creada:', result);
+        console.log('CategorÃ­a creada:', result);
       } else if (editingId) {
         const result = await categoryService.update(editingId, formData);
-        console.log('Categoría actualizada:', result);
+        console.log('CategorÃ­a actualizada:', result);
       }
       
       setIsCreating(false);
@@ -75,12 +75,12 @@ const CategoryManager = () => {
       await loadCategories();
     } catch (error) {
       console.error('Error saving category:', error);
-      alert('Error al guardar la categoría');
+      alert('Error al guardar la categorÃ­a');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar esta categoría? Se eliminarán todos sus videos y temas.')) {
+    if (!confirm('Â¿EstÃ¡s seguro de eliminar esta categorÃ­a? Se eliminarÃ¡n todos sus videos y temas.')) {
       return;
     }
 
@@ -89,7 +89,7 @@ const CategoryManager = () => {
       await loadCategories();
     } catch (error) {
       console.error('Error deleting category:', error);
-      alert('Error al eliminar la categoría');
+      alert('Error al eliminar la categorÃ­a');
     }
   };
 
@@ -119,7 +119,7 @@ const CategoryManager = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">Gestión de Cursos</h2>
+        <h2 className="text-xl font-bold text-gray-900">GestiÃ³n de Cursos</h2>
         {!isCreating && !editingId && (
           <button onClick={handleCreate} className="btn btn-primary flex items-center space-x-2">
             <Plus className="w-5 h-5" />
@@ -144,18 +144,18 @@ const CategoryManager = () => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="input"
-                placeholder="Ej: Facturación"
+                placeholder="Ej: FacturaciÃ³n"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">DescripciÃ³n</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="input"
                 rows={3}
-                placeholder="Descripción del curso..."
+                placeholder="DescripciÃ³n del curso..."
               />
             </div>
 
@@ -178,12 +178,12 @@ const CategoryManager = () => {
               </div>
               {formData.allowedRoles.length === 0 ? (
                 <p className="text-xs text-green-600 mt-2 flex items-start">
-                  <span className="mr-1">✓</span>
-                  <span>Sin roles seleccionados = <strong>TODOS los usuarios podrán ver este curso</strong> (ideal para contenido general como errores comunes y soluciones)</span>
+                  <span className="mr-1">âœ“</span>
+                  <span>Sin roles seleccionados = <strong>TODOS los usuarios podrÃ¡n ver este curso</strong> (ideal para contenido general como errores comunes y soluciones)</span>
                 </p>
               ) : (
                 <p className="text-xs text-blue-600 mt-2">
-                  ℹ️ Solo usuarios con los roles seleccionados podrán ver este curso
+                  â„¹ï¸ Solo usuarios con los roles seleccionados podrÃ¡n ver este curso
                 </p>
               )}
             </div>

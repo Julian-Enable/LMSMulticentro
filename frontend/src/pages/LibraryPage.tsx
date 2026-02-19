@@ -98,7 +98,7 @@ export default function LibraryPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <p className="text-slate-500 text-lg font-medium">No se encontraron cursos</p>
-              <p className="text-slate-400 text-sm mt-1">Intenta ajustar tu búsqueda</p>
+              <p className="text-slate-400 text-sm mt-1">Intenta ajustar tu bÃºsqueda</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

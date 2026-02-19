@@ -78,7 +78,7 @@ const UserManager = () => {
       }
 
       if (isCreating && !formData.password) {
-        alert('La contraseña es requerida para crear un usuario');
+        alert('La contraseÃ±a es requerida para crear un usuario');
         return;
       }
 
@@ -119,7 +119,7 @@ const UserManager = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar este usuario?')) {
+    if (!confirm('Â¿EstÃ¡s seguro de eliminar este usuario?')) {
       return;
     }
 
@@ -197,14 +197,14 @@ const UserManager = () => {
               {isCreating && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Contraseña <span className="text-red-500">*</span>
+                    ContraseÃ±a <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                    placeholder="••••••••"
+                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                   />
                 </div>
               )}
@@ -264,7 +264,7 @@ const UserManager = () => {
         </div>
         <button
           onClick={handleCreate}
-          className="flex items-center gap-2 bg-accent hover:bg-red-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-red-900/20 transition-all"
+          className="flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-red-900/20 transition-all"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -282,7 +282,7 @@ const UserManager = () => {
                 <th className="px-6 py-4 text-left text-xs font-extrabold text-primary uppercase tracking-wider">Usuario</th>
                 <th className="px-6 py-4 text-left text-xs font-extrabold text-primary uppercase tracking-wider">Email</th>
                 <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase tracking-wider">Rol</th>
-                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase tracking-wider">Fecha Creación</th>
+                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase tracking-wider">Fecha CreaciÃ³n</th>
                 <th className="px-6 py-4 text-center text-xs font-extrabold text-primary uppercase tracking-wider w-32">Acciones</th>
               </tr>
             </thead>
@@ -353,7 +353,7 @@ const UserManager = () => {
                         </button>
                         <button
                           onClick={() => handleDelete(user.id)}
-                          className="p-2.5 text-white bg-accent hover:bg-red-700 rounded-lg transition-all shadow-sm hover:shadow-md"
+                          className="p-2.5 text-white bg-accent-500 hover:bg-accent-600 rounded-lg transition-all shadow-sm hover:shadow-md"
                           title="Eliminar usuario"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">

@@ -84,7 +84,7 @@ export default function CategoryCoursePage() {
     return (
       <div className="flex-1 flex items-center justify-center bg-[#f8f8fa]">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">Categoría no encontrada</p>
+          <p className="text-gray-600 mb-4">CategorÃ­a no encontrada</p>
           <button onClick={() => navigate('/')} className="text-primary hover:underline">
             Volver al inicio
           </button>
@@ -105,7 +105,7 @@ export default function CategoryCoursePage() {
                 Multicentro LMS
               </h1>
               <p className="text-[#636085] dark:text-gray-400 text-xs font-medium uppercase tracking-wider">
-                Formación Corporativa
+                FormaciÃ³n Corporativa
               </p>
             </div>
 
@@ -188,7 +188,7 @@ export default function CategoryCoursePage() {
             </Link>
             <span className="text-[#636085] dark:text-gray-500">/</span>
             <Link to="/library" className="text-[#636085] dark:text-gray-400 font-medium hover:text-primary dark:hover:text-white transition-colors">
-              Categorías
+              CategorÃ­as
             </Link>
             <span className="text-[#636085] dark:text-gray-500">/</span>
             <span className="text-primary dark:text-white font-bold bg-primary/5 dark:bg-primary/20 px-2 py-0.5 rounded text-xs uppercase tracking-wide">
@@ -209,7 +209,7 @@ export default function CategoryCoursePage() {
                     {category.name}: <span className="text-primary dark:text-indigo-400">Nivel Avanzado</span>
                   </h1>
                   <p className="text-[#636085] dark:text-gray-300 text-lg font-medium leading-relaxed max-w-2xl">
-                    {category.description || 'Domina las técnicas y estrategias avanzadas en este curso completo.'}
+                    {category.description || 'Domina las tÃ©cnicas y estrategias avanzadas en este curso completo.'}
                   </p>
                 </div>
 
@@ -239,7 +239,7 @@ export default function CategoryCoursePage() {
                     </div>
                     <div className="flex flex-col">
                       <p className="text-[#636085] dark:text-gray-400 text-xs font-bold uppercase tracking-wide">
-                        Duración
+                        DuraciÃ³n
                       </p>
                       <p className="text-[#121118] dark:text-white text-lg font-bold">
                         {calculateTotalDuration()}
@@ -336,7 +336,7 @@ export default function CategoryCoursePage() {
                                 if (topicId) {
                                   navigate(`/topic/${topicId}`);
                                 } else {
-                                  alert('Este video aún no tiene temas. Ve a Administrar → Temas para crear temas para este video.');
+                                  alert('Este video aÃºn no tiene temas. Ve a Administrar â†’ Temas para crear temas para este video.');
                                 }
                               }}
                               className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-9 px-5 bg-[#ebeaf0] dark:bg-gray-800 text-[#121118] dark:text-white hover:bg-primary hover:text-white dark:hover:bg-primary transition-all text-sm font-bold shadow-sm"
@@ -351,10 +351,10 @@ export default function CategoryCoursePage() {
                                 if (topicId) {
                                   navigate(`/topic/${topicId}`);
                                 } else {
-                                  alert('Este video aún no tiene temas. Ve a Administrar → Temas para crear temas para este video.');
+                                  alert('Este video aÃºn no tiene temas. Ve a Administrar â†’ Temas para crear temas para este video.');
                                 }
                               }}
-                              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-9 px-6 bg-accent text-white hover:bg-[#a0252c] transition-all text-sm font-bold shadow-md shadow-red-900/10"
+                              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-9 px-6 bg-accent-500 text-white hover:bg-[#a0252c] transition-all text-sm font-bold shadow-md shadow-red-900/10"
                             >
                               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M8 5v14l11-7z" />
@@ -414,12 +414,12 @@ export default function CategoryCoursePage() {
                     JP
                   </div>
                   <div className="flex flex-col">
-                    <p className="text-lg font-bold text-[#121118] dark:text-white">Juan Pérez</p>
+                    <p className="text-lg font-bold text-[#121118] dark:text-white">Juan PÃ©rez</p>
                     <p className="text-sm text-[#636085] dark:text-gray-400">Director de Ventas Global</p>
                   </div>
                 </div>
                 <p className="text-sm text-[#636085] dark:text-gray-300 leading-relaxed border-t border-[#ebeaf0] dark:border-gray-700 pt-4 mt-1">
-                  Experto en negociación con más de 15 años liderando equipos en Fortune 500.
+                  Experto en negociaciÃ³n con mÃ¡s de 15 aÃ±os liderando equipos en Fortune 500.
                 </p>
               </div>
 
@@ -437,8 +437,8 @@ export default function CategoryCoursePage() {
                       href="#"
                       className="text-sm text-[#636085] dark:text-gray-400 hover:text-primary dark:hover:text-white hover:underline decoration-1 underline-offset-4 decoration-primary/50 transition-all flex items-center gap-2"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                      PDF: Guía de Objeciones
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent-500"></span>
+                      PDF: GuÃ­a de Objeciones
                     </a>
                   </li>
                   <li>
@@ -446,8 +446,8 @@ export default function CategoryCoursePage() {
                       href="#"
                       className="text-sm text-[#636085] dark:text-gray-400 hover:text-primary dark:hover:text-white hover:underline decoration-1 underline-offset-4 decoration-primary/50 transition-all flex items-center gap-2"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                      Plantilla de Email Frío
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent-500"></span>
+                      Plantilla de Email FrÃ­o
                     </a>
                   </li>
                 </ul>

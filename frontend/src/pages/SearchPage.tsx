@@ -39,7 +39,7 @@ const SearchPage = () => {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       
-      // Buscar en título y código del video
+      // Buscar en tÃ­tulo y cÃ³digo del video
       const matchesVideo = video.title.toLowerCase().includes(query) ||
         video.externalId.toLowerCase().includes(query);
       
@@ -72,13 +72,13 @@ const SearchPage = () => {
         <div className="flex items-end justify-between">
           <div>
             <h2 className="text-3xl font-extrabold text-primary tracking-tight">Explorar Contenido</h2>
-            <p className="text-slate-500 mt-1">Encuentra guías, protocolos y cursos de entrenamiento.</p>
+            <p className="text-slate-500 mt-1">Encuentra guÃ­as, protocolos y cursos de entrenamiento.</p>
           </div>
           <div className="hidden md:flex items-center gap-2 text-sm text-slate-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
             </svg>
-            <span>Usa <kbd className="font-mono bg-slate-200 px-1 rounded text-slate-700">Cmd+K</kbd> para búsqueda rápida</span>
+            <span>Usa <kbd className="font-mono bg-slate-200 px-1 rounded text-slate-700">Cmd+K</kbd> para bÃºsqueda rÃ¡pida</span>
           </div>
         </div>
 
@@ -91,13 +91,13 @@ const SearchPage = () => {
           </div>
           <input
             className="block w-full pl-12 pr-28 py-4 bg-white border-0 rounded-xl text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-accent/20 focus:outline-none text-lg font-medium shadow-sm"
-            placeholder="Buscar por título, código o palabra clave..."
+            placeholder="Buscar por tÃ­tulo, cÃ³digo o palabra clave..."
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-            <button className="bg-accent hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            <button className="bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
               Buscar
             </button>
           </div>
@@ -132,8 +132,8 @@ const SearchPage = () => {
               className="border-0 bg-transparent text-sm font-medium text-slate-700 focus:ring-0 cursor-pointer pr-8 py-0"
             >
               <option value="relevance">Relevancia</option>
-              <option value="recent">Más recientes</option>
-              <option value="viewed">Más vistos</option>
+              <option value="recent">MÃ¡s recientes</option>
+              <option value="viewed">MÃ¡s vistos</option>
             </select>
           </div>
         </div>
@@ -221,13 +221,13 @@ const SearchPage = () => {
                           if (topicId) {
                             navigate(`/topic/${topicId}`);
                           } else {
-                            alert('Este video aún no tiene temas. Ve a Administrar → Temas para crear temas para este video.');
+                            alert('Este video aÃºn no tiene temas. Ve a Administrar â†’ Temas para crear temas para este video.');
                           }
                         }}
                         className="group bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col sm:flex-row gap-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer relative overflow-hidden"
                       >
                         {/* Selection Highlight */}
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
                         {/* Thumbnail */}
                         <div className="relative w-full sm:w-56 shrink-0 aspect-video rounded-lg overflow-hidden bg-slate-100">
@@ -258,14 +258,14 @@ const SearchPage = () => {
                             {video.externalId}
                           </span>
                           {index === 0 && (
-                            <span className="text-xs font-bold tracking-wide uppercase text-white bg-accent px-2 py-1 rounded">Obligatorio</span>
+                            <span className="text-xs font-bold tracking-wide uppercase text-white bg-accent-500 px-2 py-1 rounded">Obligatorio</span>
                           )}
                         </div>
                         <h3 className="text-lg font-bold text-primary group-hover:text-accent transition-colors leading-tight mb-2">
                           {video.title}
                         </h3>
                         <p className="text-sm text-slate-500 line-clamp-2 mb-3 leading-relaxed">
-                          {video.description || 'Contenido de capacitación disponible.'}
+                          {video.description || 'Contenido de capacitaciÃ³n disponible.'}
                         </p>
                         <div className="mt-auto flex items-center justify-between">
                           <div className="flex flex-wrap gap-2">
@@ -300,7 +300,7 @@ const SearchPage = () => {
                   {/* Load More */}
                   <div className="flex justify-center mt-4">
                     <button className="px-6 py-3 bg-gray-50 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-primary transition-colors text-sm font-semibold shadow-sm w-full">
-                      Cargar más resultados
+                      Cargar mÃ¡s resultados
                     </button>
                   </div>
                 </>
