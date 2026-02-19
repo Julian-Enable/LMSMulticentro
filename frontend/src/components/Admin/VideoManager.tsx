@@ -1,4 +1,4 @@
-Ôªøimport { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { categoryService } from '../../services/category.service';
 import { Video, Category } from '../../types';
@@ -93,8 +93,8 @@ const VideoManager = () => {
 
       if (info.chapters.length > 0) {
         const createTopics = confirm(
-          `Se encontraron ${info.chapters.length} cap√≠tulos en la descripci√≥n del video.\n\n` +
-          `¬øDeseas crear autom√°ticamente los temas despu√©s de guardar el video?`
+          `Se encontraron ${info.chapters.length} capÌtulos en la descripciÛn del video.\n\n` +
+          `øDeseas crear autom·ticamente los temas despuÈs de guardar el video?`
         );
         if (createTopics) {
           // Store chapters for later creation
@@ -103,7 +103,7 @@ const VideoManager = () => {
       }
     } catch (error: any) {
       console.error('Error loading YouTube info:', error);
-      alert(error.response?.data?.message || 'Error al cargar informaci√≥n del video. Verifica que la API key de YouTube est√© configurada.');
+      alert(error.response?.data?.message || 'Error al cargar informaciÛn del video. Verifica que la API key de YouTube estÈ configurada.');
     } finally {
       setLoadingYoutubeInfo(false);
     }
@@ -209,7 +209,7 @@ const VideoManager = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¬øEst√°s seguro de eliminar este video? Se eliminar√°n todos sus temas.')) {
+    if (!confirm('øEst·s seguro de eliminar este video? Se eliminar·n todos sus temas.')) {
       return;
     }
 
@@ -273,7 +273,7 @@ const VideoManager = () => {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="relative">
-          <div className="w-16 h-16 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
+          <div className="w-16 h-16 border-4 border-gray-200 border-t-primary-600 rounded-full animate-spin"></div>
         </div>
       </div>
     );
@@ -302,39 +302,39 @@ const VideoManager = () => {
             <div className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  T√≠tulo <span className="text-red-500">*</span>
+                  TÌtulo <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  placeholder="Ej: Tutorial de Facturaci√≥n Parte 1"
+                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                  placeholder="Ej: Tutorial de FacturaciÛn Parte 1"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Descripci√≥n</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">DescripciÛn</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   rows={3}
-                  placeholder="Descripci√≥n del video..."
+                  placeholder="DescripciÛn del video..."
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    C√≥digo/ID <span className="text-red-500">*</span>
+                    CÛdigo/ID <span className="text-red-500">*</span>
                   </label>
                   <div className="flex gap-2">
                     <input
                       type="text"
                       value={formData.externalId}
                       onChange={(e) => setFormData({ ...formData, externalId: e.target.value })}
-                      className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono"
+                      className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono"
                       placeholder="dQw4w9WgXcQ"
                     />
                     {formData.platform === 'YOUTUBE' && (
@@ -344,7 +344,7 @@ const VideoManager = () => {
                         disabled={loadingYoutubeInfo || (!formData.externalId && !formData.url)}
                         className="px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-accent-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap text-sm font-medium"
                       >
-                        {loadingYoutubeInfo ? '‚è≥' : 'üì∫ Auto'}
+                        {loadingYoutubeInfo ? '?' : '?? Auto'}
                       </button>
                     )}
                   </div>
@@ -355,18 +355,18 @@ const VideoManager = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Duraci√≥n (segundos)
+                    DuraciÛn (segundos)
                   </label>
                   <input
                     type="text"
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                     placeholder="300"
                     readOnly={loadingYoutubeInfo}
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    Se autocompleta con el bot√≥n Auto
+                    Se autocompleta con el botÛn Auto
                   </p>
                 </div>
               </div>
@@ -380,7 +380,7 @@ const VideoManager = () => {
                     type="text"
                     value={formData.url}
                     onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                     placeholder="https://youtube.com/watch?v=..."
                   />
                 </div>
@@ -397,7 +397,7 @@ const VideoManager = () => {
                         platform: e.target.value as typeof formData.platform,
                       })
                     }
-                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   >
                     <option value="YOUTUBE">YouTube</option>
                     <option value="DRIVE">Google Drive</option>
@@ -415,12 +415,12 @@ const VideoManager = () => {
                   type="text"
                   value={formData.thumbnailUrl}
                   onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   placeholder="https://i.ytimg.com/vi/..."
                   readOnly={loadingYoutubeInfo}
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Se autocompleta con el bot√≥n Auto
+                  Se autocompleta con el botÛn Auto
                 </p>
               </div>
 
@@ -431,7 +431,7 @@ const VideoManager = () => {
                 <select
                   value={formData.categoryId}
                   onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                 >
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
@@ -447,7 +447,7 @@ const VideoManager = () => {
                   id="videoIsActive"
                   checked={formData.isActive}
                   onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                  className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary/20"
+                  className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500/20"
                 />
                 <label htmlFor="videoIsActive" className="ml-2 text-sm text-gray-700">
                   Video activo
@@ -465,7 +465,7 @@ const VideoManager = () => {
               <button
                 onClick={handleSave}
                 disabled={!formData.title || !formData.url || !formData.categoryId || !formData.externalId}
-                className="flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -485,13 +485,13 @@ const VideoManager = () => {
           <div className="flex items-center gap-3 flex-1 min-w-[280px]">
             <div className="relative flex-1 max-w-md group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-slate-400 group-focus-within:text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-slate-400 group-focus-within:text-primary-600">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
               <input
-                className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-slate-700"
-                placeholder="Buscar por t√≠tulo, ID o etiqueta..."
+                className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-700"
+                placeholder="Buscar por tÌtulo, ID o etiqueta..."
                 type="text"
                 value={searchQuery}
                 onChange={(e) => {
@@ -513,7 +513,7 @@ const VideoManager = () => {
           {/* Right: Create Button */}
           <button
             onClick={handleCreate}
-            className="flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-md shadow-red-900/10 transition-all active:scale-95"
+            className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-md transition-all active:scale-95"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -527,9 +527,9 @@ const VideoManager = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50/80 border-b border-slate-200">
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[100px]">C√≥digo</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[100px]">CÛdigo</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider min-w-[300px]">Video</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden lg:table-cell w-[140px]">C√≥digo</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden lg:table-cell w-[140px]">CÛdigo</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[180px]">Curso</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell text-center w-[100px]">Detalles</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center w-[120px]">Acciones</th>
@@ -568,7 +568,7 @@ const VideoManager = () => {
                               className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
                             />
                           ) : (
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary-600/20 to-accent-500/20 flex items-center justify-center">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-gray-400">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
@@ -636,7 +636,7 @@ const VideoManager = () => {
                         </button>
                         <button
                           className="p-2 text-slate-400 hover:text-primary-700 hover:bg-slate-100 rounded-lg transition-all relative group/menu"
-                          title="M√°s opciones"
+                          title="M·s opciones"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
@@ -674,7 +674,7 @@ const VideoManager = () => {
                   onClick={() => setCurrentPage(page)}
                   className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium transition-colors ${
                     page === currentPage
-                      ? 'bg-primary text-white font-bold'
+                      ? 'bg-primary-600 text-white font-bold'
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
                 >

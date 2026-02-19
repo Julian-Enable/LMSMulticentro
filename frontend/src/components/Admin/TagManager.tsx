@@ -1,4 +1,4 @@
-ï»¿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import api from '../../services/api';
 import { Tag } from '../../types';
@@ -55,7 +55,7 @@ const TagManager = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Â¿EstÃ¡s seguro de eliminar este tag?')) {
+    if (!confirm('¿Estás seguro de eliminar este tag?')) {
       return;
     }
 
@@ -85,7 +85,7 @@ const TagManager = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">GestiÃ³n de Tags</h2>
+        <h2 className="text-xl font-bold text-gray-900">Gestión de Tags</h2>
         {!isCreating && !editingId && (
           <button onClick={handleCreate} className="btn btn-primary flex items-center space-x-2">
             <Plus className="w-5 h-5" />
@@ -152,17 +152,17 @@ const TagManager = () => {
                 <div className="flex space-x-1 ml-2">
                   <button
                     onClick={() => handleEdit(tag)}
-                    className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                     title="Editar"
                   >
-                    <Edit className="w-3 h-3" />
+                    <Edit className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(tag.id)}
-                    className="p-1 text-red-600 hover:bg-red-50 rounded"
+                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                     title="Eliminar"
                   >
-                    <Trash2 className="w-3 h-3" />
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               )}

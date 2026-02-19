@@ -1,4 +1,4 @@
-锘縤mport { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import api from '../../services/api';
 import { Topic, Video, Tag } from '../../types';
@@ -93,7 +93,7 @@ const TopicManager = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('驴Est谩s seguro de eliminar este tema?')) {
+    if (!confirm('縀st醩 seguro de eliminar este tema?')) {
       return;
     }
 
@@ -146,7 +146,7 @@ const TopicManager = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">Gesti贸n de Temas</h2>
+        <h2 className="text-xl font-bold text-gray-900">Gesti髇 de Temas</h2>
         {!isCreating && !editingId && (
           <button onClick={handleCreate} className="btn btn-primary flex items-center space-x-2">
             <Plus className="w-5 h-5" />
@@ -165,7 +165,7 @@ const TopicManager = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  C贸digo <span className="text-red-500">*</span>
+                  C骴igo <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -194,7 +194,7 @@ const TopicManager = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                T铆tulo <span className="text-red-500">*</span>
+                T韙ulo <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -206,13 +206,13 @@ const TopicManager = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Descripci贸n</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Descripci髇</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="input"
                 rows={3}
-                placeholder="Descripci贸n del tema..."
+                placeholder="Descripci髇 del tema..."
               />
             </div>
 
@@ -328,14 +328,14 @@ const TopicManager = () => {
                     <div className="flex space-x-2 ml-4">
                       <button
                         onClick={() => handleEdit(topic)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         title="Editar"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(topic.id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded"
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         title="Eliminar"
                       >
                         <Trash2 className="w-4 h-4" />
