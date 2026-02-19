@@ -48,10 +48,10 @@ const Navbar = () => {
       <nav className="flex-1 px-3 py-4 space-y-1">
         <Link
           to="/"
-          className={`flex items-center space-x-3 px-3 py-2 rounded transition-colors ${
+          className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all border-l-2 ${
             isActive('/') 
-              ? 'bg-primary-600 text-white' 
-              : 'text-primary-200 hover:bg-primary-600 hover:text-white'
+              ? 'bg-primary-600 text-white border-accent-500' 
+              : 'text-primary-200 hover:bg-primary-600/60 hover:text-white border-transparent'
           }`}
         >
           <Home className="w-5 h-5" />
@@ -60,10 +60,10 @@ const Navbar = () => {
 
         <Link
           to="/search"
-          className={`flex items-center space-x-3 px-3 py-2 rounded transition-colors ${
+          className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all border-l-2 ${
             isActive('/search') 
-              ? 'bg-primary-600 text-white' 
-              : 'text-primary-200 hover:bg-primary-600 hover:text-white'
+              ? 'bg-primary-600 text-white border-accent-500' 
+              : 'text-primary-200 hover:bg-primary-600/60 hover:text-white border-transparent'
           }`}
         >
           <Search className="w-5 h-5" />
@@ -72,10 +72,10 @@ const Navbar = () => {
 
         <Link
           to="/library"
-          className={`flex items-center space-x-3 px-3 py-2 rounded transition-colors ${
+          className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all border-l-2 ${
             isActive('/library') 
-              ? 'bg-primary-600 text-white' 
-              : 'text-primary-200 hover:bg-primary-600 hover:text-white'
+              ? 'bg-primary-600 text-white border-accent-500' 
+              : 'text-primary-200 hover:bg-primary-600/60 hover:text-white border-transparent'
           }`}
         >
           <Library className="w-5 h-5" />
@@ -85,10 +85,10 @@ const Navbar = () => {
         {user?.role?.code === 'ADMIN' && (
           <Link
             to="/admin"
-            className={`flex items-center space-x-3 px-3 py-2 rounded transition-colors ${
+            className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all border-l-2 ${
               isActive('/admin') 
-                ? 'bg-accent-500 text-white' 
-                : 'text-primary-200 hover:bg-accent-500/20 hover:text-white'
+                ? 'bg-accent-600 text-white border-accent-400' 
+                : 'text-primary-200 hover:bg-accent-500/20 hover:text-white border-transparent'
             }`}
           >
             <Settings className="w-5 h-5" />

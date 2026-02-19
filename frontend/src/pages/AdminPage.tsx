@@ -27,7 +27,7 @@ const AdminPage = () => {
   ];
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#f9f9fb]">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50">
       {/* Scrollable Area */}
       <div className="flex-1 overflow-y-auto">
         <div className="container mx-auto max-w-7xl p-6 lg:p-10 flex flex-col gap-8">
@@ -50,7 +50,7 @@ const AdminPage = () => {
                       className={`pb-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
                         isActive
                           ? 'font-bold text-primary border-primary'
-                          : 'font-medium text-slate-500 hover:text-primary border-transparent hover:border-slate-300'
+                          : 'font-medium text-slate-500 hover:text-primary-700 border-transparent hover:border-slate-300'
                       }`}
                     >
                       {tab.label}

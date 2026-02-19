@@ -501,7 +501,7 @@ const VideoManager = () => {
               />
             </div>
             <button
-              className="p-2.5 text-slate-500 hover:text-primary hover:bg-slate-50 rounded-lg border border-slate-200 transition-colors"
+              className="p-2.5 text-slate-500 hover:text-primary-700 hover:bg-slate-50 rounded-lg border border-slate-200 transition-colors"
               title="Filtrar"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -577,7 +577,7 @@ const VideoManager = () => {
                           )}
                         </div>
                         <div className="flex flex-col gap-0.5">
-                          <span className="text-sm font-bold text-gray-900 group-hover:text-primary transition-colors line-clamp-1">
+                          <span className="text-sm font-bold text-gray-900 group-hover:text-primary-700 transition-colors line-clamp-1">
                             {video.title}
                           </span>
                           {video.description && (
@@ -618,7 +618,7 @@ const VideoManager = () => {
                       <div className="flex items-center justify-center gap-1">
                         <button
                           onClick={() => handleEdit(video)}
-                          className="p-2 text-slate-400 hover:text-white hover:bg-primary rounded-lg transition-all"
+                          className="p-2 text-slate-400 hover:text-white hover:bg-primary-600 rounded-lg transition-all"
                           title="Editar"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -635,7 +635,7 @@ const VideoManager = () => {
                           </svg>
                         </button>
                         <button
-                          className="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg transition-all relative group/menu"
+                          className="p-2 text-slate-400 hover:text-primary-700 hover:bg-slate-100 rounded-lg transition-all relative group/menu"
                           title="Más opciones"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -661,7 +661,7 @@ const VideoManager = () => {
               <button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="p-1 rounded-md text-slate-400 hover:text-primary hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-1 rounded-md text-slate-400 hover:text-primary-700 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -685,7 +685,7 @@ const VideoManager = () => {
               <button
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="p-1 rounded-md text-slate-500 hover:text-primary hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-1 rounded-md text-slate-500 hover:text-primary-700 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />

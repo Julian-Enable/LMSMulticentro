@@ -33,28 +33,25 @@ export default function LibraryPage() {
   });
 
   const getCategoryColor = (categoryName: string) => {
-    const colors: { [key: string]: string } = {
-      manager: 'from-purple-500 to-purple-600',
-      ventas: 'from-green-500 to-green-600',
-      compliance: 'from-red-500 to-red-600',
-      rh: 'from-blue-500 to-blue-600',
-      management: 'from-purple-500 to-purple-600',
-      tools: 'from-amber-500 to-amber-600',
-    };
-    const key = categoryName.toLowerCase();
-    return colors[key] || 'from-gray-500 to-gray-600';
+    const name = categoryName.toLowerCase();
+    if (name.includes('ventas') || name.includes('venta')) return 'from-accent-500 to-accent-700';
+    if (name.includes('compliance') || name.includes('legal')) return 'from-primary-400 to-primary-600';
+    if (name.includes('rh') || name.includes('recursos')) return 'from-primary-500 to-primary-700';
+    if (name.includes('tools') || name.includes('herramientas')) return 'from-primary-600 to-primary-800';
+    // Default: alternate between primary and accent based on index
+    return 'from-primary-600 to-primary-800';
   };
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-[#f9f9fb]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div className="flex-1 flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#f9f9fb]">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50">
       {/* Header */}
       <header className="flex-none px-8 py-6">
         <div className="max-w-7xl mx-auto">
@@ -126,7 +123,7 @@ export default function LibraryPage() {
 
                     {/* Card Body */}
                     <div className="p-6">
-                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-700 transition-colors">
                         {category.name}
                       </h3>
                       {category.description && (

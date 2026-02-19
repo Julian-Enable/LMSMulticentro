@@ -99,7 +99,7 @@ const TopicPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#f9f9fb]">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-primary"></div>
           <p className="mt-4 text-gray-600 font-medium">Cargando tema...</p>
@@ -110,7 +110,7 @@ const TopicPage = () => {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#f9f9fb]">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center max-w-md mx-auto p-6">
           <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-16 h-16 text-red-500 mx-auto mb-4">
@@ -143,7 +143,7 @@ const TopicPage = () => {
 
   if (!topic) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#f9f9fb]">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-200">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-16 h-16 text-gray-300 mx-auto mb-4">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
@@ -161,10 +161,10 @@ const TopicPage = () => {
   const score = showQuizResults ? getQuizScore() : null;
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#f9f9fb]">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50">
       {/* Breadcrumbs */}
       <div className="px-6 py-4 flex flex-wrap gap-2 items-center text-sm border-b border-gray-200 bg-white shrink-0">
-        <Link to="/" className="text-gray-600 hover:text-primary font-medium flex items-center gap-1">
+        <Link to="/" className="text-gray-600 hover:text-primary-700 font-medium flex items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-[18px] h-[18px]">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
@@ -173,7 +173,7 @@ const TopicPage = () => {
         <span className="text-gray-400 mx-2">|</span>
         {topic.video?.category && (
           <>
-            <Link to={`/course/${topic.video.category.id}`} className="text-gray-600 hover:text-primary font-medium">
+            <Link to={`/course/${topic.video.category.id}`} className="text-gray-600 hover:text-primary-700 font-medium">
               Curso: {topic.video.category.name}
             </Link>
             <span className="text-gray-600 font-medium">/</span>
@@ -228,13 +228,13 @@ const TopicPage = () => {
 
                   {/* Action Buttons */}
                   <div className="flex items-center gap-2">
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-700 text-sm font-bold hover:bg-gray-100 hover:text-primary transition-colors">
+                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-700 text-sm font-bold hover:bg-gray-100 hover:text-primary-700 transition-colors">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 00-1.423-.23H5.904M14.25 9h2.25M5.904 18.75c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 01-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 10.203 4.167 9.75 5 9.75h1.053c.472 0 .745.556.5.96a8.958 8.958 0 00-1.302 4.665c0 1.194.232 2.333.654 3.375z" />
                       </svg>
                       <span className="hidden sm:inline">Me gusta</span>
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-700 text-sm font-bold hover:bg-gray-100 hover:text-primary transition-colors">
+                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-50 border border-gray-300 text-gray-700 text-sm font-bold hover:bg-gray-100 hover:text-primary-700 transition-colors">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
                       </svg>
@@ -414,7 +414,7 @@ const TopicPage = () => {
                   <div className="flex items-center justify-between gap-2 mt-1">
                     <button 
                       onClick={() => handleNavigation('previous')}
-                      className="flex-1 py-2 px-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-700 hover:text-primary hover:border-primary/30 hover:bg-gray-100 text-xs font-bold transition-colors flex items-center justify-center gap-1"
+                      className="flex-1 py-2 px-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-700 hover:text-primary-700 hover:border-primary/30 hover:bg-gray-100 text-xs font-bold transition-colors flex items-center justify-center gap-1"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -423,7 +423,7 @@ const TopicPage = () => {
                     </button>
                     <button 
                       onClick={() => handleNavigation('next')}
-                      className="flex-1 py-2 px-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-700 hover:text-primary hover:border-primary/30 hover:bg-gray-100 text-xs font-bold transition-colors flex items-center justify-center gap-1"
+                      className="flex-1 py-2 px-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-700 hover:text-primary-700 hover:border-primary/30 hover:bg-gray-100 text-xs font-bold transition-colors flex items-center justify-center gap-1"
                     >
                       Siguiente
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">

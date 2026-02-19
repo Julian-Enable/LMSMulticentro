@@ -55,16 +55,16 @@ const HomePage = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#F8F8FA]">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50">
       {/* Header & Top Stats Area */}
       <div className="flex-shrink-0 px-8 pt-8 pb-4">
         {/* Welcome Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-extrabold text-[#121118] tracking-tight">
-              Bienvenido de vuelta, {user?.username}
+            <h1 className="text-3xl font-extrabold text-primary-900 tracking-tight">
+                Bienvenido de vuelta, {user?.username}
             </h1>
-            <p className="text-[#636085] mt-1">Aquí está el resumen de tu aprendizaje hoy.</p>
+            <p className="text-primary-400 mt-1">Aquí está el resumen de tu aprendizaje hoy.</p>
           </div>
           <div className="flex gap-3">
             {/* Secondary Actions */}
@@ -96,9 +96,9 @@ const HomePage = () => {
           <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-start justify-between hover:-translate-y-1 transition-transform">
             <div>
               <p className="text-gray-500 text-sm font-medium mb-1">Total Cursos</p>
-              <p className="text-3xl font-black text-primary tracking-tight">{categories.length}</p>
+              <p className="text-3xl font-black text-primary-700 tracking-tight">{categories.length}</p>
             </div>
-            <div className="h-10 w-10 rounded-lg bg-blue-50 text-primary flex items-center justify-center">
+            <div className="h-10 w-10 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 6.878V6a2.25 2.25 0 012.25-2.25h7.5A2.25 2.25 0 0118 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 004.5 9v.878m13.5-3A2.25 2.25 0 0119.5 9v.878m0 0a2.246 2.246 0 00-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0121 12v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6c0-.98.626-1.813 1.5-2.122" />
               </svg>
@@ -109,9 +109,9 @@ const HomePage = () => {
           <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-start justify-between hover:-translate-y-1 transition-transform">
             <div>
               <p className="text-gray-500 text-sm font-medium mb-1">Videos Disponibles</p>
-              <p className="text-3xl font-black text-primary tracking-tight">{totalVideos}</p>
+              <p className="text-3xl font-black text-primary-700 tracking-tight">{totalVideos}</p>
             </div>
-            <div className="h-10 w-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-lg bg-accent-50 text-accent-500 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
@@ -123,9 +123,9 @@ const HomePage = () => {
           <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-start justify-between hover:-translate-y-1 transition-transform">
             <div>
               <p className="text-gray-500 text-sm font-medium mb-1">Horas de Contenido</p>
-              <p className="text-3xl font-black text-primary tracking-tight">{totalTimeDisplay}</p>
+              <p className="text-3xl font-black text-primary-700 tracking-tight">{totalTimeDisplay}</p>
             </div>
-            <div className="h-10 w-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -153,9 +153,9 @@ const HomePage = () => {
             {categories[0] && (
               <Link
                 to={`/course/${categories[0].id}`}
-                className="group relative overflow-hidden rounded-2xl md:col-span-2 md:row-span-2 shadow-md hover:-translate-y-1 transition-all cursor-pointer bg-primary"
+                className="group relative overflow-hidden rounded-2xl md:col-span-2 md:row-span-2 shadow-md hover:-translate-y-1 transition-all cursor-pointer bg-primary-700"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#241f55] to-black opacity-90 z-10"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-800 to-primary-900 opacity-90 z-10"></div>
                 <div className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700" style={{backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800')"}}></div>
                 <div className="relative z-20 h-full flex flex-col justify-between p-8">
                   <div className="flex justify-between items-start">
@@ -183,10 +183,10 @@ const HomePage = () => {
             {/* Standard Cards */}
             {categories.slice(1, 5).map((category, index) => {
               const colors = [
-                { bg: 'from-blue-50 to-white', icon: 'bg-blue-100 text-blue-600', badge: 'bg-blue-100 text-blue-800' },
-                { bg: 'from-green-50 to-white', icon: 'bg-green-100 text-green-600', badge: 'bg-green-100 text-green-800' },
-                { bg: 'from-purple-50 to-white', icon: 'bg-purple-100 text-purple-600', badge: 'bg-purple-100 text-purple-800' },
-                { bg: 'from-red-50 to-white', icon: 'bg-red-100 text-red-600', badge: 'bg-red-100 text-red-800' }
+                { bg: 'from-primary-50 to-white', icon: 'bg-primary-100 text-primary-600', badge: 'bg-primary-100 text-primary-700' },
+                { bg: 'from-accent-50 to-white', icon: 'bg-accent-100 text-accent-500', badge: 'bg-accent-100 text-accent-700' },
+                { bg: 'from-primary-50 to-white', icon: 'bg-primary-100 text-primary-700', badge: 'bg-primary-100 text-primary-800' },
+                { bg: 'from-accent-50 to-white', icon: 'bg-accent-50 text-accent-600', badge: 'bg-accent-50 text-accent-700' }
               ];
               const color = colors[index] || colors[0];
 

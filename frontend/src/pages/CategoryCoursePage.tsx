@@ -74,7 +74,7 @@ export default function CategoryCoursePage() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-[#f8f8fa]">
+      <div className="flex-1 flex items-center justify-center bg-gray-50">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
@@ -82,7 +82,7 @@ export default function CategoryCoursePage() {
 
   if (!category) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-[#f8f8fa]">
+      <div className="flex-1 flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <p className="text-gray-600 mb-4">Categoría no encontrada</p>
           <button onClick={() => navigate('/')} className="text-primary hover:underline">
@@ -96,7 +96,7 @@ export default function CategoryCoursePage() {
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/* Sidebar */}
-      <aside className="hidden md:flex flex-col w-72 h-full bg-white dark:bg-background-dark border-r border-[#ebeaf0] dark:border-gray-800 shrink-0">
+      <aside className="hidden md:flex flex-col w-72 h-full bg-white dark:bg-background-dark border-r border-gray-200 dark:border-gray-800 shrink-0">
         <div className="flex flex-col h-full p-6 justify-between">
           <div className="flex flex-col gap-8">
             {/* Logo Area */}
@@ -104,7 +104,7 @@ export default function CategoryCoursePage() {
               <h1 className="text-primary dark:text-white text-xl font-bold leading-normal tracking-tight">
                 Multicentro LMS
               </h1>
-              <p className="text-[#636085] dark:text-gray-400 text-xs font-medium uppercase tracking-wider">
+              <p className="text-primary-400 dark:text-gray-400 text-xs font-medium uppercase tracking-wider">
                 Formación Corporativa
               </p>
             </div>
@@ -113,12 +113,12 @@ export default function CategoryCoursePage() {
             <nav className="flex flex-col gap-2">
               <Link
                 to="/"
-                className="group flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#ebeaf0] dark:hover:bg-gray-800 transition-colors"
+                className="group flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
-                <svg className="w-6 h-6 text-[#636085] dark:text-gray-400 group-hover:text-primary dark:group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-primary-400 dark:text-gray-400 group-hover:text-primary-700 dark:group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
-                <p className="text-[#636085] dark:text-gray-300 group-hover:text-primary dark:group-hover:text-white text-sm font-medium">
+                <p className="text-primary-400 dark:text-gray-300 group-hover:text-primary-700 dark:group-hover:text-white text-sm font-medium">
                   Dashboard
                 </p>
               </Link>
@@ -135,24 +135,24 @@ export default function CategoryCoursePage() {
 
               <Link
                 to="/progress"
-                className="group flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#ebeaf0] dark:hover:bg-gray-800 transition-colors"
+                className="group flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
-                <svg className="w-6 h-6 text-[#636085] dark:text-gray-400 group-hover:text-primary dark:group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-primary-400 dark:text-gray-400 group-hover:text-primary-700 dark:group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
-                <p className="text-[#636085] dark:text-gray-300 group-hover:text-primary dark:group-hover:text-white text-sm font-medium">
+                <p className="text-primary-400 dark:text-gray-300 group-hover:text-primary-700 dark:group-hover:text-white text-sm font-medium">
                   Mi Progreso
                 </p>
               </Link>
 
               <Link
                 to="/profile"
-                className="group flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#ebeaf0] dark:hover:bg-gray-800 transition-colors"
+                className="group flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
-                <svg className="w-6 h-6 text-[#636085] dark:text-gray-400 group-hover:text-primary dark:group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-primary-400 dark:text-gray-400 group-hover:text-primary-700 dark:group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                <p className="text-[#636085] dark:text-gray-300 group-hover:text-primary dark:group-hover:text-white text-sm font-medium">
+                <p className="text-primary-400 dark:text-gray-300 group-hover:text-primary-700 dark:group-hover:text-white text-sm font-medium">
                   Perfil
                 </p>
               </Link>
@@ -160,16 +160,16 @@ export default function CategoryCoursePage() {
           </div>
 
           {/* User Footer */}
-          <div className="border-t border-[#ebeaf0] dark:border-gray-800 pt-6">
+          <div className="border-t border-gray-200 dark:border-gray-800 pt-6">
             <div className="flex items-center gap-3 px-2">
               <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white font-bold border border-gray-200 dark:border-gray-700">
                 {user?.username?.[0]?.toUpperCase() || 'U'}
               </div>
               <div className="flex flex-col">
-                <p className="text-sm font-bold text-[#121118] dark:text-white">
+                <p className="text-sm font-bold text-primary-900 dark:text-white">
                   {user?.username || 'Usuario'}
                 </p>
-                <p className="text-xs text-[#636085] dark:text-gray-400">
+                <p className="text-xs text-primary-400 dark:text-gray-400">
                   {user?.email || 'estudiante@ejemplo.com'}
                 </p>
               </div>
@@ -179,18 +179,18 @@ export default function CategoryCoursePage() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col h-full overflow-y-auto relative bg-[#f8f8fa]">
+      <main className="flex-1 flex flex-col h-full overflow-y-auto relative bg-gray-50">
         {/* Breadcrumbs */}
-        <div className="w-full px-6 py-6 md:px-10 lg:px-12 sticky top-0 bg-[#f8f8fa]/95 backdrop-blur-sm z-10 border-b border-transparent dark:border-gray-800">
+        <div className="w-full px-6 py-6 md:px-10 lg:px-12 sticky top-0 bg-gray-50/95 backdrop-blur-sm z-10 border-b border-transparent dark:border-gray-800">
           <div className="flex flex-wrap items-center gap-2 text-sm">
-            <Link to="/" className="text-[#636085] dark:text-gray-400 font-medium hover:text-primary dark:hover:text-white transition-colors">
+            <Link to="/" className="text-primary-400 dark:text-gray-400 font-medium hover:text-primary-700 dark:hover:text-white transition-colors">
               Inicio
             </Link>
-            <span className="text-[#636085] dark:text-gray-500">/</span>
-            <Link to="/library" className="text-[#636085] dark:text-gray-400 font-medium hover:text-primary dark:hover:text-white transition-colors">
+            <span className="text-primary-400 dark:text-gray-500">/</span>
+            <Link to="/library" className="text-primary-400 dark:text-gray-400 font-medium hover:text-primary-700 dark:hover:text-white transition-colors">
               Categorías
             </Link>
-            <span className="text-[#636085] dark:text-gray-500">/</span>
+            <span className="text-primary-400 dark:text-gray-500">/</span>
             <span className="text-primary dark:text-white font-bold bg-primary/5 dark:bg-primary/20 px-2 py-0.5 rounded text-xs uppercase tracking-wide">
               {category.name}
             </span>
@@ -205,43 +205,43 @@ export default function CategoryCoursePage() {
               <div className="flex flex-col gap-6">
                 {/* Page Heading */}
                 <div className="flex flex-col gap-3">
-                  <h1 className="text-[#121118] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">
+                  <h1 className="text-primary-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">
                     {category.name}: <span className="text-primary dark:text-indigo-400">Nivel Avanzado</span>
                   </h1>
-                  <p className="text-[#636085] dark:text-gray-300 text-lg font-medium leading-relaxed max-w-2xl">
+                  <p className="text-primary-400 dark:text-gray-300 text-lg font-medium leading-relaxed max-w-2xl">
                     {category.description || 'Domina las técnicas y estrategias avanzadas en este curso completo.'}
                   </p>
                 </div>
 
                 {/* Stats Row */}
                 <div className="flex flex-wrap gap-4">
-                  <div className="flex items-center gap-3 rounded-xl bg-white dark:bg-background-dark p-4 border border-[#d7d6e1] dark:border-gray-700 shadow-sm min-w-[160px]">
+                  <div className="flex items-center gap-3 rounded-xl bg-white dark:bg-background-dark p-4 border border-gray-200 dark:border-gray-700 shadow-sm min-w-[160px]">
                     <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-primary dark:text-blue-300">
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
                       </svg>
                     </div>
                     <div className="flex flex-col">
-                      <p className="text-[#636085] dark:text-gray-400 text-xs font-bold uppercase tracking-wide">
+                      <p className="text-primary-400 dark:text-gray-400 text-xs font-bold uppercase tracking-wide">
                         Lecciones
                       </p>
-                      <p className="text-[#121118] dark:text-white text-lg font-bold">
+                      <p className="text-primary-900 dark:text-white text-lg font-bold">
                         {videos.length} Videos
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 rounded-xl bg-white dark:bg-background-dark p-4 border border-[#d7d6e1] dark:border-gray-700 shadow-sm min-w-[160px]">
+                  <div className="flex items-center gap-3 rounded-xl bg-white dark:bg-background-dark p-4 border border-gray-200 dark:border-gray-700 shadow-sm min-w-[160px]">
                     <div className="p-2 rounded-lg bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-300">
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
                     <div className="flex flex-col">
-                      <p className="text-[#636085] dark:text-gray-400 text-xs font-bold uppercase tracking-wide">
+                      <p className="text-primary-400 dark:text-gray-400 text-xs font-bold uppercase tracking-wide">
                         Duración
                       </p>
-                      <p className="text-[#121118] dark:text-white text-lg font-bold">
+                      <p className="text-primary-900 dark:text-white text-lg font-bold">
                         {calculateTotalDuration()}
                       </p>
                     </div>
@@ -251,7 +251,7 @@ export default function CategoryCoursePage() {
 
               {/* Video List Section */}
               <div className="flex flex-col gap-4 mt-2">
-                <h3 className="text-xl font-bold text-[#121118] dark:text-white mb-2">
+                <h3 className="text-xl font-bold text-primary-900 dark:text-white mb-2">
                   Contenido del Curso
                 </h3>
 
@@ -267,13 +267,13 @@ export default function CategoryCoursePage() {
                       key={video.id}
                       className={`group relative flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white dark:bg-background-dark p-4 rounded-xl border shadow-sm hover:shadow-md transition-all ${
                         isCompleted
-                          ? 'border-l-4 border-l-primary border-y border-r border-[#ebeaf0] dark:border-gray-700'
-                          : 'border border-[#ebeaf0] dark:border-gray-700'
+                          ? 'border-l-4 border-l-primary border-y border-r border-gray-200 dark:border-gray-700'
+                          : 'border border-gray-200 dark:border-gray-700'
                       } ${isLocked ? 'opacity-80 hover:opacity-100' : ''}`}
                     >
                       {/* Decorative Circle (only for first/active item) */}
                       {isCompleted && (
-                        <div className="absolute -left-[14px] top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-primary border-4 border-[#f8f8fa] hidden sm:block"></div>
+                        <div className="absolute -left-[14px] top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-primary border-4 border-gray-50 hidden sm:block"></div>
                       )}
 
                       <div className="flex items-center gap-4 w-full">
@@ -311,15 +311,15 @@ export default function CategoryCoursePage() {
                         {/* Content */}
                         <div className="flex flex-col flex-1 gap-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className={`text-xs font-black tracking-widest uppercase ${isLocked ? 'text-[#636085] dark:text-gray-500' : 'text-primary dark:text-blue-300'}`}>
+                            <span className={`text-xs font-black tracking-widest uppercase ${isLocked ? 'text-primary-400 dark:text-gray-500' : 'text-primary dark:text-blue-300'}`}>
                               {String(index + 1).padStart(2, '0')}
                             </span>
                             {getStatusBadge(status)}
                           </div>
-                          <p className={`text-base font-bold line-clamp-1 transition-colors ${isLocked ? 'text-[#121118] dark:text-white' : 'text-[#121118] dark:text-white group-hover:text-primary dark:group-hover:text-blue-400'}`}>
+                          <p className={`text-base font-bold line-clamp-1 transition-colors ${isLocked ? 'text-primary-900 dark:text-white' : 'text-primary-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-blue-400'}`}>
                             {video.title}
                           </p>
-                          <p className="text-[#636085] dark:text-gray-400 text-sm font-medium flex items-center gap-1">
+                          <p className="text-primary-400 dark:text-gray-400 text-sm font-medium flex items-center gap-1">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -339,7 +339,7 @@ export default function CategoryCoursePage() {
                                   alert('Este video aún no tiene temas. Ve a Administrar → Temas para crear temas para este video.');
                                 }
                               }}
-                              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-9 px-5 bg-[#ebeaf0] dark:bg-gray-800 text-[#121118] dark:text-white hover:bg-primary hover:text-white dark:hover:bg-primary transition-all text-sm font-bold shadow-sm"
+                              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-9 px-5 bg-gray-100 dark:bg-gray-800 text-primary-900 dark:text-white hover:bg-primary-600 hover:text-white dark:hover:bg-primary-600 transition-all text-sm font-bold shadow-sm"
                             >
                               <span>Repasar</span>
                             </button>
@@ -354,7 +354,7 @@ export default function CategoryCoursePage() {
                                   alert('Este video aún no tiene temas. Ve a Administrar → Temas para crear temas para este video.');
                                 }
                               }}
-                              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-9 px-6 bg-accent-500 text-white hover:bg-[#a0252c] transition-all text-sm font-bold shadow-md shadow-red-900/10"
+                              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-9 px-6 bg-accent-500 text-white hover:bg-accent-600 transition-all text-sm font-bold shadow-md shadow-red-900/10"
                             >
                               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M8 5v14l11-7z" />
@@ -365,7 +365,7 @@ export default function CategoryCoursePage() {
                           {isLocked && (
                             <button
                               disabled
-                              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-9 px-5 bg-transparent border border-[#d7d6e1] dark:border-gray-600 text-gray-400 cursor-not-allowed text-sm font-medium"
+                              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-9 px-5 bg-transparent border border-gray-200 dark:border-gray-600 text-gray-400 cursor-not-allowed text-sm font-medium"
                             >
                               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 17a2 2 0 100-4 2 2 0 000 4zm6-9a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2h1V6a5 5 0 1110 0v2h1zm-6-5a3 3 0 00-3 3v2h6V6a3 3 0 00-3-3z" />
@@ -384,9 +384,9 @@ export default function CategoryCoursePage() {
             {/* Right Column: Sticky Sidebar */}
             <div className="lg:col-span-4 flex flex-col gap-6 lg:sticky lg:top-24">
               {/* Progress Card */}
-              <div className="bg-white dark:bg-background-dark rounded-xl p-6 border border-[#d7d6e1] dark:border-gray-700 shadow-sm flex flex-col gap-4">
+              <div className="bg-white dark:bg-background-dark rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col gap-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-base font-bold text-[#121118] dark:text-white">Tu Progreso</h3>
+                  <h3 className="text-base font-bold text-primary-900 dark:text-white">Tu Progreso</h3>
                   <span className="text-primary dark:text-blue-300 font-bold text-lg">
                     {progressPercentage}%
                   </span>
@@ -398,15 +398,15 @@ export default function CategoryCoursePage() {
                     style={{ width: `${progressPercentage}%` }}
                   ></div>
                 </div>
-                <p className="text-sm text-[#636085] dark:text-gray-400">
-                  Has completado <span className="text-[#121118] dark:text-white font-bold">{completedCount}</span> de{' '}
-                  <span className="text-[#121118] dark:text-white font-bold">{videos.length}</span> lecciones.
+                <p className="text-sm text-primary-400 dark:text-gray-400">
+                  Has completado <span className="text-primary-900 dark:text-white font-bold">{completedCount}</span> de{' '}
+                  <span className="text-primary-900 dark:text-white font-bold">{videos.length}</span> lecciones.
                 </p>
               </div>
 
               {/* Instructor Card */}
-              <div className="bg-white dark:bg-background-dark rounded-xl p-6 border border-[#d7d6e1] dark:border-gray-700 shadow-sm flex flex-col gap-4">
-                <h3 className="text-sm uppercase tracking-wider text-[#636085] dark:text-gray-400 font-bold">
+              <div className="bg-white dark:bg-background-dark rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col gap-4">
+                <h3 className="text-sm uppercase tracking-wider text-primary-400 dark:text-gray-400 font-bold">
                   Instructor
                 </h3>
                 <div className="flex items-center gap-4">
@@ -414,11 +414,11 @@ export default function CategoryCoursePage() {
                     JP
                   </div>
                   <div className="flex flex-col">
-                    <p className="text-lg font-bold text-[#121118] dark:text-white">Juan Pérez</p>
-                    <p className="text-sm text-[#636085] dark:text-gray-400">Director de Ventas Global</p>
+                    <p className="text-lg font-bold text-primary-900 dark:text-white">Juan Pérez</p>
+                    <p className="text-sm text-primary-400 dark:text-gray-400">Director de Ventas Global</p>
                   </div>
                 </div>
-                <p className="text-sm text-[#636085] dark:text-gray-300 leading-relaxed border-t border-[#ebeaf0] dark:border-gray-700 pt-4 mt-1">
+                <p className="text-sm text-primary-400 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4 mt-1">
                   Experto en negociación con más de 15 años liderando equipos en Fortune 500.
                 </p>
               </div>
@@ -435,7 +435,7 @@ export default function CategoryCoursePage() {
                   <li>
                     <a
                       href="#"
-                      className="text-sm text-[#636085] dark:text-gray-400 hover:text-primary dark:hover:text-white hover:underline decoration-1 underline-offset-4 decoration-primary/50 transition-all flex items-center gap-2"
+                      className="text-sm text-primary-400 dark:text-gray-400 hover:text-primary-700 dark:hover:text-white hover:underline decoration-1 underline-offset-4 decoration-primary-500/50 transition-all flex items-center gap-2"
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-accent-500"></span>
                       PDF: Guía de Objeciones
@@ -444,7 +444,7 @@ export default function CategoryCoursePage() {
                   <li>
                     <a
                       href="#"
-                      className="text-sm text-[#636085] dark:text-gray-400 hover:text-primary dark:hover:text-white hover:underline decoration-1 underline-offset-4 decoration-primary/50 transition-all flex items-center gap-2"
+                      className="text-sm text-primary-400 dark:text-gray-400 hover:text-primary-700 dark:hover:text-white hover:underline decoration-1 underline-offset-4 decoration-primary-500/50 transition-all flex items-center gap-2"
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-accent-500"></span>
                       Plantilla de Email Frío

@@ -66,7 +66,7 @@ const SearchPage = () => {
   };
 
   return (
-    <main className="flex-1 flex flex-col h-full overflow-hidden relative bg-[#F8F8FA]">
+    <main className="flex-1 flex flex-col h-full overflow-hidden relative bg-gray-50">
       {/* Header & Search */}
       <header className="pt-8 pb-4 px-8 md:px-12 flex flex-col gap-6 shrink-0 z-10">
         <div className="flex items-end justify-between">
@@ -85,7 +85,7 @@ const SearchPage = () => {
         {/* Search Bar */}
         <div className="relative w-full max-w-4xl shadow-lg shadow-primary/5 rounded-xl group focus-within:shadow-primary/10 transition-shadow">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-slate-400 group-focus-within:text-accent transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-slate-400 group-focus-within:text-accent-500 transition-colors">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
           </div>
@@ -112,9 +112,9 @@ const SearchPage = () => {
               {selectedCategories.map(catId => {
                 const category = categories.find(c => c.id === catId);
                 return category ? (
-                  <span key={catId} className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-primary text-white border border-primary">
+                  <span key={catId} className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-primary-600 text-white border border-primary-500">
                     {category.name}
-                    <button onClick={() => toggleCategory(catId)} className="hover:text-accent ml-1 transition-colors">
+                    <button onClick={() => toggleCategory(catId)} className="hover:text-accent-500 ml-1 transition-colors">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3 h-3">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                       </svg>
@@ -159,7 +159,7 @@ const SearchPage = () => {
                           onChange={() => toggleCategory(category.id)}
                           className="rounded w-4 h-4 text-primary focus:ring-accent/20 border-slate-300 transition-colors"
                         />
-                        <span className="text-sm text-slate-600 group-hover:text-primary transition-colors">{category.name}</span>
+                        <span className="text-sm text-slate-600 group-hover:text-primary-700 transition-colors">{category.name}</span>
                         <span className="ml-auto text-xs text-slate-400">{category.videoCount || 0}</span>
                       </label>
                     ))}
@@ -176,19 +176,19 @@ const SearchPage = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
                       </svg>
-                      <span className="text-sm text-slate-600 group-hover:text-primary transition-colors">Video</span>
+                      <span className="text-sm text-slate-600 group-hover:text-primary-700 transition-colors">Video</span>
                     </label>
                     <label className="flex items-center gap-3 cursor-pointer group">
                       <input type="checkbox" className="rounded w-4 h-4 text-primary focus:ring-accent/20 border-slate-300" />
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-slate-400">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                       </svg>
-                      <span className="text-sm text-slate-600 group-hover:text-primary transition-colors">Documento</span>
+                      <span className="text-sm text-slate-600 group-hover:text-primary-700 transition-colors">Documento</span>
                     </label>
                   </div>
                 </div>
 
-                <button className="text-xs font-medium text-accent hover:text-red-700 flex items-center gap-1 mt-2">
+                <button className="text-xs font-medium text-accent-500 hover:text-accent-600 flex items-center gap-1 mt-2">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                   </svg>
@@ -201,7 +201,7 @@ const SearchPage = () => {
             <div className="flex-1 flex flex-col gap-4">
               {loading ? (
                 <div className="flex items-center justify-center py-20">
-                  <div className="w-16 h-16 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
+                  <div className="w-16 h-16 border-4 border-gray-200 border-t-primary-600 rounded-full animate-spin"></div>
                 </div>
               ) : filteredVideos.length === 0 ? (
                 <div className="bg-white rounded-xl p-12 text-center border border-dashed border-gray-300">
@@ -238,14 +238,14 @@ const SearchPage = () => {
                             className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           />
                         ) : (
-                          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20"></div>
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-accent-500/20"></div>
                         )}
                         <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
                         <div className="absolute bottom-2 right-2 bg-black/70 text-white text-[10px] font-bold px-1.5 py-0.5 rounded backdrop-blur-sm">
                           {video.duration || '14:20'}
                         </div>
                         <div className="absolute top-2 left-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow-sm">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-primary-700">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                           </svg>
                         </div>
@@ -261,7 +261,7 @@ const SearchPage = () => {
                             <span className="text-xs font-bold tracking-wide uppercase text-white bg-accent-500 px-2 py-1 rounded">Obligatorio</span>
                           )}
                         </div>
-                        <h3 className="text-lg font-bold text-primary group-hover:text-accent transition-colors leading-tight mb-2">
+                        <h3 className="text-lg font-bold text-primary-700 group-hover:text-accent-500 transition-colors leading-tight mb-2">
                           {video.title}
                         </h3>
                         <p className="text-sm text-slate-500 line-clamp-2 mb-3 leading-relaxed">
@@ -269,7 +269,7 @@ const SearchPage = () => {
                         </p>
                         <div className="mt-auto flex items-center justify-between">
                           <div className="flex flex-wrap gap-2">
-                            <span className="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-primary-100 text-primary-700 border border-primary-200">
                               {video.category?.name || 'General'}
                             </span>
                             <span className="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-slate-200 text-slate-700 border border-slate-300">
@@ -288,7 +288,7 @@ const SearchPage = () => {
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3.5 h-3.5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                               </svg>
-                              {Math.floor(Math.random() * 30) + 1}d
+                              Reciente
                             </span>
                           </div>
                         </div>
@@ -299,7 +299,7 @@ const SearchPage = () => {
 
                   {/* Load More */}
                   <div className="flex justify-center mt-4">
-                    <button className="px-6 py-3 bg-gray-50 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-primary transition-colors text-sm font-semibold shadow-sm w-full">
+                    <button className="px-6 py-3 bg-gray-50 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-primary-700 transition-colors text-sm font-semibold shadow-sm w-full">
                       Cargar más resultados
                     </button>
                   </div>
