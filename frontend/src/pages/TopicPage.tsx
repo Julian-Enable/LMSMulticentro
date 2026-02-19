@@ -67,13 +67,13 @@ const TopicPage = () => {
   };
 
   const handleNavigation = (direction: 'previous' | 'next') => {
-    if (!topic?.video?.topics) return;
-    const sorted = [...topic.video.topics].sort((a, b) => a.order - b.order);
-    const idx = sorted.findIndex(t => t.id === topicId);
-    if (direction === 'previous' && idx > 0) {
-      navigate(`/topic/${sorted[idx - 1].id}`);
-    } else if (direction === 'next' && idx !== -1 && idx < sorted.length - 1) {
-      navigate(`/topic/${sorted[idx + 1].id}`);
+    const videos = topic?.video?.category?.videos;
+    if (!videos) return;
+    const sorted = [...videos].sort((a, b) => a.order - b.order);
+    const idx = sorted.findIndex(v => v.id === topic?.videoId);
+    const target = direction === 'previous' ? sorted[idx - 1] : sorted[idx + 1];
+    if (target?.topics?.[0]?.id) {
+      navigate(`/topic/${target.topics[0].id}`);
     }
   };
 
@@ -164,10 +164,12 @@ const TopicPage = () => {
   const videoUrl = topic.video ? getVideoUrl(topic.video.platform, topic.video.externalId) : '';
   const score = showQuizResults ? getQuizScore() : null;
 
-  const sortedTopics = topic.video?.topics ? [...topic.video.topics].sort((a, b) => a.order - b.order) : [];
-  const currentIdx = sortedTopics.findIndex(t => t.id === topicId);
-  const hasPrevious = currentIdx > 0;
-  const hasNext = currentIdx !== -1 && currentIdx < sortedTopics.length - 1;
+  const sortedVideos = topic.video?.category?.videos
+    ? [...topic.video.category.videos].sort((a, b) => a.order - b.order)
+    : [];
+  const videoIdx = sortedVideos.findIndex(v => v.id === topic.videoId);
+  const hasPrevious = videoIdx > 0;
+  const hasNext = videoIdx !== -1 && videoIdx < sortedVideos.length - 1;
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50">

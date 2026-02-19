@@ -50,7 +50,25 @@ export const getTopicById = async (req: Request, res: Response) => {
       include: {
         video: {
           include: {
-            category: true,
+            category: {
+              include: {
+                videos: {
+                  where: { isActive: true },
+                  orderBy: { order: 'asc' },
+                  select: {
+                    id: true,
+                    title: true,
+                    order: true,
+                    topics: {
+                      where: { isActive: true },
+                      orderBy: { order: 'asc' },
+                      take: 1,
+                      select: { id: true }
+                    }
+                  }
+                }
+              }
+            },
             topics: {
               where: { isActive: true },
               orderBy: { order: 'asc' },
