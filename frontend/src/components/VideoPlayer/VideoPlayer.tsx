@@ -1,4 +1,5 @@
-﻿import ReactPlayer from 'react-player';
+﻿import { useRef } from 'react';
+import ReactPlayer from 'react-player';
 import { OnProgressProps } from 'react-player/base';
 
 interface VideoPlayerProps {
@@ -16,10 +17,20 @@ const VideoPlayer = ({
   onEnded,
   className = '',
 }: VideoPlayerProps) => {
+  const playerRef = useRef<ReactPlayer>(null);
+
+  const handleReady = () => {
+    const internalPlayer = playerRef.current?.getInternalPlayer();
+    if (internalPlayer && typeof internalPlayer.setPlaybackQuality === 'function') {
+      internalPlayer.setPlaybackQuality('hd1080');
+    }
+  };
+
   return (
     <div className={`relative w-full bg-black rounded-lg overflow-hidden ${className}`}>
       <div className="aspect-video">
         <ReactPlayer
+          ref={playerRef}
           url={url}
           width="100%"
           height="100%"
@@ -27,13 +38,15 @@ const VideoPlayer = ({
           playing={false}
           onProgress={onProgress}
           onEnded={onEnded}
+          onReady={handleReady}
           config={{
             youtube: {
               playerVars: {
                 start: startTime,
-                rel: 0, // No mostrar videos relacionados
-                modestbranding: 1, // Minimizar branding de YouTube
-                showinfo: 0, // No mostrar info del video
+                rel: 0,
+                modestbranding: 1,
+                showinfo: 0,
+                vq: 'hd1080', // Sugerir calidad 1080p al iniciar
               },
             },
             file: {
