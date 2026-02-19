@@ -349,7 +349,7 @@ const TopicPage = () => {
                 <div className="p-4 bg-gray-50 border-b border-gray-200">
                   <div className="flex justify-between items-end mb-2">
                     <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">Progreso del módulo</span>
-                    <span className="text-sm font-bold text-primary">
+                    <span className="text-sm font-bold text-primary-600">
                       {topic.video?.topics && topic.video.topics.length > 0
                         ? Math.round(((topic.order + 1) / topic.video.topics.length) * 100)
                         : 0}%
@@ -357,7 +357,7 @@ const TopicPage = () => {
                   </div>
                   <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-primary rounded-full transition-all duration-300" 
+                      className="h-full bg-primary-600 rounded-full transition-all duration-300" 
                       style={{ 
                         width: `${topic.video?.topics && topic.video.topics.length > 0 
                           ? Math.round(((topic.order + 1) / topic.video.topics.length) * 100) 
@@ -370,30 +370,44 @@ const TopicPage = () => {
                 {/* Topics List */}
                 {activeTab === 'temario' ? (
                   <div className="overflow-y-auto flex-1 p-2 space-y-1" style={{ maxHeight: '500px' }}>
-                    {/* Current Topic - Active */}
-                    <div className="flex gap-3 p-3 rounded-lg bg-primary/5 border border-primary/20 relative group cursor-pointer transition-all">
-                      <div className="absolute left-0 top-3 bottom-3 w-1 bg-primary rounded-r"></div>
-                      <div className="mt-1 ml-2 text-primary animate-pulse">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-                        </svg>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-primary text-sm font-bold">{topic.title}</span>
-                        <span className="text-primary text-xs font-mono font-bold mt-1 bg-white inline-block px-1.5 py-0.5 rounded shadow-sm w-fit">
-                          {topic.duration 
-                            ? formatTimestamp(topic.duration)
-                            : topic.video?.topics && topic.video.topics.length === 1 && topic.video.duration
-                              ? formatTimestamp(topic.video.duration)
-                              : 'Ver tema'}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Placeholder for other topics */}
-                    <div className="text-center py-8 text-gray-500 text-sm">
-                      Otros temas del módulo aparecerán aquí
-                    </div>
+                    {topic.video?.topics && topic.video.topics.length > 0
+                      ? [...topic.video.topics].sort((a, b) => a.order - b.order).map((t) => {
+                          const isActive = t.id === topicId;
+                          return (
+                            <div
+                              key={t.id}
+                              onClick={() => !isActive && navigate(`/topic/${t.id}`)}
+                              className={`flex gap-3 p-3 rounded-lg relative transition-all ${
+                                isActive
+                                  ? 'bg-primary-600/5 border border-primary-600/20 cursor-default'
+                                  : 'border border-transparent hover:bg-gray-100 cursor-pointer'
+                              }`}
+                            >
+                              {isActive && <div className="absolute left-0 top-3 bottom-3 w-1 bg-primary-600 rounded-r"></div>}
+                              <div className={`mt-1 ${isActive ? 'ml-2 text-primary-600 animate-pulse' : 'text-gray-400'}`}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
+                                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                                </svg>
+                              </div>
+                              <div className="flex flex-col">
+                                <span className={`text-sm font-bold ${isActive ? 'text-primary-700' : 'text-gray-700'}`}>{t.title}</span>
+                                {t.duration && (
+                                  <span className={`text-xs font-mono font-bold mt-1 inline-block px-1.5 py-0.5 rounded w-fit ${
+                                    isActive ? 'text-primary-600 bg-white shadow-sm' : 'text-gray-500 bg-gray-100'
+                                  }`}>
+                                    {formatTimestamp(t.duration)}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })
+                      : (
+                        <div className="text-center py-8 text-gray-400 text-sm">
+                          No hay otros temas en este módulo
+                        </div>
+                      )
+                    }
                   </div>
                 ) : (
                   <div className="overflow-y-auto flex-1 p-4" style={{ maxHeight: '500px' }}>
