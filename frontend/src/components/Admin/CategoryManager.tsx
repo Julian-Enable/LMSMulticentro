@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+Ôªøimport { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { categoryService } from '../../services/category.service';
 import { roleService, Role } from '../../services/role.service';
@@ -72,12 +72,12 @@ const CategoryManager = () => {
       await loadCategories();
     } catch (error) {
       console.error('Error saving category:', error);
-      alert('Error al guardar la categorÌa');
+      alert('Error al guardar la categor√≠a');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('øEst·s seguro de eliminar esta categorÌa? Se eliminar·n todos sus videos y temas.')) {
+    if (!confirm('¬øEst√°s seguro de eliminar esta categor√≠a? Se eliminar√°n todos sus videos y temas.')) {
       return;
     }
 
@@ -86,7 +86,7 @@ const CategoryManager = () => {
       await loadCategories();
     } catch (error) {
       console.error('Error deleting category:', error);
-      alert('Error al eliminar la categorÌa');
+      alert('Error al eliminar la categor√≠a');
     }
   };
 
@@ -116,7 +116,7 @@ const CategoryManager = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">GestiÛn de Cursos</h2>
+        <h2 className="text-xl font-bold text-gray-900">Gesti√≥n de Cursos</h2>
         {!isCreating && !editingId && (
           <button onClick={handleCreate} className="btn btn-primary flex items-center space-x-2">
             <Plus className="w-5 h-5" />
@@ -141,18 +141,18 @@ const CategoryManager = () => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="input"
-                placeholder="Ej: FacturaciÛn"
+                placeholder="Ej: Facturaci√≥n"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">DescripciÛn</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Descripci√≥n</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="input"
                 rows={3}
-                placeholder="DescripciÛn del curso..."
+                placeholder="Descripci√≥n del curso..."
               />
             </div>
 
@@ -175,12 +175,12 @@ const CategoryManager = () => {
               </div>
               {formData.allowedRoles.length === 0 ? (
                 <p className="text-xs text-green-600 mt-2 flex items-start">
-                  <span className="mr-1">?</span>
-                  <span>Sin roles seleccionados = <strong>TODOS los usuarios podr·n ver este curso</strong> (ideal para contenido general como errores comunes y soluciones)</span>
+                  <span className="mr-1">‚úì</span>
+                  <span>Sin roles seleccionados = <strong>TODOS los usuarios podr√°n ver este curso</strong> (ideal para contenido general como errores comunes y soluciones)</span>
                 </p>
               ) : (
                 <p className="text-xs text-blue-600 mt-2">
-                  ?? Solo usuarios con los roles seleccionados podr·n ver este curso
+                  ‚ÑπÔ∏è Solo usuarios con los roles seleccionados podr√°n ver este curso
                 </p>
               )}
             </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Save, X, Plus, Edit2, Trash2 } from 'lucide-react';
 import { Role, roleService } from '../../services/role.service';
 
@@ -60,7 +60,7 @@ const RoleManager = () => {
   const handleSave = async () => {
     try {
       if (!formData.code || !formData.name) {
-        alert('C�digo y nombre son requeridos');
+        alert('Código y nombre son requeridos');
         return;
       }
 
@@ -110,7 +110,7 @@ const RoleManager = () => {
       return;
     }
 
-    if (!confirm(`�Est�s seguro de eliminar el rol "${role.name}"?`)) {
+    if (!confirm(`¿Estás seguro de eliminar el rol "${role.name}"?`)) {
       return;
     }
 
@@ -137,7 +137,7 @@ const RoleManager = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Gesti�n de Roles</h2>
+          <h2 className="text-xl font-bold text-gray-900">Gestión de Roles</h2>
           <p className="text-sm text-gray-500 mt-1">Crea y administra los roles del sistema</p>
         </div>
         {!isCreating && !editingId && (
@@ -160,8 +160,8 @@ const RoleManager = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                C�digo <span className="text-red-500">*</span>
-                <span className="text-xs text-gray-500 ml-2">(ej: CONTADOR, sin espacios, may�sculas)</span>
+                Código <span className="text-red-500">*</span>
+                <span className="text-xs text-gray-500 ml-2">(ej: CONTADOR, sin espacios, mayúsculas)</span>
               </label>
               <input
                 type="text"
@@ -187,13 +187,13 @@ const RoleManager = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Descripci�n</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="input"
                 rows={2}
-                placeholder="Descripci�n del rol..."
+                placeholder="Descripción del rol..."
               />
             </div>
 
@@ -258,9 +258,9 @@ const RoleManager = () => {
           <table className="w-full">
             <thead className="bg-gradient-to-r from-primary-600/5 to-purple-50 border-b-2 border-primary-600/20">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 uppercase">C�digo</th>
+                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 uppercase">Código</th>
                 <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 uppercase">Nombre</th>
-                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 uppercase">Descripci�n</th>
+                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 uppercase">Descripción</th>
                 <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 uppercase">Color</th>
                 <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 uppercase">Usuarios</th>
                 <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 uppercase">Estado</th>
