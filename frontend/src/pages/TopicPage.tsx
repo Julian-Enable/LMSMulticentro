@@ -16,8 +16,6 @@ const TopicPage = () => {
   const [showQuizResults, setShowQuizResults] = useState(false);
   const [activeTab, setActiveTab] = useState<'temario' | 'materiales'>('temario');
   const [expandedDescription, setExpandedDescription] = useState(false);
-  const [hasPrevious, setHasPrevious] = useState<boolean | null>(null);
-  const [hasNext, setHasNext] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (topicId) {
@@ -34,14 +32,6 @@ const TopicPage = () => {
     try {
       const data = await topicService.getById(topicId);
       setTopic(data);
-
-      // Check navigation availability
-      const [prevResult, nextResult] = await Promise.allSettled([
-        topicService.getPrevious(topicId),
-        topicService.getNext(topicId),
-      ]);
-      setHasPrevious(prevResult.status === 'fulfilled');
-      setHasNext(nextResult.status === 'fulfilled');
 
       // Increment views after loading
       try {
@@ -76,18 +66,14 @@ const TopicPage = () => {
     }
   };
 
-  const handleNavigation = async (direction: 'previous' | 'next') => {
-    if (!topicId) return;
-
-    try {
-      const navigationData = direction === 'next' 
-        ? await topicService.getNext(topicId)
-        : await topicService.getPrevious(topicId);
-      if (navigationData && navigationData.id) {
-        navigate(`/topic/${navigationData.id}`);
-      }
-    } catch (error) {
-      console.error(`Error navigating to ${direction} topic:`, error);
+  const handleNavigation = (direction: 'previous' | 'next') => {
+    if (!topic?.video?.topics) return;
+    const sorted = [...topic.video.topics].sort((a, b) => a.order - b.order);
+    const idx = sorted.findIndex(t => t.id === topicId);
+    if (direction === 'previous' && idx > 0) {
+      navigate(`/topic/${sorted[idx - 1].id}`);
+    } else if (direction === 'next' && idx !== -1 && idx < sorted.length - 1) {
+      navigate(`/topic/${sorted[idx + 1].id}`);
     }
   };
 
@@ -177,6 +163,11 @@ const TopicPage = () => {
 
   const videoUrl = topic.video ? getVideoUrl(topic.video.platform, topic.video.externalId) : '';
   const score = showQuizResults ? getQuizScore() : null;
+
+  const sortedTopics = topic.video?.topics ? [...topic.video.topics].sort((a, b) => a.order - b.order) : [];
+  const currentIdx = sortedTopics.findIndex(t => t.id === topicId);
+  const hasPrevious = currentIdx > 0;
+  const hasNext = currentIdx !== -1 && currentIdx < sortedTopics.length - 1;
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50">
