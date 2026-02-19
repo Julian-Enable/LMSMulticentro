@@ -2,7 +2,12 @@
 import { Search, Library, LogOut, User, Settings, Home, Video } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 
-const Navbar = () => {
+interface NavbarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+const Navbar = ({ isOpen = false, onClose }: NavbarProps) => {
   const { user, isAuthenticated, logout } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,6 +18,10 @@ const Navbar = () => {
   };
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleNavClick = () => {
+    onClose?.();
+  };
 
   if (!isAuthenticated) {
     return (
@@ -33,21 +42,34 @@ const Navbar = () => {
   }
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-primary-700 text-white flex flex-col z-40">
+    <aside className={`fixed left-0 top-0 h-screen w-64 bg-primary-700 text-white flex flex-col z-40 transition-transform duration-300 ${
+      isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+    }`}>
       {/* Logo */}
-      <div className="h-14 flex items-center px-6 border-b border-primary-600">
-        <Link to="/" className="flex items-center space-x-2">
+      <div className="h-14 flex items-center justify-between px-6 border-b border-primary-600">
+        <Link to="/" className="flex items-center space-x-2" onClick={handleNavClick}>
           <div className="w-7 h-7 bg-accent-500 rounded flex items-center justify-center">
             <Video className="w-4 h-4 text-white" />
           </div>
           <span className="font-bold text-lg">Multicentro</span>
         </Link>
+        {/* Close button (mobile only) */}
+        <button
+          onClick={onClose}
+          className="lg:hidden p-1.5 rounded text-primary-200 hover:text-white hover:bg-primary-600 transition-colors"
+          aria-label="Cerrar menú"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         <Link
           to="/"
+          onClick={handleNavClick}
           className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all border-l-2 ${
             isActive('/') 
               ? 'bg-primary-600 text-white border-accent-500' 
@@ -60,6 +82,7 @@ const Navbar = () => {
 
         <Link
           to="/search"
+          onClick={handleNavClick}
           className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all border-l-2 ${
             isActive('/search') 
               ? 'bg-primary-600 text-white border-accent-500' 
@@ -72,6 +95,7 @@ const Navbar = () => {
 
         <Link
           to="/library"
+          onClick={handleNavClick}
           className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all border-l-2 ${
             isActive('/library') 
               ? 'bg-primary-600 text-white border-accent-500' 
@@ -85,6 +109,7 @@ const Navbar = () => {
         {user?.role?.code === 'ADMIN' && (
           <Link
             to="/admin"
+            onClick={handleNavClick}
             className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all border-l-2 ${
               isActive('/admin') 
                 ? 'bg-accent-600 text-white border-accent-400' 
@@ -99,15 +124,21 @@ const Navbar = () => {
 
       {/* User section */}
       <div className="border-t border-primary-600 p-4">
-        <div className="flex items-center space-x-3 mb-3">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-accent-400 to-accent-600 flex items-center justify-center">
+        <Link
+          to="/profile"
+          onClick={handleNavClick}
+          className={`flex items-center space-x-3 mb-3 p-2 rounded-lg transition-colors ${
+            isActive('/profile') ? 'bg-primary-600' : 'hover:bg-primary-600/50'
+          }`}
+        >
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-accent-400 to-accent-600 flex items-center justify-center flex-shrink-0">
             <User className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-white truncate">{user?.username}</p>
             <p className="text-xs text-primary-300">{user?.role?.name || 'Sin rol'}</p>
           </div>
-        </div>
+        </Link>
         <button
           onClick={handleLogout}
           className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-primary-600 hover:bg-primary-500 rounded text-sm font-medium transition-colors"
@@ -118,6 +149,7 @@ const Navbar = () => {
       </div>
     </aside>
   );
+
 };
 
 export default Navbar;

@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { topicService } from '../services/topic.service';
+import { progressService } from '../services/progress.service';
 import { Topic } from '../types';
 import { formatTimestamp, getVideoUrl } from '../utils/helpers';
 import VideoPlayer from '../components/VideoPlayer/VideoPlayer';
@@ -47,9 +48,16 @@ const TopicPage = () => {
     }
   };
 
-  const handleVideoEnd = () => {
-    // Mark topic as completed when video ends
-    if (topicId && topic?.video?.category?.id) {
+  const handleVideoEnd = async () => {
+    if (!topicId) return;
+    // Mark topic as completed in the backend
+    try {
+      await progressService.markComplete(topicId);
+    } catch {
+      // fail silently — backend unavailable
+    }
+    // Also update localStorage as cache
+    if (topic?.video?.category?.id) {
       const categoryId = topic.video.category.id;
       const saved = localStorage.getItem(`course-progress-${categoryId}`);
       const completedTopics = saved ? new Set(JSON.parse(saved)) : new Set();

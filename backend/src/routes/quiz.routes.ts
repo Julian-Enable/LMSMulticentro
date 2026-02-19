@@ -10,13 +10,13 @@ import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
 
-// Public routes
+// All quiz routes require authentication
+router.use(authenticate);
+
 router.get('/', getQuizzes);
 router.get('/:id', getQuizById);
-
-// Protected routes (Admin only)
-router.post('/', authenticate, createQuiz);
-router.put('/:id', authenticate, updateQuiz);
+router.post('/', createQuiz);
+router.put('/:id', updateQuiz);
 router.delete('/:id', authenticate, deleteQuiz);
 
 export default router;

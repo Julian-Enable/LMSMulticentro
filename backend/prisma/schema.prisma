@@ -38,7 +38,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  role Role @relation(fields: [roleId], references: [id])
+  role     Role           @relation(fields: [roleId], references: [id])
+  progress UserProgress[]
 
   @@index([roleId])
   @@map("users")
@@ -119,9 +120,10 @@ model Topic {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  video  Video      @relation(fields: [videoId], references: [id], onDelete: Cascade)
-  tags   TopicTag[]
-  quizzes Quiz[]
+  video    Video          @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  tags     TopicTag[]
+  quizzes  Quiz[]
+  progress UserProgress[]
 
   @@index([videoId])
   @@index([code])
@@ -150,6 +152,24 @@ model TopicTag {
 
   @@id([topicId, tagId])
   @@map("topic_tags")
+}
+
+// Progreso del usuario por tema
+model UserProgress {
+  id          String   @id @default(uuid())
+  userId      String
+  topicId     String
+  completedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, topicId])
+  @@index([userId])
+  @@index([topicId])
+  @@map("user_progress")
 }
 
 // Modelo de Quiz/Evaluación

@@ -11,6 +11,8 @@ import LibraryPage from './pages/LibraryPage';
 import LoginPage from './pages/LoginPage';
 import AdminPage from './pages/AdminPage';
 
+import ProfilePage from './pages/ProfilePage';
+
 // Layout
 import Layout from './components/Layout/Layout';
 import PrivateRoute from './components/Auth/PrivateRoute';
@@ -32,6 +34,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/library" element={<LibraryPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/course/:categoryId" element={<CoursePage />} />
         <Route path="/topic/:topicId" element={<TopicPage />} />
 

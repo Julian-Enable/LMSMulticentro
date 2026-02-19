@@ -2,6 +2,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { PlayCircle, CheckCircle, Clock } from 'lucide-react';
 import { categoryService } from '../services/category.service';
+import { progressService } from '../services/progress.service';
 import { Category, Video, Topic } from '../types';
 import { formatTimestamp } from '../utils/helpers';
 
@@ -30,26 +31,48 @@ const CoursePage = () => {
     }
   };
 
-  const loadProgress = (categoryId: string) => {
-    // Load from localStorage
-    const saved = localStorage.getItem(`course-progress-${categoryId}`);
-    if (saved) {
-      setCompletedTopics(new Set(JSON.parse(saved)));
+  const loadProgress = async (categoryId: string) => {
+    // Try backend first, fall back to localStorage
+    try {
+      const completedIds = await progressService.getCategoryProgress(categoryId);
+      setCompletedTopics(new Set(completedIds));
+      // Update localStorage cache
+      localStorage.setItem(`course-progress-${categoryId}`, JSON.stringify(completedIds));
+    } catch {
+      // Fallback: load from localStorage
+      const saved = localStorage.getItem(`course-progress-${categoryId}`);
+      if (saved) {
+        setCompletedTopics(new Set(JSON.parse(saved)));
+      }
     }
   };
 
-  const toggleTopicComplete = (topicId: string) => {
+  const toggleTopicComplete = async (topicId: string) => {
     const newCompleted = new Set(completedTopics);
-    if (newCompleted.has(topicId)) {
+    const wasCompleted = newCompleted.has(topicId);
+
+    if (wasCompleted) {
       newCompleted.delete(topicId);
     } else {
       newCompleted.add(topicId);
     }
     setCompletedTopics(newCompleted);
-    
-    // Save to localStorage
+
+    // Update localStorage cache
     if (categoryId) {
       localStorage.setItem(`course-progress-${categoryId}`, JSON.stringify(Array.from(newCompleted)));
+    }
+
+    // Persist to backend
+    try {
+      if (wasCompleted) {
+        await progressService.unmarkComplete(topicId);
+      } else {
+        await progressService.markComplete(topicId);
+      }
+    } catch {
+      // Revert on error
+      setCompletedTopics(completedTopics);
     }
   };
 

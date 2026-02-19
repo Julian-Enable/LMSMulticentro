@@ -15,6 +15,7 @@ import searchRoutes from './routes/search.routes';
 import userRoutes from './routes/user.routes';
 import youtubeRoutes from './routes/youtube.routes';
 import roleRoutes from './routes/role.routes';
+import progressRoutes from './routes/progress.routes';
 
 dotenv.config();
 
@@ -63,6 +64,7 @@ app.use('/api/search', searchRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/youtube', youtubeRoutes);
 app.use('/api/roles', roleRoutes);
+app.use('/api/progress', progressRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

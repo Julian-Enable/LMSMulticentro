@@ -4,32 +4,34 @@ import api from '../../services/api';
 import { Quiz, Topic } from '../../types';
 
 interface QuizFormData {
-  title: string;
-  description: string;
   topicId: string;
-  questions: {
-    id?: string;
-    question: string;
-    options: {
-      id?: string;
-      text: string;
-      isCorrect: boolean;
-    }[];
-  }[];
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation: string;
+  order: number;
+  isActive: boolean;
 }
+
+const emptyForm = (): QuizFormData => ({
+  topicId: '',
+  question: '',
+  options: ['', '', '', ''],
+  correctAnswer: 0,
+  explanation: '',
+  order: 0,
+  isActive: true,
+});
 
 const QuizManager = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState<QuizFormData>({
-    title: '',
-    description: '',
-    topicId: '',
-    questions: [],
-  });
   const [isCreating, setIsCreating] = useState(false);
+  const [formData, setFormData] = useState<QuizFormData>(emptyForm());
+  const [saving, setSaving] = useState(false);
+  const [filterTopicId, setFilterTopicId] = useState('');
 
   useEffect(() => {
     loadData();
@@ -53,44 +55,48 @@ const QuizManager = () => {
 
   const handleCreate = () => {
     setIsCreating(true);
+    setEditingId(null);
+    setFormData(emptyForm());
+  };
+
+  const handleEdit = (quiz: Quiz) => {
+    setEditingId(quiz.id);
+    setIsCreating(false);
     setFormData({
-      title: '',
-      description: '',
-      topicId: '',
-      questions: [
-        {
-          question: '',
-          options: [
-            { text: '', isCorrect: true },
-            { text: '', isCorrect: false },
-          ],
-        },
-      ],
+      topicId: quiz.topicId,
+      question: quiz.question,
+      options: quiz.options.length >= 2 ? [...quiz.options] : [...quiz.options, '', ''].slice(0, Math.max(quiz.options.length, 2)),
+      correctAnswer: quiz.correctAnswer,
+      explanation: quiz.explanation || '',
+      order: quiz.order,
+      isActive: quiz.isActive,
     });
   };
 
-  const handleEdit = async (quiz: Quiz) => {
-    setEditingId(quiz.id);
-    
-    try {
-      const { data } = await api.get(`/quizzes/${quiz.id}`);
-      setFormData({
-        title: data.title,
-        description: data.description || '',
-        topicId: data.topicId,
-        questions: data.questions || [],
-      });
-    } catch (error) {
-      console.error('Error loading quiz details:', error);
-    }
-  };
-
   const handleSave = async () => {
+    if (!formData.topicId || !formData.question.trim()) return;
+    const filledOptions = formData.options.filter(o => o.trim());
+    if (filledOptions.length < 2) {
+      alert('Debes ingresar al menos 2 opciones');
+      return;
+    }
+
+    setSaving(true);
     try {
+      const payload = {
+        topicId: formData.topicId,
+        question: formData.question.trim(),
+        options: filledOptions,
+        correctAnswer: formData.correctAnswer,
+        explanation: formData.explanation.trim() || undefined,
+        order: formData.order,
+        isActive: formData.isActive,
+      };
+
       if (isCreating) {
-        await api.post('/quizzes', formData);
+        await api.post('/quizzes', payload);
       } else if (editingId) {
-        await api.put(`/quizzes/${editingId}`, formData);
+        await api.put(`/quizzes/${editingId}`, payload);
       }
 
       setIsCreating(false);
@@ -98,21 +104,20 @@ const QuizManager = () => {
       await loadData();
     } catch (error) {
       console.error('Error saving quiz:', error);
-      alert('Error al guardar el quiz');
+      alert('Error al guardar la pregunta');
+    } finally {
+      setSaving(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar este quiz?')) {
-      return;
-    }
-
+    if (!confirm('¿Eliminar esta pregunta?')) return;
     try {
       await api.delete(`/quizzes/${id}`);
       await loadData();
     } catch (error) {
       console.error('Error deleting quiz:', error);
-      alert('Error al eliminar el quiz');
+      alert('Error al eliminar la pregunta');
     }
   };
 
@@ -121,62 +126,30 @@ const QuizManager = () => {
     setEditingId(null);
   };
 
-  const addQuestion = () => {
+  const updateOption = (index: number, value: string) => {
+    const opts = [...formData.options];
+    opts[index] = value;
+    setFormData({ ...formData, options: opts });
+  };
+
+  const addOption = () => {
+    if (formData.options.length >= 6) return;
+    setFormData({ ...formData, options: [...formData.options, ''] });
+  };
+
+  const removeOption = (index: number) => {
+    if (formData.options.length <= 2) return;
+    const opts = formData.options.filter((_, i) => i !== index);
     setFormData({
       ...formData,
-      questions: [
-        ...formData.questions,
-        {
-          question: '',
-          options: [
-            { text: '', isCorrect: true },
-            { text: '', isCorrect: false },
-          ],
-        },
-      ],
+      options: opts,
+      correctAnswer: formData.correctAnswer >= opts.length ? 0 : formData.correctAnswer,
     });
   };
 
-  const removeQuestion = (index: number) => {
-    setFormData({
-      ...formData,
-      questions: formData.questions.filter((_, i) => i !== index),
-    });
-  };
-
-  const updateQuestion = (index: number, question: string) => {
-    const newQuestions = [...formData.questions];
-    newQuestions[index].question = question;
-    setFormData({ ...formData, questions: newQuestions });
-  };
-
-  const addOption = (questionIndex: number) => {
-    const newQuestions = [...formData.questions];
-    newQuestions[questionIndex].options.push({ text: '', isCorrect: false });
-    setFormData({ ...formData, questions: newQuestions });
-  };
-
-  const removeOption = (questionIndex: number, optionIndex: number) => {
-    const newQuestions = [...formData.questions];
-    newQuestions[questionIndex].options = newQuestions[questionIndex].options.filter(
-      (_, i) => i !== optionIndex
-    );
-    setFormData({ ...formData, questions: newQuestions });
-  };
-
-  const updateOption = (questionIndex: number, optionIndex: number, text: string) => {
-    const newQuestions = [...formData.questions];
-    newQuestions[questionIndex].options[optionIndex].text = text;
-    setFormData({ ...formData, questions: newQuestions });
-  };
-
-  const toggleCorrect = (questionIndex: number, optionIndex: number) => {
-    const newQuestions = [...formData.questions];
-    newQuestions[questionIndex].options.forEach((opt, i) => {
-      opt.isCorrect = i === optionIndex;
-    });
-    setFormData({ ...formData, questions: newQuestions });
-  };
+  const filteredQuizzes = filterTopicId
+    ? quizzes.filter(q => q.topicId === filterTopicId)
+    : quizzes;
 
   if (loading) {
     return (
@@ -187,199 +160,245 @@ const QuizManager = () => {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">Gestión de Quizzes</h2>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-bold text-gray-900">Cuestionarios</h2>
+          <p className="text-sm text-slate-500">{quizzes.length} preguntas en total</p>
+        </div>
         {!isCreating && !editingId && (
-          <button onClick={handleCreate} className="btn btn-primary flex items-center space-x-2">
-            <Plus className="w-5 h-5" />
-            <span>Nuevo Quiz</span>
+          <button
+            onClick={handleCreate}
+            className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold text-sm transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Nueva Pregunta
           </button>
         )}
       </div>
 
-      {/* Create/Edit Form */}
+      {/* Create / Edit Form */}
       {(isCreating || editingId) && (
-        <div className="card bg-primary-50">
-          <h3 className="font-semibold text-gray-900 mb-4">
-            {isCreating ? 'Crear Nuevo Quiz' : 'Editar Quiz'}
+        <div className="bg-primary-50 border border-primary-200 rounded-xl p-6 space-y-4">
+          <h3 className="font-bold text-gray-900">
+            {isCreating ? 'Nueva Pregunta' : 'Editar Pregunta'}
           </h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Título <span className="text-red-500">*</span>
+
+          {/* Topic selector */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Tema <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={formData.topicId}
+              onChange={(e) => setFormData({ ...formData, topicId: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="">Seleccionar tema...</option>
+              {topics.map((topic) => (
+                <option key={topic.id} value={topic.id}>
+                  {topic.code} — {topic.title}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Question */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Pregunta <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              value={formData.question}
+              onChange={(e) => setFormData({ ...formData, question: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              rows={2}
+              placeholder="Escribe la pregunta..."
+            />
+          </div>
+
+          {/* Options */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-semibold text-gray-700">
+                Opciones <span className="text-xs text-slate-500 font-normal">(selecciona la correcta con el radio)</span>
               </label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="input"
-                placeholder="Ej: Evaluación Facturación"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-              <textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="input"
-                rows={2}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Tema <span className="text-red-500">*</span>
-              </label>
-              <select
-                value={formData.topicId}
-                onChange={(e) => setFormData({ ...formData, topicId: e.target.value })}
-                className="input"
-              >
-                <option value="">Seleccionar tema</option>
-                {topics.map((topic) => (
-                  <option key={topic.id} value={topic.id}>
-                    {topic.code} - {topic.title}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Questions */}
-            <div>
-              <div className="flex justify-between items-center mb-3">
-                <label className="block text-sm font-medium text-gray-700">Preguntas</label>
-                <button
-                  type="button"
-                  onClick={addQuestion}
-                  className="text-sm text-primary-600 hover:text-primary-700 flex items-center space-x-1"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Agregar pregunta</span>
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                {formData.questions.map((question, qIndex) => (
-                  <div key={qIndex} className="p-4 bg-white rounded-lg border-2 border-gray-200">
-                    <div className="flex justify-between items-start mb-3">
-                      <label className="text-sm font-medium text-gray-700">
-                        Pregunta {qIndex + 1}
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => removeQuestion(qIndex)}
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-
-                    <input
-                      type="text"
-                      value={question.question}
-                      onChange={(e) => updateQuestion(qIndex, e.target.value)}
-                      className="input mb-3"
-                      placeholder="Escribe la pregunta..."
-                    />
-
-                    <div className="space-y-2">
-                      {question.options.map((option, oIndex) => (
-                        <div key={oIndex} className="flex items-center space-x-2">
-                          <input
-                            type="radio"
-                            checked={option.isCorrect}
-                            onChange={() => toggleCorrect(qIndex, oIndex)}
-                            className="w-4 h-4 text-green-600"
-                            title="Marcar como correcta"
-                          />
-                          <input
-                            type="text"
-                            value={option.text}
-                            onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
-                            className="input flex-1"
-                            placeholder={`Opción ${oIndex + 1}`}
-                          />
-                          {question.options.length > 2 && (
-                            <button
-                              type="button"
-                              onClick={() => removeOption(qIndex, oIndex)}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => addOption(qIndex)}
-                        className="text-sm text-primary-600 hover:text-primary-700"
-                      >
-                        + Agregar opción
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex space-x-2">
               <button
-                onClick={handleSave}
-                disabled={!formData.title || !formData.topicId || formData.questions.length === 0}
-                className="btn btn-primary flex items-center space-x-2"
+                type="button"
+                onClick={addOption}
+                disabled={formData.options.length >= 6}
+                className="text-xs text-primary-600 hover:text-primary-700 font-semibold disabled:opacity-40"
               >
-                <Save className="w-4 h-4" />
-                <span>Guardar</span>
-              </button>
-              <button onClick={handleCancel} className="btn btn-secondary flex items-center space-x-2">
-                <X className="w-4 h-4" />
-                <span>Cancelar</span>
+                + Agregar opción
               </button>
             </div>
+            <div className="space-y-2">
+              {formData.options.map((opt, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="correctAnswer"
+                    checked={formData.correctAnswer === i}
+                    onChange={() => setFormData({ ...formData, correctAnswer: i })}
+                    className="w-4 h-4 accent-green-600"
+                    title="Marcar como correcta"
+                  />
+                  <input
+                    type="text"
+                    value={opt}
+                    onChange={(e) => updateOption(i, e.target.value)}
+                    className={`flex-1 px-3 py-1.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                      formData.correctAnswer === i ? 'border-green-400 bg-green-50' : 'border-gray-300'
+                    }`}
+                    placeholder={`Opción ${i + 1}${formData.correctAnswer === i ? ' ✓ correcta' : ''}`}
+                  />
+                  {formData.options.length > 2 && (
+                    <button
+                      type="button"
+                      onClick={() => removeOption(i)}
+                      className="p-1 text-red-500 hover:bg-red-50 rounded"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Explanation */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Explicación <span className="text-xs text-slate-400 font-normal">(opcional — se muestra al responder)</span>
+            </label>
+            <textarea
+              value={formData.explanation}
+              onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              rows={2}
+              placeholder="Explica por qué la respuesta es correcta..."
+            />
+          </div>
+
+          {/* Order + Active */}
+          <div className="flex items-center gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Orden</label>
+              <input
+                type="number"
+                value={formData.order}
+                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+                className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                min={0}
+              />
+            </div>
+            <label className="flex items-center gap-2 cursor-pointer mt-5">
+              <input
+                type="checkbox"
+                checked={formData.isActive}
+                onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                className="w-4 h-4 accent-primary-600"
+              />
+              <span className="text-sm font-semibold text-gray-700">Activa</span>
+            </label>
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-2 pt-1">
+            <button
+              onClick={handleSave}
+              disabled={saving || !formData.topicId || !formData.question.trim()}
+              className="flex items-center gap-2 px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Save className="w-4 h-4" />
+              {saving ? 'Guardando...' : 'Guardar'}
+            </button>
+            <button
+              onClick={handleCancel}
+              className="flex items-center gap-2 px-5 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg font-semibold text-sm transition-colors"
+            >
+              <X className="w-4 h-4" />
+              Cancelar
+            </button>
           </div>
         </div>
       )}
 
-      {/* Quizzes List */}
-      <div className="space-y-2">
-        {quizzes.length === 0 ? (
-          <div className="card text-center py-8 text-gray-500">No hay quizzes creados</div>
+      {/* Filter by topic */}
+      {!isCreating && !editingId && quizzes.length > 0 && (
+        <select
+          value={filterTopicId}
+          onChange={(e) => setFilterTopicId(e.target.value)}
+          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+        >
+          <option value="">Todos los temas</option>
+          {topics
+            .filter(t => quizzes.some(q => q.topicId === t.id))
+            .map(t => (
+              <option key={t.id} value={t.id}>{t.code} — {t.title}</option>
+            ))}
+        </select>
+      )}
+
+      {/* Quizzes list */}
+      <div className="space-y-3">
+        {filteredQuizzes.length === 0 ? (
+          <div className="bg-white border border-gray-200 rounded-xl text-center py-12 text-slate-500">
+            {quizzes.length === 0 ? 'No hay preguntas creadas aún' : 'No hay preguntas para el filtro seleccionado'}
+          </div>
         ) : (
-          quizzes.map((quiz) => (
-            <div key={quiz.id} className="card hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 mb-1">{quiz.question}</h3>
+          filteredQuizzes.map((quiz, idx) => (
+            <div key={quiz.id} className={`bg-white border rounded-xl p-5 hover:shadow-sm transition-shadow ${!quiz.isActive ? 'opacity-60' : 'border-gray-200'}`}>
+              <div className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary-100 text-primary-700 text-xs font-bold flex items-center justify-center mt-0.5">
+                  {idx + 1}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900 mb-2">{quiz.question}</p>
+                  <div className="space-y-1 mb-2">
+                    {quiz.options.map((option, i) => (
+                      <div
+                        key={i}
+                        className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg ${
+                          i === quiz.correctAnswer
+                            ? 'bg-green-50 text-green-800 font-semibold'
+                            : 'text-gray-600'
+                        }`}
+                      >
+                        {i === quiz.correctAnswer && (
+                          <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                        <span>{option}</span>
+                      </div>
+                    ))}
+                  </div>
                   {quiz.explanation && (
-                    <p className="text-sm text-gray-600 mb-2">{quiz.explanation}</p>
+                    <p className="text-xs text-slate-500 italic mt-1">💡 {quiz.explanation}</p>
                   )}
-                  <div className="flex items-center space-x-4 text-xs text-gray-500">
-                    <span>Tema: {quiz.topic?.code} - {quiz.topic?.title}</span>
-                    <span>{quiz.options?.length || 0} opciones</span>
+                  <div className="flex items-center gap-3 text-xs text-slate-400 mt-2">
+                    <span>Tema: {quiz.topic?.code} — {quiz.topic?.title}</span>
+                    {!quiz.isActive && <span className="text-orange-500 font-semibold">Inactiva</span>}
                   </div>
                 </div>
-
-                {editingId !== quiz.id && (
-                  <div className="flex space-x-2 ml-4">
-                    <button
-                      onClick={() => handleEdit(quiz)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded"
-                      title="Editar"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(quiz.id)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded"
-                      title="Eliminar"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                )}
+                <div className="flex gap-1 flex-shrink-0">
+                  <button
+                    onClick={() => handleEdit(quiz)}
+                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                    title="Editar"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(quiz.id)}
+                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Eliminar"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
           ))

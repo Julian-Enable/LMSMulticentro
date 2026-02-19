@@ -135,3 +135,20 @@ export interface AuthResponse {
   token: string;
   user: User;
 }
+
+export interface UserProgress {
+  id: string;
+  userId: string;
+  topicId: string;
+  completedAt: string;
+  topic?: {
+    id: string;
+    title: string;
+    code: string;
+    video?: {
+      id: string;
+      title: string;
+      category?: { id: string; name: string };
+    };
+  };
+}
