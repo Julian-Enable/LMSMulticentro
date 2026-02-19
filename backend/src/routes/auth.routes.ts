@@ -7,6 +7,6 @@ const router = Router();
 router.post('/login', login);
 router.post('/register', register);
 router.get('/profile', authenticate, getProfile);
-router.post('/make-admin', makeAdmin); // Temporal
+router.post('/make-admin', authenticate, makeAdmin); // Temporal - requiere auth
 
 export default router;

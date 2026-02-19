@@ -17,23 +17,19 @@ const TopicPage = () => {
   const [expandedDescription, setExpandedDescription] = useState(false);
 
   useEffect(() => {
-    console.log('TopicPage mounted, id:', topicId);
     if (topicId) {
       loadTopic(topicId);
     } else {
-      console.error('No topic ID provided');
       setError('No se proporcionó ID del tema');
       setLoading(false);
     }
   }, [topicId]);
 
   const loadTopic = async (topicId: string) => {
-    console.log('Loading topic:', topicId);
     setLoading(true);
     setError(null);
     try {
       const data = await topicService.getById(topicId);
-      console.log('Topic loaded successfully:', data);
       setTopic(data);
       
       // Increment views after loading
@@ -59,7 +55,6 @@ const TopicPage = () => {
       const completedTopics = saved ? new Set(JSON.parse(saved)) : new Set();
       completedTopics.add(topicId);
       localStorage.setItem(`course-progress-${categoryId}`, JSON.stringify(Array.from(completedTopics)));
-      console.log('Topic marked as completed:', topicId);
     }
   };
 

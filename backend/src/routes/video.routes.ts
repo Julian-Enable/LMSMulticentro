@@ -10,11 +10,11 @@ import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
 
-// Public routes
-router.get('/', getVideos);
-router.get('/:id', getVideoById);
+// Protected routes - require authentication
+router.get('/', authenticate, getVideos);
+router.get('/:id', authenticate, getVideoById);
 
-// Protected routes (Admin only)
+// Admin only routes
 router.post('/', authenticate, createVideo);
 router.put('/:id', authenticate, updateVideo);
 router.delete('/:id', authenticate, deleteVideo);

@@ -13,14 +13,14 @@ import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
 
-// Public routes
-router.get('/', getTopics);
-router.get('/:id', getTopicById);
-router.get('/:id/next', getNextTopic);
-router.get('/:id/previous', getPreviousTopic);
-router.post('/:id/view', incrementTopicViews);
+// Protected routes - require authentication
+router.get('/', authenticate, getTopics);
+router.get('/:id', authenticate, getTopicById);
+router.get('/:id/next', authenticate, getNextTopic);
+router.get('/:id/previous', authenticate, getPreviousTopic);
+router.post('/:id/view', authenticate, incrementTopicViews);
 
-// Protected routes (Admin only)
+// Admin only routes
 router.post('/', authenticate, createTopic);
 router.put('/:id', authenticate, updateTopic);
 router.delete('/:id', authenticate, deleteTopic);

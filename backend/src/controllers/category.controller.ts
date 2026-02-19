@@ -1,10 +1,11 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import prisma from '../config/database';
+import { AuthRequest } from '../middleware/auth.middleware';
 
-export const getCategories = async (req: Request, res: Response) => {
+export const getCategories = async (req: AuthRequest, res: Response) => {
   try {
     const { isActive, admin } = req.query;
-    const userRoleId = (req as any).user?.roleId; // Get user role ID from auth middleware
+    const userRoleId = req.user?.roleId;
 
     const categories = await prisma.category.findMany({
       where: isActive !== undefined ? { isActive: isActive === 'true' } : {},
@@ -72,7 +73,7 @@ export const getCategories = async (req: Request, res: Response) => {
   }
 };
 
-export const getCategoryById = async (req: Request, res: Response) => {
+export const getCategoryById = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -102,7 +103,7 @@ export const getCategoryById = async (req: Request, res: Response) => {
   }
 };
 
-export const createCategory = async (req: Request, res: Response) => {
+export const createCategory = async (req: AuthRequest, res: Response) => {
   try {
     const { name, description, order, isActive, allowedRoles } = req.body;
 
@@ -140,7 +141,7 @@ export const createCategory = async (req: Request, res: Response) => {
   }
 };
 
-export const updateCategory = async (req: Request, res: Response) => {
+export const updateCategory = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const { name, description, order, isActive, allowedRoles } = req.body;
@@ -193,7 +194,7 @@ export const updateCategory = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteCategory = async (req: Request, res: Response) => {
+export const deleteCategory = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
