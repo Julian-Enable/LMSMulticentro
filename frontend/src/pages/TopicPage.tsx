@@ -1,7 +1,7 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { topicService } from '../services/topic.service';
-import { progressService } from '../services/progress.service';
+import { useProgressStore } from '../store/progressStore';
 import { Topic } from '../types';
 import { formatTimestamp, getVideoUrl } from '../utils/helpers';
 import VideoPlayer from '../components/VideoPlayer/VideoPlayer';
@@ -16,7 +16,11 @@ const TopicPage = () => {
   const [showQuizResults, setShowQuizResults] = useState(false);
   const [activeTab, setActiveTab] = useState<'temario' | 'materiales'>('temario');
   const [expandedDescription, setExpandedDescription] = useState(false);
-  const [completedTopics, setCompletedTopics] = useState<Set<string>>(new Set());
+
+  // Zustand Global Progress state
+  const { progressByCourse, initProgress, markComplete } = useProgressStore();
+  const categoryId = topic?.video?.category?.id;
+  const completedTopics = progressByCourse[categoryId || ''] || new Set<string>();
 
   useEffect(() => {
     if (topicId) {
@@ -34,11 +38,9 @@ const TopicPage = () => {
       const data = await topicService.getById(topicId);
       setTopic(data);
 
-      // Load completed topics from localStorage
-      const categoryId = data?.video?.category?.id;
-      if (categoryId) {
-        const saved = localStorage.getItem(`course-progress-${categoryId}`);
-        if (saved) setCompletedTopics(new Set(JSON.parse(saved)));
+      const categoryIdLoad = data?.video?.category?.id;
+      if (categoryIdLoad) {
+        initProgress(categoryIdLoad);
       }
 
       // Increment views after loading
@@ -57,22 +59,8 @@ const TopicPage = () => {
   };
 
   const handleVideoEnd = async () => {
-    if (!topicId) return;
-    // Mark topic as completed in the backend
-    try {
-      await progressService.markComplete(topicId);
-    } catch {
-      // fail silently — backend unavailable
-    }
-    // Also update localStorage as cache
-    if (topic?.video?.category?.id) {
-      const categoryId = topic.video.category.id;
-      const saved = localStorage.getItem(`course-progress-${categoryId}`);
-      const updated = saved ? new Set<string>(JSON.parse(saved)) : new Set<string>();
-      updated.add(topicId);
-      localStorage.setItem(`course-progress-${categoryId}`, JSON.stringify(Array.from(updated)));
-      setCompletedTopics(new Set(updated));
-    }
+    if (!topicId || !categoryId) return;
+    await markComplete(categoryId, topicId);
   };
 
   const handleNavigation = (direction: 'previous' | 'next') => {
@@ -362,11 +350,10 @@ const TopicPage = () => {
                 {/* Progress Header */}
                 <div className="p-4 bg-gray-50 border-b border-gray-200">
                   {(() => {
-                    const categoryId = topic.video?.category?.id;
                     const allTopics = topic.video?.category?.videos?.flatMap((v: any) => v.topics ?? []) ?? [];
                     const total = allTopics.length;
-                    const saved = categoryId ? localStorage.getItem(`course-progress-${categoryId}`) : null;
-                    const completed = saved ? (JSON.parse(saved) as string[]).filter((id: string) => allTopics.some((t: any) => t.id === id)).length : 0;
+                    
+                    const completed = completedTopics.size;
                     const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
                     return (
                       <>

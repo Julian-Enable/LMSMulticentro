@@ -4,7 +4,8 @@ import {
   getVideoById,
   createVideo,
   updateVideo,
-  deleteVideo
+  deleteVideo,
+  createVideoBundle
 } from '../controllers/video.controller';
 import { authenticate } from '../middleware/auth.middleware';
 
@@ -15,6 +16,7 @@ router.get('/', authenticate, getVideos);
 router.get('/:id', authenticate, getVideoById);
 
 // Admin only routes
+router.post('/bundle', authenticate, createVideoBundle);
 router.post('/', authenticate, createVideo);
 router.put('/:id', authenticate, updateVideo);
 router.delete('/:id', authenticate, deleteVideo);

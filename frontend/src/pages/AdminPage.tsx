@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import CategoryManager from '../components/Admin/CategoryManager';
 import VideoManager from '../components/Admin/VideoManager';
 import TopicManager from '../components/Admin/TopicManager';
@@ -6,14 +6,16 @@ import TagManager from '../components/Admin/TagManager';
 import QuizManager from '../components/Admin/QuizManager';
 import UserManager from '../components/Admin/UserManager';
 import RoleManager from '../components/Admin/RoleManager';
+import UnifiedCreator from '../components/Admin/UnifiedCreator.tsx';
 
-type TabType = 'categories' | 'videos' | 'topics' | 'tags' | 'quizzes' | 'users' | 'roles';
+type TabType = 'magic' | 'categories' | 'videos' | 'topics' | 'tags' | 'quizzes' | 'users' | 'roles';
 
 const AdminPage = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('videos');
+  const [activeTab, setActiveTab] = useState<TabType>('magic');
   const isMockMode = import.meta.env.VITE_USE_MOCK === 'true';
 
   const tabs = [
+    { id: 'magic' as TabType, label: '✨ Creador Mágico' },
     { id: 'categories' as TabType, label: 'Cursos' },
     { id: 'videos' as TabType, label: 'Videos' },
     { id: 'users' as TabType, label: 'Usuarios' },
@@ -47,11 +49,10 @@ const AdminPage = () => {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`pb-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
-                        isActive
-                          ? 'font-bold text-primary border-primary'
-                          : 'font-medium text-slate-500 hover:text-primary-700 border-transparent hover:border-slate-300'
-                      }`}
+                      className={`pb-3 text-sm whitespace-nowrap border-b-2 transition-colors ${isActive
+                        ? 'font-bold text-primary border-primary'
+                        : 'font-medium text-slate-500 hover:text-primary-700 border-transparent hover:border-slate-300'
+                        }`}
                     >
                       {tab.label}
                     </button>
@@ -63,6 +64,7 @@ const AdminPage = () => {
 
           {/* Tab Content */}
           <div>
+            {activeTab === 'magic' && <UnifiedCreator />}
             {activeTab === 'categories' && <CategoryManager />}
             {activeTab === 'videos' && <VideoManager />}
             {activeTab === 'users' && <UserManager />}

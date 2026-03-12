@@ -22,6 +22,11 @@ export const videoService = {
     return response.data;
   },
 
+  createBundle: async (bundleData: any): Promise<Video> => {
+    const response = await api.post('/videos/bundle', bundleData);
+    return response.data;
+  },
+
   delete: async (id: string): Promise<void> => {
     await api.delete(`/videos/${id}`);
   },

@@ -1,4 +1,4 @@
-﻿import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import { OnProgressProps } from 'react-player/base';
 
@@ -18,7 +18,26 @@ const VideoPlayer = ({
   className = '',
 }: VideoPlayerProps) => {
   const playerRef = useRef<ReactPlayer>(null);
+  const prevUrlRef = useRef<string>(url);
   const [ended, setEnded] = useState(false);
+
+  // Dynamic seeking without remounting the entire iframe
+  useEffect(() => {
+    // Si la URL es la misma (Mismo video) pero cambió el timestamp
+    if (playerRef.current && prevUrlRef.current === url) {
+      playerRef.current.seekTo(startTime, 'seconds');
+      setEnded(false);
+      
+      // Auto-play automatically if you navigate between chapters
+      setTimeout(() => {
+        const internalPlayer = playerRef.current?.getInternalPlayer();
+        if (internalPlayer && typeof internalPlayer.playVideo === 'function') {
+          internalPlayer.playVideo();
+        }
+      }, 150);
+    }
+    prevUrlRef.current = url;
+  }, [startTime, url]);
 
   const handleReady = () => {
     const internalPlayer = playerRef.current?.getInternalPlayer();
