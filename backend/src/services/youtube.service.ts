@@ -85,7 +85,8 @@ const parseChaptersFromDescription = (description: string, parentTitle: string =
     }
   }
   
-  return chapters;
+  // Filter out placeholder chapters that are explicitly just "fin" or "end"
+  return chapters.filter(c => !['fin', 'end'].includes(c.title.toLowerCase().trim()));
 };
 
 // Convert ISO 8601 duration (PT1H2M10S) to seconds
