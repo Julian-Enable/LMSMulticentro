@@ -68,7 +68,7 @@ const parseChaptersFromDescription = (description: string, parentTitle: string =
       const hours = match[3] ? parseInt(match[1]) : 0;
       const minutes = match[3] ? parseInt(match[2]) : parseInt(match[1]);
       const seconds = match[3] ? parseInt(match[3]) : parseInt(match[2]);
-      const title = match[4].trim();
+      const title = match[4].replace(/^[-–—:.,\s]+/, '').trim();
       
       const totalSeconds = hours * 3600 + minutes * 60 + seconds;
       

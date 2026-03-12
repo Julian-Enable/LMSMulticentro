@@ -73,6 +73,10 @@ export default function UnifiedCreator() {
       setVideoThumbnailUrl(info.thumbnailUrl);
       setVideoDuration(info.duration);
 
+      // Attempt to extract topic codes from the video title.
+      // E.g., title "1,21 - 1,22 - CERRAR CAJA" -> extracts ['1,21', '1,22']
+      const codeMatches = info.title.match(/\d+[,.]\d+/g) || [];
+
       if (info.chapters && info.chapters.length > 0) {
         const generatedTopics: TopicDraft[] = info.chapters.map((chapter, index) => {
           // Calculate duration if possible
@@ -83,9 +87,12 @@ export default function UnifiedCreator() {
              durationStr = String(info.duration - chapter.timestamp);
           }
 
+          // Use extracted code if available, otherwise default to sequential
+          let extractedCodeStr = codeMatches[index] ? codeMatches[index].replace(',', '.') : `${index + 1}.0`;
+
           return {
             id: window.crypto.randomUUID(),
-            code: `${index + 1}.0`,
+            code: extractedCodeStr,
             title: chapter.title,
             description: '',
             timestamp: String(chapter.timestamp),
