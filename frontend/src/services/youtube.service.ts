@@ -3,6 +3,7 @@ import api from './api';
 export interface YouTubeChapter {
   title: string;
   timestamp: number;
+  tags?: string[];
 }
 
 export interface YouTubeVideoInfo {

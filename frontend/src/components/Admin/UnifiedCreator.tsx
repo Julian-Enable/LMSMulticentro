@@ -90,7 +90,7 @@ export default function UnifiedCreator() {
             description: '',
             timestamp: String(chapter.timestamp),
             duration: durationStr,
-            tagsString: 'generado'
+            tagsString: chapter.tags ? chapter.tags.join(', ') : ''
           };
         });
         setTopics(generatedTopics);
