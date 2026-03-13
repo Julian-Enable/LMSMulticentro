@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { User, Role } from '../../types';
 import { userService } from '../../services/user.service';
 import { roleService } from '../../services/role.service';
@@ -14,6 +14,7 @@ const UserManager = () => {
     email: '',
     password: '',
     roleId: '',
+    isActive: true,
   });
   const [isCreating, setIsCreating] = useState(false);
 
@@ -57,6 +58,7 @@ const UserManager = () => {
       email: '',
       password: '',
       roleId: defaultRole?.id || '',
+      isActive: true,
     });
   };
 
@@ -67,6 +69,7 @@ const UserManager = () => {
       email: user.email || '',
       password: '',
       roleId: user.roleId || '',
+      isActive: user.isActive !== false,
     });
   };
 
@@ -88,12 +91,14 @@ const UserManager = () => {
           email: formData.email,
           password: formData.password,
           roleId: formData.roleId,
+          isActive: formData.isActive,
         });
       } else if (editingId) {
         const updateData: any = {
           username: formData.username,
           email: formData.email,
           roleId: formData.roleId,
+          isActive: formData.isActive,
         };
         if (formData.password) {
           updateData.password = formData.password;
@@ -110,6 +115,7 @@ const UserManager = () => {
         email: '',
         password: '',
         roleId: defaultRole?.id || '',
+        isActive: true,
       });
     } catch (error: any) {
       console.error('Error saving user:', error);
@@ -194,20 +200,20 @@ const UserManager = () => {
                 />
               </div>
 
-              {isCreating && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Contraseña <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
-                    placeholder="••••••••"
-                  />
-                </div>
-              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {isCreating ? 'Contraseña ' : 'Nueva Contraseña (Opcional) '}
+                  {isCreating && <span className="text-red-500">*</span>}
+                </label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all cursor-text"
+                  placeholder={isCreating ? "••••••••" : "Dejar en blanco para no cambiar"}
+                  autoComplete="new-password"
+                />
+              </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -223,6 +229,23 @@ const UserManager = () => {
                     <option key={role.id} value={role.id}>{role.name}</option>
                   ))}
                 </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Estado <span className="text-red-500">*</span>
+                </label>
+                <div className="flex items-center gap-3 mt-2">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, isActive: !formData.isActive })}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${formData.isActive ? 'bg-primary-600' : 'bg-gray-300'}`}
+                  >
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${formData.isActive ? 'translate-x-6' : 'translate-x-1'}`} />
+                  </button>
+                  <span className={`text-sm font-semibold ${formData.isActive ? 'text-primary-700' : 'text-gray-500'}`}>
+                    {formData.isActive ? 'Activo' : 'Inactivo'}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -301,10 +324,20 @@ const UserManager = () => {
                   <tr key={user.id} className="hover:bg-blue-50/30 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-11 h-11 rounded-full bg-gradient-to-br from-primary-600 to-purple-600 text-white flex items-center justify-center font-bold text-base shadow-md">
-                          {user.username.charAt(0).toUpperCase()}
+                        <div className="relative">
+                          <div className={`w-11 h-11 rounded-full text-white flex items-center justify-center font-bold text-base shadow-md ${user.isActive === false ? 'bg-gray-400 grayscale' : 'bg-gradient-to-br from-primary-600 to-purple-600'}`}>
+                            {user.username.charAt(0).toUpperCase()}
+                          </div>
+                          {user.isActive === false && (
+                            <span className="absolute -bottom-1 -right-1 flex h-4 w-4 rounded-full bg-red-500 border-2 border-white items-center justify-center" title="Usuario Inactivo">
+                              <div className="w-1.5 h-0.5 bg-white rounded-full"></div>
+                            </span>
+                          )}
                         </div>
-                        <span className="font-bold text-gray-900 text-sm">{user.username}</span>
+                        <div className="flex flex-col">
+                          <span className={`font-bold text-sm ${user.isActive === false ? 'text-gray-500 line-through' : 'text-gray-900'}`}>{user.username}</span>
+                          {user.isActive === false && <span className="text-xs text-red-500 font-medium">Inactivo</span>}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">

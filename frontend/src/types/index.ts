@@ -19,6 +19,7 @@ export interface User {
   username: string;
   email?: string;
   roleId?: string;
+  isActive?: boolean;
   role?: Role;
   createdAt?: string;
 }

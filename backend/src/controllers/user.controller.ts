@@ -12,6 +12,7 @@ export const getUsers = async (req: Request, res: Response) => {
         username: true,
         email: true,
         roleId: true,
+        isActive: true,
         role: true,
         createdAt: true,
       },
@@ -29,7 +30,7 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { username, email, password, roleId } = req.body;
+    const { username, email, password, roleId, isActive } = req.body;
 
     if (!username || !email || !password || !roleId) {
       return res.status(400).json({ message: 'Username, email, password, and role are required' });
@@ -59,12 +60,14 @@ export const createUser = async (req: Request, res: Response) => {
         email,
         password: hashedPassword,
         roleId,
+        isActive: isActive !== undefined ? isActive : true,
       },
       select: {
         id: true,
         username: true,
         email: true,
         roleId: true,
+        isActive: true,
         role: true,
         createdAt: true,
       },
@@ -80,13 +83,14 @@ export const createUser = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { username, email, password, roleId } = req.body;
+    const { username, email, password, roleId, isActive } = req.body;
 
     const updateData: any = {};
     
     if (username) updateData.username = username;
     if (email) updateData.email = email;
     if (roleId) updateData.roleId = roleId;
+    if (isActive !== undefined) updateData.isActive = isActive;
     if (password) {
       updateData.password = await bcrypt.hash(password, 10);
     }
@@ -99,6 +103,7 @@ export const updateUser = async (req: Request, res: Response) => {
         username: true,
         email: true,
         roleId: true,
+        isActive: true,
         role: true,
         createdAt: true,
       },
