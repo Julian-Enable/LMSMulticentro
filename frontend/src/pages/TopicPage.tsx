@@ -100,10 +100,24 @@ const TopicPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-primary-600"></div>
-          <p className="mt-4 text-gray-600 font-medium">Cargando tema...</p>
+      <div className="flex-1 flex flex-col h-full bg-gray-50 animate-pulse">
+        <div className="px-6 py-4 border-b border-gray-200 bg-white">
+           <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+        </div>
+        <div className="flex-1 overflow-y-auto max-w-[1600px] w-full mx-auto">
+          <div className="flex flex-col xl:flex-row gap-6 px-4 md:px-6 py-6 pb-10">
+            {/* Main Content Skeleton */}
+            <div className="flex-1 min-w-0 flex flex-col gap-6">
+              <div className="w-full aspect-video bg-gray-200 rounded-xl shadow-lg"></div>
+              <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-32 bg-gray-200 rounded-xl w-full border border-gray-100"></div>
+            </div>
+            {/* Sidebar Skeleton */}
+            <div className="w-full xl:w-[380px] flex-none flex flex-col gap-6">
+               <div className="h-[400px] bg-gray-200 rounded-xl w-full border border-gray-100 shadow-sm"></div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -198,7 +212,7 @@ const TopicPage = () => {
       {/* Content Grid (70/30) */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-[1600px] mx-auto min-h-full">
-          <div className="flex flex-col xl:flex-row gap-6 px-4 md:px-6 py-6 pb-10 flex-1">
+          <div className="flex flex-col xl:flex-row gap-6 px-4 md:px-6 py-6 pb-32 xl:pb-10 flex-1">
             {/* Left Column: Video & Details (70%) */}
             <div className="flex-1 min-w-0 flex flex-col gap-6">
               {/* Video Player Container */}
@@ -425,8 +439,8 @@ const TopicPage = () => {
                   </div>
                 )}
 
-                {/* Footer Actions */}
-                <div className="p-4 border-t border-gray-200 bg-gray-50 flex flex-col gap-3">
+                {/* Footer Actions (Sticky on Mobile) */}
+                <div className="p-4 border-t border-gray-200 bg-gray-50 flex flex-col gap-3 fixed bottom-0 left-0 right-0 z-50 glass xl:static xl:z-auto xl:bg-gray-50 xl:backdrop-blur-none xl:border-none shadow-[0_-15px_30px_rgba(0,0,0,0.1)] xl:shadow-none animate-in slide-in-from-bottom-6">
                   {topic.quizzes && topic.quizzes.length > 0 && (
                     <button 
                       onClick={() => {

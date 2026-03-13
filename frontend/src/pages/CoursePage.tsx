@@ -5,6 +5,7 @@ import { categoryService } from '../services/category.service';
 import { useProgressStore } from '../store/progressStore';
 import { Category, Video, Topic } from '../types';
 import { formatTimestamp } from '../utils/helpers';
+import confetti from 'canvas-confetti';
 
 const CoursePage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
@@ -14,6 +15,7 @@ const CoursePage = () => {
   // Zustand Global Progress State
   const { progressByCourse, initProgress, toggleComplete } = useProgressStore();
   const completedTopics = progressByCourse[categoryId || ''] || new Set<string>();
+  const [hasCelebrated, setHasCelebrated] = useState(false);
 
   useEffect(() => {
     if (categoryId) {
@@ -21,6 +23,40 @@ const CoursePage = () => {
       initProgress(categoryId); // Zustand fetches API or reads Cache automatically
     }
   }, [categoryId, initProgress]);
+
+  // Gamification: Confetti when course is 100% completed
+  useEffect(() => {
+    const topics = category?.videos?.flatMap(v => v.topics || []) || [];
+    const progressPct = topics.length > 0 ? Math.round((completedTopics.size / topics.length) * 100) : 0;
+    
+    if (progressPct === 100 && !hasCelebrated && category && !loading) {
+      setHasCelebrated(true);
+      const duration = 3000;
+      const end = Date.now() + duration;
+
+      const frame = () => {
+        confetti({
+          particleCount: 5,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ['#232752', '#92232a', '#ffffff']
+        });
+        confetti({
+          particleCount: 5,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ['#232752', '#92232a', '#ffffff']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      };
+      frame();
+    }
+  }, [completedTopics.size, category, loading, hasCelebrated]);
 
   const loadCategory = async (categoryId: string) => {
     setLoading(true);
@@ -73,9 +109,37 @@ const CoursePage = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-12">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-        <p className="mt-4 text-gray-600">Cargando curso...</p>
+      <div className="max-w-5xl mx-auto space-y-8 animate-pulse">
+        {/* Header Skeleton */}
+        <div>
+          <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+          <div className="h-8 bg-gray-200 rounded w-1/2 mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+        </div>
+        {/* Progress Card Skeleton */}
+        <div className="card space-y-4 border border-gray-100 shadow-sm">
+          <div className="flex justify-between">
+            <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+            <div className="h-8 bg-gray-200 rounded w-16"></div>
+          </div>
+          <div className="h-3 bg-gray-200 rounded-full w-full"></div>
+        </div>
+        {/* Modules Skeleton */}
+        <div className="space-y-6">
+          {[1, 2].map((i) => (
+            <div key={i} className="card space-y-4 border border-gray-100 shadow-sm">
+              <div className="flex items-center space-x-3">
+                <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
+                <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+              </div>
+              <div className="space-y-2">
+                {[1, 2, 3].map((j) => (
+                  <div key={j} className="h-12 bg-gray-100/80 rounded-lg w-full"></div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

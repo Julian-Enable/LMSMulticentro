@@ -34,6 +34,7 @@ export default function UnifiedCreator() {
   const [videoDuration, setVideoDuration] = useState<number | null>(null);
   
   const [topics, setTopics] = useState<TopicDraft[]>([]);
+  const [expandedTopicIndex, setExpandedTopicIndex] = useState<number | null>(null);
 
   useEffect(() => {
     loadCategories();
@@ -336,45 +337,61 @@ export default function UnifiedCreator() {
                  </div>
                ) : (
                  <div className="space-y-3">
-                   {topics.map((topic, index) => (
-                     <div key={topic.id} className="flex gap-4 items-start bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:border-primary/40 transition-colors group">
-                        <div className="pt-2 cursor-grab text-slate-400 group-hover:text-slate-600">
-                          <GripVertical className="w-5 h-5" />
+                   {topics.map((topic, index) => {
+                     const isExpanded = expandedTopicIndex === index;
+                     return (
+                     <div key={topic.id} className={`bg-white rounded-xl border transition-all duration-200 overflow-hidden ${isExpanded ? 'border-primary/50 shadow-md ring-1 ring-primary/20' : 'border-slate-200 shadow-sm hover:border-primary/30'}`}>
+                        {/* Header (Summary) */}
+                        <div 
+                          className="flex items-center gap-3 p-3 cursor-pointer select-none"
+                          onClick={() => setExpandedTopicIndex(isExpanded ? null : index)}
+                        >
+                          <div className="cursor-grab text-slate-400 hover:text-slate-600" onClick={(e) => e.stopPropagation()}>
+                            <GripVertical className="w-5 h-5" />
+                          </div>
+                          <div className="w-12 text-center text-xs font-bold text-slate-500 bg-slate-100 rounded py-1">{topic.code}</div>
+                          <div className="flex-1 text-sm font-semibold text-slate-800 truncate">{topic.title || 'Tema sin título'}</div>
+                          {topic.duration && <div className="text-xs text-slate-500 font-mono bg-slate-50 px-2 py-0.5 rounded">{topic.duration}s</div>}
+                          <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteTopic(index); }} className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
                         
-                        <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-3">
-                          <div className="md:col-span-2">
-                            <label className="text-xs text-slate-500 font-medium">Código</label>
-                            <input type="text" value={topic.code} onChange={(e) => handleUpdateTopic(index, 'code', e.target.value)} className="w-full text-sm border-b border-transparent hover:border-slate-300 focus:border-primary focus:outline-none py-1 bg-slate-50 px-2 rounded" />
-                          </div>
-                          
-                          <div className="md:col-span-4">
-                            <label className="text-xs text-slate-500 font-medium">Título del Tema</label>
-                            <input type="text" value={topic.title} onChange={(e) => handleUpdateTopic(index, 'title', e.target.value)} className="w-full text-sm font-medium border-b border-transparent focus:border-primary hover:border-slate-300 focus:outline-none py-1 px-2" placeholder="Ej: Introducción a React" />
-                          </div>
+                        {/* Body (Expanded Form) */}
+                        {isExpanded && (
+                          <div className="p-4 pt-0 border-t border-slate-100 bg-slate-50/50 mt-1 animate-in fade-in slide-in-from-top-2 duration-200">
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+                              <div className="md:col-span-2">
+                                <label className="text-xs text-slate-500 font-medium">Código</label>
+                                <input type="text" value={topic.code} onChange={(e) => handleUpdateTopic(index, 'code', e.target.value)} className="w-full text-sm border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 bg-white px-2 rounded-md shadow-sm" />
+                              </div>
+                              
+                              <div className="md:col-span-10">
+                                <label className="text-xs text-slate-500 font-medium">Título del Tema</label>
+                                <input type="text" value={topic.title} onChange={(e) => handleUpdateTopic(index, 'title', e.target.value)} className="w-full text-sm font-medium border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 bg-white px-2 rounded-md shadow-sm" placeholder="Ej: Introducción a React" />
+                              </div>
 
-                          <div className="md:col-span-2 flex gap-2">
-                            <div className="w-1/2">
-                              <label className="text-xs text-slate-500 font-medium">Inicio (s)</label>
-                              <input type="text" value={topic.timestamp} onChange={(e) => handleUpdateTopic(index, 'timestamp', e.target.value)} className="w-full text-sm border-b border-transparent hover:border-slate-300 focus:border-primary focus:outline-none py-1 font-mono text-center" />
+                              <div className="md:col-span-4 flex gap-2">
+                                <div className="w-1/2">
+                                  <label className="text-xs text-slate-500 font-medium">Inicio (s)</label>
+                                  <input type="text" value={topic.timestamp} onChange={(e) => handleUpdateTopic(index, 'timestamp', e.target.value)} className="w-full text-sm border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 font-mono text-center rounded-md bg-white shadow-sm" />
+                                </div>
+                                <div className="w-1/2">
+                                   <label className="text-xs text-slate-500 font-medium">Dura (s)</label>
+                                   <input type="text" placeholder="auto" value={topic.duration} onChange={(e) => handleUpdateTopic(index, 'duration', e.target.value)} className="w-full text-sm border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 font-mono text-center text-slate-400 bg-white shadow-sm" />
+                                </div>
+                              </div>
+
+                              <div className="md:col-span-8">
+                                <label className="text-xs text-slate-500 font-medium flex items-center gap-1"><TagIcon className="w-3 h-3"/> Etiquetas (sep. x coma)</label>
+                                <input type="text" value={topic.tagsString} onChange={(e) => handleUpdateTopic(index, 'tagsString', e.target.value)} className="w-full text-sm border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 text-primary-700 bg-primary/5 px-3 rounded-md shadow-sm" placeholder="ej: front, web, react" />
+                              </div>
                             </div>
-                            <div className="w-1/2">
-                               <label className="text-xs text-slate-500 font-medium">Dura (s)</label>
-                               <input type="text" placeholder="auto" value={topic.duration} onChange={(e) => handleUpdateTopic(index, 'duration', e.target.value)} className="w-full text-sm border-b border-transparent hover:border-slate-300 focus:border-primary focus:outline-none py-1 font-mono text-center text-slate-500" />
-                            </div>
                           </div>
-
-                          <div className="md:col-span-4">
-                            <label className="text-xs text-slate-500 font-medium flex items-center gap-1"><TagIcon className="w-3 h-3"/> Etiquetas (sep. x coma)</label>
-                            <input type="text" value={topic.tagsString} onChange={(e) => handleUpdateTopic(index, 'tagsString', e.target.value)} className="w-full text-sm border-b border-transparent hover:border-slate-300 focus:border-primary focus:outline-none py-1 text-primary-700 bg-primary-50 px-2 rounded" placeholder="ej: front, web, react" />
-                          </div>
-                        </div>
-
-                        <button type="button" onClick={() => handleDeleteTopic(index)} className="pt-2 text-slate-300 hover:text-red-500 transition-colors">
-                          <Trash2 className="w-5 h-5" />
-                        </button>
+                        )}
                      </div>
-                   ))}
+                     );
+                   })}
                  </div>
                )}
              </div>
