@@ -193,7 +193,7 @@ export const createVideoBundle = async (req: Request, res: Response) => {
         const allTags = new Set<string>();
         topics.forEach((topic: any) => {
           if (topic.tags && Array.isArray(topic.tags)) {
-            topic.tags.forEach((t: string) => allTags.add(t));
+            topic.tags.forEach((t: string) => allTags.add(t.trim().toLowerCase()));
           }
         });
 
@@ -228,7 +228,7 @@ export const createVideoBundle = async (req: Request, res: Response) => {
                  tags: {
                    create: topicData.tags.map((tagName: string) => ({
                      tag: {
-                       connect: { id: tagsMap.get(tagName) }
+                       connect: { id: tagsMap.get(tagName.trim().toLowerCase()) }
                      }
                    }))
                  }

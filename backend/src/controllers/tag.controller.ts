@@ -68,7 +68,7 @@ export const createTag = async (req: Request, res: Response) => {
     }
 
     const tag = await prisma.tag.create({
-      data: { name }
+      data: { name: name.trim().toLowerCase() }
     });
 
     res.status(201).json(tag);
@@ -89,7 +89,7 @@ export const updateTag = async (req: Request, res: Response) => {
 
     const tag = await prisma.tag.update({
       where: { id: String(id) },
-      data: { name }
+      data: { name: name.trim().toLowerCase() }
     });
 
     res.json(tag);
