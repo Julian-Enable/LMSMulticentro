@@ -1,27 +1,16 @@
-﻿import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { categoryService } from '../services/category.service';
-import { Category } from '../types';
+import { CourseCardSkeleton } from '../components/UI/Skeletons';
 
 export default function LibraryPage() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    try {
-      const categoriesData = await categoryService.getAll();
-      setCategories(categoriesData);
-    } catch (error) {
-      console.error('Error loading data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: categories = [], isLoading: loading } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoryService.getAll()
+  });
 
   // Filter categories
   const filteredCategories = categories.filter((category) => {
@@ -42,13 +31,7 @@ export default function LibraryPage() {
     return 'from-primary-600 to-primary-800';
   };
 
-  if (loading) {
-    return (
-      <div className="flex-1 flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50">
@@ -89,7 +72,11 @@ export default function LibraryPage() {
       {/* Categories Grid */}
       <div className="flex-1 overflow-y-auto px-8 pb-8">
         <div className="max-w-7xl mx-auto">
-          {filteredCategories.length === 0 ? (
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 9 }).map((_, i) => <CourseCardSkeleton key={i} />)}
+            </div>
+          ) : filteredCategories.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

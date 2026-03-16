@@ -1,13 +1,15 @@
-﻿import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { categoryService } from '../../services/category.service';
-import { roleService, Role } from '../../services/role.service';
+import { roleService } from '../../services/role.service';
 import { Category } from '../../types';
+import ConfirmModal from '../UI/ConfirmModal';
+import { SkeletonBox } from '../UI/Skeletons';
 
 const CategoryManager = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [roles, setRoles] = useState<Role[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ 
     name: '', 
@@ -16,32 +18,34 @@ const CategoryManager = () => {
     allowedRoles: [] as string[]
   });
   const [isCreating, setIsCreating] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadCategories();
-    loadRoles();
-  }, []);
+  const { data: categories = [], isLoading: loadingCategories } = useQuery({
+    queryKey: ['categories', 'admin'],
+    queryFn: () => categoryService.getAllAdmin()
+  });
 
-  const loadCategories = async () => {
-    setLoading(true);
-    try {
-      const data = await categoryService.getAllAdmin();
-      setCategories(data);
-    } catch (error) {
-      console.error('Error loading categories:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: roles = [], isLoading: loadingRoles } = useQuery({
+    queryKey: ['roles'],
+    queryFn: () => roleService.getAll(true)
+  });
 
-  const loadRoles = async () => {
-    try {
-      const data = await roleService.getAll(true); // Only active roles
-      setRoles(data);
-    } catch (error) {
-      console.error('Error loading roles:', error);
-    }
-  };
+  const loading = loadingCategories || loadingRoles;
+
+  const createMutation = useMutation({
+    mutationFn: (data: any) => categoryService.create(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['categories'] })
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string, data: any }) => categoryService.update(id, data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['categories'] })
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => categoryService.delete(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['categories'] })
+  });
 
   const handleCreate = () => {
     setIsCreating(true);
@@ -61,32 +65,36 @@ const CategoryManager = () => {
   const handleSave = async () => {
     try {
       if (isCreating) {
-        await categoryService.create(formData);
+        await createMutation.mutateAsync(formData);
       } else if (editingId) {
-        await categoryService.update(editingId, formData);
+        await updateMutation.mutateAsync({ id: editingId, data: formData });
       }
+      toast.success(isCreating ? 'Curso creado correctamente' : 'Curso actualizado');
       
       setIsCreating(false);
       setEditingId(null);
       setFormData({ name: '', description: '', isActive: true, allowedRoles: [] });
-      await loadCategories();
+
     } catch (error) {
       console.error('Error saving category:', error);
-      alert('Error al guardar la categoría');
+      toast.error('Error al guardar el curso');
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar esta categoría? Se eliminarán todos sus videos y temas.')) {
-      return;
-    }
+  const handleDeleteClick = (id: string) => {
+    setItemToDelete(id);
+  };
 
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
     try {
-      await categoryService.delete(id);
-      await loadCategories();
+      await deleteMutation.mutateAsync(itemToDelete);
+      toast.success('Curso eliminado correctamente');
     } catch (error) {
       console.error('Error deleting category:', error);
-      alert('Error al eliminar la categoría');
+      toast.error('Error al eliminar el curso');
+    } finally {
+      setItemToDelete(null);
     }
   };
 
@@ -107,14 +115,27 @@ const CategoryManager = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-12">
-        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+      <div className="space-y-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <SkeletonBox key={i} className="h-24 w-full" />
+        ))}
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <>
+      <ConfirmModal
+        isOpen={!!itemToDelete}
+        title="Eliminar Curso"
+        message="¿Estás seguro de eliminar este curso? Se eliminarán todos sus videos y temas asociados. Esta acción no se puede deshacer."
+        confirmLabel="Eliminar Curso"
+        onConfirm={confirmDelete}
+        onCancel={() => setItemToDelete(null)}
+        isLoading={deleteMutation.isPending}
+      />
+      
+      <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-900">Gestión de Cursos</h2>
         {!isCreating && !editingId && (
@@ -253,7 +274,7 @@ const CategoryManager = () => {
                       <Edit className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => handleDelete(category.id)}
+                      onClick={() => handleDeleteClick(category.id)}
                       className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       title="Eliminar"
                     >
@@ -267,6 +288,7 @@ const CategoryManager = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

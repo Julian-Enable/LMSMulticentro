@@ -5,7 +5,7 @@ import { ProgressService } from '../services/progress.service';
 export const getCategoryProgress = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
-    const { categoryId } = req.params;
+    const categoryId = req.params.categoryId as string;
     const progress = await ProgressService.getCategoryProgress(req.user.id, categoryId);
     res.json(progress);
   } catch (error) {

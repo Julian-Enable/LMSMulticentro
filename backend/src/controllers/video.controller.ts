@@ -16,7 +16,7 @@ export const getVideos = async (req: Request, res: Response, next: NextFunction)
 
 export const getVideoById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const video = await VideoService.getVideoById(id);
     res.json(video);
   } catch (error) {
@@ -35,7 +35,7 @@ export const createVideo = async (req: Request, res: Response, next: NextFunctio
 
 export const updateVideo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const video = await VideoService.updateVideo(id, req.body);
     res.json(video);
   } catch (error) {
@@ -45,7 +45,7 @@ export const updateVideo = async (req: Request, res: Response, next: NextFunctio
 
 export const deleteVideo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await VideoService.deleteVideo(id);
     res.status(204).send();
   } catch (error) {

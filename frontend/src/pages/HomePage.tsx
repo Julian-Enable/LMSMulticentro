@@ -1,28 +1,16 @@
-﻿import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { categoryService } from '../services/category.service';
-import { Category } from '../types';
 import { useAuthStore } from '../store/authStore';
+import { CourseCardSkeleton, SkeletonBox } from '../components/UI/Skeletons';
 
 const HomePage = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
   const { user } = useAuthStore();
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    try { 
-      const categoriesData = await categoryService.getAll(true);
-      setCategories(categoriesData);
-    } catch (error) {
-      console.error('Error loading data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: categories = [], isLoading: loading } = useQuery({
+    queryKey: ['categories', 'featured'],
+    queryFn: () => categoryService.getAll(true)
+  });
 
   // Calculate total duration from videos in visible categories
   const totalMinutes = categories.reduce((sum, category) => {
@@ -96,7 +84,7 @@ const HomePage = () => {
           <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-start justify-between hover:-translate-y-1 transition-transform">
             <div>
               <p className="text-gray-500 text-sm font-medium mb-1">Total Cursos</p>
-              <p className="text-3xl font-black text-primary-700 tracking-tight">{categories.length}</p>
+              {loading ? <SkeletonBox className="h-9 w-16" /> : <p className="text-3xl font-black text-primary-700 tracking-tight">{categories.length}</p>}
             </div>
             <div className="h-10 w-10 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -109,7 +97,7 @@ const HomePage = () => {
           <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-start justify-between hover:-translate-y-1 transition-transform">
             <div>
               <p className="text-gray-500 text-sm font-medium mb-1">Videos Disponibles</p>
-              <p className="text-3xl font-black text-primary-700 tracking-tight">{totalVideos}</p>
+              {loading ? <SkeletonBox className="h-9 w-16" /> : <p className="text-3xl font-black text-primary-700 tracking-tight">{totalVideos}</p>}
             </div>
             <div className="h-10 w-10 rounded-lg bg-accent-50 text-accent-500 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -123,7 +111,7 @@ const HomePage = () => {
           <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-start justify-between hover:-translate-y-1 transition-transform">
             <div>
               <p className="text-gray-500 text-sm font-medium mb-1">Horas de Contenido</p>
-              <p className="text-3xl font-black text-primary-700 tracking-tight">{totalTimeDisplay}</p>
+              {loading ? <SkeletonBox className="h-9 w-24" /> : <p className="text-3xl font-black text-primary-700 tracking-tight">{totalTimeDisplay}</p>}
             </div>
             <div className="h-10 w-10 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -144,8 +132,12 @@ const HomePage = () => {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="w-16 h-16 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-[180px]">
+             <div className="md:col-span-2 md:row-span-2"><CourseCardSkeleton /></div>
+             <CourseCardSkeleton />
+             <CourseCardSkeleton />
+             <CourseCardSkeleton />
+             <CourseCardSkeleton />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-[180px]">

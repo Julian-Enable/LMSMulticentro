@@ -16,7 +16,7 @@ export const getRoles = async (req: Request, res: Response, next: NextFunction) 
 
 export const getRoleById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const role = await RoleService.getRoleById(id);
     res.json(role);
   } catch (error) {
@@ -38,7 +38,7 @@ export const createRole = async (req: Request, res: Response, next: NextFunction
 
 export const updateRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const role = await RoleService.updateRole(id, req.body);
     res.json(role);
   } catch (error) {
@@ -48,7 +48,7 @@ export const updateRole = async (req: Request, res: Response, next: NextFunction
 
 export const deleteRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await RoleService.deleteRole(id);
     res.json({ message: 'Role deleted successfully' });
   } catch (error) {

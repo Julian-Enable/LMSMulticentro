@@ -13,7 +13,7 @@ export const getTags = async (req: Request, res: Response, next: NextFunction) =
 
 export const getTagById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const tag = await TagService.getTagById(id);
     res.json(tag);
   } catch (error) {
@@ -35,7 +35,7 @@ export const createTag = async (req: Request, res: Response, next: NextFunction)
 
 export const updateTag = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { name } = req.body;
     if (!name) throw new BadRequestError('Name is required');
 
@@ -48,7 +48,7 @@ export const updateTag = async (req: Request, res: Response, next: NextFunction)
 
 export const deleteTag = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await TagService.deleteTag(id);
     res.status(204).send();
   } catch (error) {

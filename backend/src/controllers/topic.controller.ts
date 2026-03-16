@@ -17,7 +17,7 @@ export const getTopics = async (req: Request, res: Response, next: NextFunction)
 
 export const getTopicById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const topic = await TopicService.getTopicById(id);
     res.json(topic);
   } catch (error) {
@@ -36,7 +36,7 @@ export const createTopic = async (req: Request, res: Response, next: NextFunctio
 
 export const updateTopic = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const topic = await TopicService.updateTopic(id, req.body);
     res.json(topic);
   } catch (error) {
@@ -46,7 +46,7 @@ export const updateTopic = async (req: Request, res: Response, next: NextFunctio
 
 export const deleteTopic = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await TopicService.deleteTopic(id);
     res.status(204).send();
   } catch (error) {
@@ -56,7 +56,7 @@ export const deleteTopic = async (req: Request, res: Response, next: NextFunctio
 
 export const getNextTopic = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const topic = await TopicService.getNextTopic(id);
     res.json(topic);
   } catch (error) {
@@ -66,7 +66,7 @@ export const getNextTopic = async (req: Request, res: Response, next: NextFuncti
 
 export const getPreviousTopic = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const topic = await TopicService.getPreviousTopic(id);
     res.json(topic);
   } catch (error) {
@@ -76,7 +76,7 @@ export const getPreviousTopic = async (req: Request, res: Response, next: NextFu
 
 export const incrementTopicViews = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const topic = await TopicService.incrementTopicViews(id);
     res.json(topic);
   } catch (error) {

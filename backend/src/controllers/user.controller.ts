@@ -21,7 +21,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
 export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const user = await UserService.updateUser(id, req.body);
     res.json(user);
   } catch (error) {
@@ -31,7 +31,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await UserService.deleteUser(id);
     res.json({ message: 'User deleted successfully' });
   } catch (error) {

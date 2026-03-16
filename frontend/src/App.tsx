@@ -1,6 +1,7 @@
-﻿import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
+import { Toaster } from 'react-hot-toast';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -25,7 +26,9 @@ function App() {
   }, [initAuth]);
 
   return (
-    <Routes>
+    <>
+      <Toaster position="top-right" toastOptions={{ className: 'text-sm font-medium' }} />
+      <Routes>
       {/* Public routes */}
       <Route path="/login" element={<LoginPage />} />
 
@@ -52,6 +55,7 @@ function App() {
       {/* Fallback route */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   );
 }
 

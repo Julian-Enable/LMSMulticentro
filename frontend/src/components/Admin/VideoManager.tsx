@@ -1,15 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import api from '../../services/api';
 import { categoryService } from '../../services/category.service';
-import { Video, Category } from '../../types';
+import { Video } from '../../types';
 import { mockVideos, mockCategories } from '../../data/mockData';
 import { youtubeService } from '../../services/youtube.service';
+import ConfirmModal from '../UI/ConfirmModal';
+import { TableSkeleton } from '../UI/Skeletons';
 
 // Admin Video Manager Component
 const VideoManager = () => {
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,33 +29,64 @@ const VideoManager = () => {
   });
   const [isCreating, setIsCreating] = useState(false);
   const [loadingYoutubeInfo, setLoadingYoutubeInfo] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    setLoading(true);
-    try {
+  const { data: videos = [], isLoading: loadingVideos } = useQuery({
+    queryKey: ['videos'],
+    queryFn: async () => {
       if (import.meta.env.VITE_USE_MOCK === 'true') {
-        // Use mock data
         await new Promise(resolve => setTimeout(resolve, 500));
-        setVideos(mockVideos);
-        setCategories(mockCategories);
-      } else {
-        const [videosRes, categoriesData] = await Promise.all([
-          api.get('/videos'),
-          categoryService.getAllAdmin(),
-        ]);
-        setVideos(videosRes.data);
-        setCategories(categoriesData);
+        return mockVideos;
       }
-    } catch (error) {
-      console.error('Error loading data:', error);
-    } finally {
-      setLoading(false);
+      const res = await api.get('/videos');
+      return res.data as Video[];
     }
-  };
+  });
+
+  const { data: categories = [], isLoading: loadingCategories } = useQuery({
+    queryKey: ['categories', 'admin'],
+    queryFn: async () => {
+      if (import.meta.env.VITE_USE_MOCK === 'true') {
+        return mockCategories;
+      }
+      return await categoryService.getAllAdmin();
+    }
+  });
+
+  const loading = loadingVideos || loadingCategories;
+
+  const createMutation = useMutation({
+    mutationFn: async (data: any) => {
+      if (import.meta.env.VITE_USE_MOCK === 'true') {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        return; // Simulation 
+      }
+      return api.post('/videos', data);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['videos'] })
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string, data: any }) => {
+      if (import.meta.env.VITE_USE_MOCK === 'true') {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        return;
+      }
+      return api.put(`/videos/${id}`, data);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['videos'] })
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      if (import.meta.env.VITE_USE_MOCK === 'true') {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        return;
+      }
+      return api.delete(`/videos/${id}`);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['videos'] })
+  });
 
   const handleCreate = () => {
     setIsCreating(true);
@@ -103,7 +136,7 @@ const VideoManager = () => {
       }
     } catch (error: any) {
       console.error('Error loading YouTube info:', error);
-      alert(error.response?.data?.message || 'Error al cargar información del video. Verifica que la API key de YouTube esté configurada.');
+      toast.error(error.response?.data?.message || 'Error al cargar información del video.');
     } finally {
       setLoadingYoutubeInfo(false);
     }
@@ -131,100 +164,45 @@ const VideoManager = () => {
 
   const handleSave = async () => {
     try {
-      if (import.meta.env.VITE_USE_MOCK === 'true') {
-        // Mock mode - just simulate save
-        await new Promise(resolve => setTimeout(resolve, 500));
-        if (isCreating) {
-          const platformValue = formData.platform === 'DRIVE' ? 'GOOGLE_DRIVE' : 
-                               formData.platform === 'OTHER' ? 'YOUTUBE' : 
-                               formData.platform;
-          const newVideo: Video = {
-            id: `video-${Date.now()}`,
-            title: formData.title,
-            description: formData.description,
-            externalId: formData.externalId || formData.url,
-            platform: platformValue as 'YOUTUBE' | 'GOOGLE_DRIVE' | 'VIMEO',
-            categoryId: formData.categoryId,
-            category: categories.find(c => c.id === formData.categoryId),
-            isActive: formData.isActive,
-            order: videos.length + 1,
-            duration: formData.duration ? parseFloat(formData.duration) : undefined,
-            thumbnailUrl: formData.thumbnailUrl || `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000)}?w=400&h=225&fit=crop`,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            topics: [],
-            topicCount: 0,
-          };
-          setVideos(prev => [newVideo, ...prev]);
-        } else if (editingId) {
-          const platformValue = formData.platform === 'DRIVE' ? 'GOOGLE_DRIVE' : 
-                               formData.platform === 'OTHER' ? 'YOUTUBE' : 
-                               formData.platform;
-          setVideos(prev => prev.map(v => 
-            v.id === editingId 
-              ? { 
-                  ...v, 
-                  title: formData.title,
-                  description: formData.description,
-                  externalId: formData.externalId || formData.url,
-                  platform: platformValue as 'YOUTUBE' | 'GOOGLE_DRIVE' | 'VIMEO',
-                  categoryId: formData.categoryId,
-                  category: categories.find(c => c.id === formData.categoryId),
-                  isActive: formData.isActive,
-                  duration: formData.duration ? parseFloat(formData.duration) : v.duration,
-                  thumbnailUrl: formData.thumbnailUrl || v.thumbnailUrl,
-                  updatedAt: new Date().toISOString(),
-                } 
-              : v
-          ));
-        }
-        setIsCreating(false);
-        setEditingId(null);
-      } else {
-        const platformMap: any = {
-          'DRIVE': 'GOOGLE_DRIVE',
-          'YOUTUBE': 'YOUTUBE',
-          'VIMEO': 'VIMEO',
-          'OTHER': 'YOUTUBE'
-        };
-        const dataToSend = {
-          ...formData,
-          externalId: formData.url,
-          platform: platformMap[formData.platform]
-        };
-        if (isCreating) {
-          await api.post('/videos', dataToSend);
-        } else if (editingId) {
-          await api.put(`/videos/${editingId}`, dataToSend);
-        }
+      const platformValue = formData.platform === 'DRIVE' ? 'GOOGLE_DRIVE' : 
+                          formData.platform === 'OTHER' ? 'YOUTUBE' : 
+                          formData.platform;
+      const dataToSend = {
+        ...formData,
+        externalId: formData.url,
+        platform: platformValue
+      };
 
-        setIsCreating(false);
-        setEditingId(null);
-        await loadData();
+      if (isCreating) {
+        await createMutation.mutateAsync(dataToSend);
+      } else if (editingId) {
+        await updateMutation.mutateAsync({ id: editingId, data: dataToSend });
       }
+
+      toast.success(isCreating ? 'Video creado correctamente' : 'Video actualizado');
+      setIsCreating(false);
+      setEditingId(null);
+
     } catch (error) {
       console.error('Error saving video:', error);
-      alert('Error al guardar el video');
+      toast.error('Error al guardar el video');
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar este video? Se eliminarán todos sus temas.')) {
-      return;
-    }
+  const handleDeleteClick = (id: string) => {
+    setItemToDelete(id);
+  };
 
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
     try {
-      if (import.meta.env.VITE_USE_MOCK === 'true') {
-        // Mock mode - just remove from state
-        await new Promise(resolve => setTimeout(resolve, 300));
-        setVideos(prev => prev.filter(v => v.id !== id));
-      } else {
-        await api.delete(`/videos/${id}`);
-        await loadData();
-      }
+      await deleteMutation.mutateAsync(itemToDelete);
+      toast.success('Video eliminado correctamente');
     } catch (error) {
       console.error('Error deleting video:', error);
-      alert('Error al eliminar el video');
+      toast.error('Error al eliminar el video');
+    } finally {
+      setItemToDelete(null);
     }
   };
 
@@ -271,16 +249,25 @@ const VideoManager = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="relative">
-          <div className="w-16 h-16 border-4 border-gray-200 border-t-primary-600 rounded-full animate-spin"></div>
-        </div>
+      <div className="bg-white rounded-xl border border-slate-200 p-6 flex flex-col gap-4">
+        <TableSkeleton rows={6} />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-0">
+    <>
+      <ConfirmModal
+        isOpen={!!itemToDelete}
+        title="Eliminar Video"
+        message="¿Estás seguro de eliminar este video? Se eliminarán de forma permanente todos sus temas interactivos. Esta acción no se puede deshacer."
+        confirmLabel="Eliminar Video"
+        onConfirm={confirmDelete}
+        onCancel={() => setItemToDelete(null)}
+        isLoading={deleteMutation.isPending}
+      />
+      
+      <div className="flex flex-col gap-0">
       {/* Create/Edit Modal */}
       {(isCreating || editingId) && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
@@ -626,7 +613,7 @@ const VideoManager = () => {
                           </svg>
                         </button>
                         <button
-                          onClick={() => handleDelete(video.id)}
+                          onClick={() => handleDeleteClick(video.id)}
                           className="p-2 text-slate-400 hover:text-white hover:bg-red-500 rounded-lg transition-all"
                           title="Eliminar"
                         >
@@ -696,6 +683,7 @@ const VideoManager = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

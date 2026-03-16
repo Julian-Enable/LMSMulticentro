@@ -17,7 +17,7 @@ export const getQuizzes = async (req: Request, res: Response, next: NextFunction
 
 export const getQuizById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const quiz = await QuizService.getQuizById(id);
     res.json(quiz);
   } catch (error) {
@@ -42,7 +42,7 @@ export const createQuiz = async (req: Request, res: Response, next: NextFunction
 
 export const updateQuiz = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const quiz = await QuizService.updateQuiz(id, req.body);
     res.json(quiz);
   } catch (error) {
@@ -52,7 +52,7 @@ export const updateQuiz = async (req: Request, res: Response, next: NextFunction
 
 export const deleteQuiz = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await QuizService.deleteQuiz(id);
     res.status(204).send();
   } catch (error) {

@@ -17,7 +17,7 @@ export const getCategories = async (req: AuthRequest, res: Response, next: NextF
 
 export const getCategoryById = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const category = await CategoryService.getCategoryById(id);
     res.json(category);
   } catch (error) {
@@ -36,7 +36,7 @@ export const createCategory = async (req: AuthRequest, res: Response, next: Next
 
 export const updateCategory = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const category = await CategoryService.updateCategory(id, req.body);
     res.json(category);
   } catch (error) {
@@ -46,7 +46,7 @@ export const updateCategory = async (req: AuthRequest, res: Response, next: Next
 
 export const deleteCategory = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await CategoryService.deleteCategory(id);
     res.status(204).send();
   } catch (error) {
