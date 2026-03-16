@@ -20,7 +20,6 @@ const AdminPage = () => {
     { id: 'videos' as TabType, label: 'Videos' },
     { id: 'users' as TabType, label: 'Usuarios' },
     { id: 'roles' as TabType, label: 'Roles' },
-    // Hide these tabs in mock mode for now (not fully implemented)
     ...(!isMockMode ? [
       { id: 'topics' as TabType, label: 'Temas' },
       { id: 'tags' as TabType, label: 'Etiquetas' },

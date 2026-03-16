@@ -109,8 +109,9 @@ export class VideoService {
     const exists = await prisma.video.findUnique({ where: { id } });
     if (!exists) throw new NotFoundError('Video');
 
-    await prisma.video.delete({
-      where: { id }
+    await prisma.video.update({
+      where: { id },
+      data: { isActive: false }
     });
   }
 

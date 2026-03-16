@@ -152,8 +152,9 @@ export class CategoryService {
     const exists = await prisma.category.findUnique({ where: { id } });
     if (!exists) throw new NotFoundError('Categoría');
 
-    await prisma.category.delete({
-      where: { id }
+    await prisma.category.update({
+      where: { id },
+      data: { isActive: false }
     });
   }
 }

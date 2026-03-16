@@ -77,8 +77,9 @@ export class QuizService {
     const exists = await prisma.quiz.findUnique({ where: { id } });
     if (!exists) throw new NotFoundError('Quiz');
 
-    await prisma.quiz.delete({
-      where: { id }
+    await prisma.quiz.update({
+      where: { id },
+      data: { isActive: false }
     });
   }
 }

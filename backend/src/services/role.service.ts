@@ -93,8 +93,9 @@ export class RoleService {
     if (role.isSystem) throw new BadRequestError('Cannot delete system role');
     if (role._count.users > 0) throw new ConflictError(`Cannot delete role with ${role._count.users} assigned users. Reassign users first.`);
 
-    await prisma.role.delete({
-      where: { id }
+    await prisma.role.update({
+      where: { id },
+      data: { isActive: false }
     });
   }
 }
