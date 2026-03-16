@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -18,7 +19,7 @@ export default {
           300: '#757bb1',
           400: '#474f97',
           500: '#2c3166',
-          600: '#232752', // same as DEFAULT
+          600: '#232752',
           DEFAULT: '#232752',
           700: '#1a1d3e',
           800: '#12142a',
@@ -31,17 +32,33 @@ export default {
           300: '#ed757b',
           400: '#e7474f',
           500: '#b72c34',
-          600: '#92232a', // same as DEFAULT
+          600: '#92232a',
           DEFAULT: '#92232a',
           700: '#6e1a20',
           800: '#491215',
           900: '#25090b',
+        },
+        // Dark mode colors
+        background: {
+          light: '#f9fafb',
+          dark: '#0f172a',
+        },
+        surface: {
+          light: '#ffffff',
+          dark: '#1e293b',
+        },
+        'surface-secondary': {
+          light: '#f3f4f6',
+          dark: '#334155',
         },
       },
       boxShadow: {
         'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
         'medium': '0 4px 20px -2px rgba(44, 49, 102, 0.1), 0 12px 30px -4px rgba(44, 49, 102, 0.08)',
         'strong': '0 10px 40px -5px rgba(44, 49, 102, 0.2), 0 20px 50px -8px rgba(44, 49, 102, 0.15)',
+        'dark-soft': '0 2px 15px -3px rgba(0, 0, 0, 0.3), 0 10px 20px -2px rgba(0, 0, 0, 0.2)',
+        'dark-medium': '0 4px 20px -2px rgba(0, 0, 0, 0.4), 0 12px 30px -4px rgba(0, 0, 0, 0.3)',
+        'dark-strong': '0 10px 40px -5px rgba(0, 0, 0, 0.5), 0 20px 50px -8px rgba(0, 0, 0, 0.4)',
       },
     },
   },

@@ -2,159 +2,200 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { categoryService } from '../services/category.service';
 import { useAuthStore } from '../store/authStore';
+import { useProgressStore } from '../store/progressStore';
 import { CourseCardSkeleton, SkeletonBox } from '../components/UI/Skeletons';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { motion } from 'framer-motion';
+import { BookOpen, Video, Clock, TrendingUp, Award, PlayCircle } from 'lucide-react';
 
 const HomePage = () => {
   const { user } = useAuthStore();
+  const { progressByCourse } = useProgressStore();
 
   const { data: categories = [], isLoading: loading } = useQuery({
     queryKey: ['categories', 'featured'],
     queryFn: () => categoryService.getAll(true)
   });
 
-  // Calculate total duration from videos in visible categories
+  // Calculate stats
   const totalMinutes = categories.reduce((sum, category) => {
     if (!category.videos) return sum;
-    
     const categoryMinutes = category.videos.reduce((videoSum, video) => {
       if (typeof video.duration === 'number') {
-        // Convert duration from seconds to minutes
         return videoSum + (video.duration / 60);
       }
       return videoSum;
     }, 0);
-    
     return sum + categoryMinutes;
   }, 0);
 
   const totalVideos = categories.reduce((sum, cat) => sum + (cat.videoCount || 0), 0);
   const totalHours = Math.floor(totalMinutes / 60);
   const remainingMinutes = Math.floor(totalMinutes % 60);
-  
-  let totalTimeDisplay = '';
-  if (totalHours > 0 && remainingMinutes > 0) {
-    totalTimeDisplay = `${totalHours}h ${remainingMinutes}m`;
-  } else if (totalHours > 0) {
-    totalTimeDisplay = `${totalHours}h`;
-  } else if (remainingMinutes > 0) {
-    totalTimeDisplay = `${remainingMinutes}m`;
-  } else {
-    totalTimeDisplay = '0m';
-  }
+  const totalTimeDisplay = totalHours > 0 
+    ? `${totalHours}h ${remainingMinutes}m` 
+    : `${remainingMinutes}m`;
+
+  // Calculate completed topics across all courses
+  const allTopicIds = categories.flatMap(cat => 
+    cat.videos?.flatMap(video => video.topics?.map(t => t.id) || []) || []
+  );
+  const completedCount = allTopicIds.filter(id => 
+    Object.values(progressByCourse).some(progress => progress.has(id))
+  ).length;
+  const progressPercentage = allTopicIds.length > 0 
+    ? Math.round((completedCount / allTopicIds.length) * 100) 
+    : 0;
+
+  // Prepare chart data
+  const chartData = categories.slice(0, 5).map(cat => ({
+    name: cat.name.length > 15 ? cat.name.substring(0, 15) + '...' : cat.name,
+    videos: cat.videoCount || 0,
+    full: cat.name
+  }));
+
+  const stats = [
+    { label: 'Total Cursos', value: categories.length, icon: BookOpen, color: 'primary', change: '+2 este mes' },
+    { label: 'Videos', value: totalVideos, icon: Video, color: 'accent', change: `${totalTimeDisplay} contenido` },
+    { label: 'Completados', value: completedCount, icon: Award, color: 'green', change: `${progressPercentage}% progreso` },
+    { label: 'Horas', value: totalHours, icon: Clock, color: 'blue', change: 'de aprendizaje' },
+  ];
+
+  const COLORS = ['#232752', '#92232a', '#2c3166', '#b72c34', '#474f97'];
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50">
-      {/* Header & Top Stats Area */}
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+      {/* Header */}
       <div className="flex-shrink-0 px-8 pt-8 pb-4">
-        {/* Welcome Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8"
+        >
           <div>
-            <h1 className="text-3xl font-extrabold text-primary-900 tracking-tight">
-                Bienvenido de vuelta, {user?.username}
+            <h1 className="text-3xl font-extrabold text-primary-900 dark:text-slate-100 tracking-tight">
+              Bienvenido de vuelta, {user?.username}
             </h1>
-            <p className="text-primary-400 mt-1">Aquí está el resumen de tu aprendizaje hoy.</p>
+            <p className="text-primary-400 dark:text-slate-400 mt-1">Aquí está el resumen de tu aprendizaje hoy.</p>
           </div>
           <div className="flex gap-3">
-            {/* Secondary Actions */}
-            <Link 
+            <Link
               to="/library"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gray-50 border border-gray-300 text-primary text-sm font-bold shadow-sm hover:bg-gray-100 hover:shadow-md transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 text-primary dark:text-slate-200 text-sm font-bold shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-              </svg>
+              <BookOpen className="w-5 h-5" />
               Ver Biblioteca
             </Link>
-            {/* Primary Action */}
-            <Link 
+            <Link
               to="/search"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent-500 hover:bg-accent-600 text-white text-sm font-bold shadow-lg shadow-red-900/20 transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent-500 hover:bg-accent-600 text-white text-sm font-bold shadow-lg shadow-accent-500/30 transition-all hover:-translate-y-0.5"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-              </svg>
+              <TrendingUp className="w-5 h-5" />
               Buscar Contenido
             </Link>
           </div>
-        </div>
+        </motion.div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-2">
-          {/* Stat 1 */}
-          <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-start justify-between hover:-translate-y-1 transition-transform">
-            <div>
-              <p className="text-gray-500 text-sm font-medium mb-1">Total Cursos</p>
-              {loading ? <SkeletonBox className="h-9 w-16" /> : <p className="text-3xl font-black text-primary-700 tracking-tight">{categories.length}</p>}
-            </div>
-            <div className="h-10 w-10 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 6.878V6a2.25 2.25 0 012.25-2.25h7.5A2.25 2.25 0 0118 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 004.5 9v.878m13.5-3A2.25 2.25 0 0119.5 9v.878m0 0a2.246 2.246 0 00-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0121 12v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6c0-.98.626-1.813 1.5-2.122" />
-              </svg>
-            </div>
-          </div>
-
-          {/* Stat 2 */}
-          <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-start justify-between hover:-translate-y-1 transition-transform">
-            <div>
-              <p className="text-gray-500 text-sm font-medium mb-1">Videos Disponibles</p>
-              {loading ? <SkeletonBox className="h-9 w-16" /> : <p className="text-3xl font-black text-primary-700 tracking-tight">{totalVideos}</p>}
-            </div>
-            <div className="h-10 w-10 rounded-lg bg-accent-50 text-accent-500 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
-              </svg>
-            </div>
-          </div>
-
-          {/* Stat 3 */}
-          <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-start justify-between hover:-translate-y-1 transition-transform">
-            <div>
-              <p className="text-gray-500 text-sm font-medium mb-1">Horas de Contenido</p>
-              {loading ? <SkeletonBox className="h-9 w-24" /> : <p className="text-3xl font-black text-primary-700 tracking-tight">{totalTimeDisplay}</p>}
-            </div>
-            <div className="h-10 w-10 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ y: -4, scale: 1.02 }}
+              className="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className={`h-12 w-12 rounded-xl bg-${stat.color}-50 dark:bg-slate-700 flex items-center justify-center`}>
+                  <stat.icon className={`w-6 h-6 text-${stat.color}-500`} />
+                </div>
+                <span className="text-xs font-semibold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded-full">
+                  {stat.change}
+                </span>
+              </div>
+              {loading ? (
+                <SkeletonBox className="h-9 w-16" />
+              ) : (
+                <p className="text-3xl font-black text-primary-700 dark:text-slate-100 tracking-tight">{stat.value}</p>
+              )}
+              <p className="text-gray-500 dark:text-slate-400 text-sm font-medium mt-1">{stat.label}</p>
+            </motion.div>
+          ))}
         </div>
+
+        {/* Chart Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mb-8"
+        >
+          <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-primary-500" />
+            Distribución de Contenido por Curso
+          </h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="name" stroke="#6b7280" fontSize={12} />
+                <YAxis stroke="#6b7280" fontSize={12} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1e293b',
+                    border: 'none',
+                    borderRadius: '12px',
+                    color: '#fff'
+                  }}
+                  cursor={{ fill: '#f3f4f6' }}
+                />
+                <Bar dataKey="videos" radius={[8, 8, 0, 0]}>
+                  {chartData.map((_, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </motion.div>
       </div>
 
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto px-8 pb-12">
         <div className="flex items-center justify-between mb-6 mt-4">
-          <h2 className="text-xl font-bold text-gray-900">Explorar Cursos</h2>
-          <Link to="/library" className="text-sm font-semibold text-primary hover:underline">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+            <PlayCircle className="w-6 h-6 text-accent-500" />
+            Explorar Cursos
+          </h2>
+          <Link to="/library" className="text-sm font-semibold text-primary hover:underline dark:text-slate-300">
             Ver todas
           </Link>
         </div>
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-[180px]">
-             <div className="md:col-span-2 md:row-span-2"><CourseCardSkeleton /></div>
-             <CourseCardSkeleton />
-             <CourseCardSkeleton />
-             <CourseCardSkeleton />
-             <CourseCardSkeleton />
+            <div className="md:col-span-2 md:row-span-2"><CourseCardSkeleton /></div>
+            <CourseCardSkeleton />
+            <CourseCardSkeleton />
+            <CourseCardSkeleton />
+            <CourseCardSkeleton />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-[180px]">
-            {/* Large Feature Card - First category */}
+            {/* Large Feature Card */}
             {categories[0] && (
               <Link
                 to={`/course/${categories[0].id}`}
-                className="group relative overflow-hidden rounded-2xl md:col-span-2 md:row-span-2 shadow-md hover:-translate-y-1 transition-all cursor-pointer bg-primary-700"
+                className="group relative overflow-hidden rounded-2xl md:col-span-2 md:row-span-2 shadow-md hover:-translate-y-2 transition-all cursor-pointer bg-primary-700"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-800 to-primary-900 opacity-90 z-10"></div>
                 <div className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700" style={{backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800')"}}></div>
                 <div className="relative z-20 h-full flex flex-col justify-between p-8">
                   <div className="flex justify-between items-start">
                     <div className="h-12 w-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-                      </svg>
+                      <BookOpen className="w-7 h-7" />
                     </div>
                     <span className="bg-accent-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Destacado</span>
                   </div>
@@ -162,9 +203,7 @@ const HomePage = () => {
                     <h3 className="text-3xl font-bold text-white mb-2">{categories[0].name}</h3>
                     <p className="text-gray-200 text-sm md:text-base max-w-md line-clamp-2">{categories[0].description}</p>
                     <div className="mt-4 flex items-center gap-2 text-white/80 text-sm font-medium">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-3.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0118 18.375M20.625 4.5H3.375m17.25 0c.621 0 1.125.504 1.125 1.125M20.625 4.5h-1.5C18.504 4.5 18 5.004 18 5.625m3.75 0v1.5c0 .621-.504 1.125-1.125 1.125M3.375 4.5c-.621 0-1.125.504-1.125 1.125M3.375 4.5h1.5C5.496 4.5 6 5.004 6 5.625m-3.75 0v1.5c0 .621.504 1.125 1.125 1.125m0 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C5.496 8.25 6 7.746 6 7.125v-1.5M4.875 8.25C5.496 8.25 6 8.754 6 9.375v1.5m0-5.25v5.25m0-5.25C6 5.004 6.504 4.5 7.125 4.5h9.75c.621 0 1.125.504 1.125 1.125m1.125 2.625h1.5m-1.5 0A1.125 1.125 0 0118 7.125v-1.5m1.125 2.625c-.621 0-1.125.504-1.125 1.125v1.5m2.625-2.625c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125M18 5.625v5.25M7.125 12h9.75m-9.75 0A1.125 1.125 0 016 10.875M7.125 12C6.504 12 6 12.504 6 13.125m0-2.25C6 11.496 5.496 12 4.875 12M18 10.875c0 .621-.504 1.125-1.125 1.125M18 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m-12 5.25v-5.25m0 5.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125m-12 0v-1.5c0-.621-.504-1.125-1.125-1.125M18 18.375v-5.25m0 5.25v-1.5c0-.621.504-1.125 1.125-1.125M18 13.125v1.5c0 .621.504 1.125 1.125 1.125M18 13.125c0-.621.504-1.125 1.125-1.125M6 13.125v1.5c0 .621-.504 1.125-1.125 1.125M6 13.125C6 12.504 5.496 12 4.875 12m-1.5 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M19.125 12h1.5m0 0c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h1.5m14.25 0h1.5" />
-                      </svg>
+                      <Video className="w-5 h-5" />
                       {categories[0].videoCount || 0} Videos
                     </div>
                   </div>
@@ -186,19 +225,18 @@ const HomePage = () => {
                 <Link
                   key={category.id}
                   to={`/course/${category.id}`}
-                  className="group relative overflow-hidden rounded-2xl shadow-sm hover:-translate-y-1 transition-all cursor-pointer bg-white border border-gray-100"
+                  className="group relative overflow-hidden rounded-2xl shadow-sm hover:-translate-y-2 transition-all cursor-pointer bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700"
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${color.bg} opacity-50`}></div>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${color.bg} dark:from-slate-700 dark:to-slate-800 opacity-50`}></div>
                   <div className="relative z-10 p-6 flex flex-col h-full justify-between">
-                    <div className={`h-10 w-10 rounded-lg ${color.icon} flex items-center justify-center mb-4`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-                      </svg>
+                    <div className={`h-10 w-10 rounded-lg ${color.icon} dark:bg-slate-600 dark:text-slate-200 flex items-center justify-center mb-4`}>
+                      <BookOpen className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-1">{category.name}</h3>
-                      <p className="text-gray-500 text-xs mb-3 line-clamp-2">{category.description}</p>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color.badge}`}>
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-1">{category.name}</h3>
+                      <p className="text-gray-500 dark:text-slate-400 text-xs mb-3 line-clamp-2">{category.description}</p>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color.badge} dark:bg-slate-600 dark:text-slate-200`}>
+                        <Video className="w-3 h-3 mr-1" />
                         {category.videoCount || 0} Videos
                       </span>
                     </div>

@@ -1,6 +1,7 @@
 ﻿import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Library, LogOut, User, Settings, Home, Video } from 'lucide-react';
+import { Search, Library, LogOut, User, Settings, Home, Video, Moon, Sun } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
+import { useTheme } from '../../context/ThemeContext';
 
 interface NavbarProps {
   isOpen?: boolean;
@@ -9,6 +10,7 @@ interface NavbarProps {
 
 const Navbar = ({ isOpen = false, onClose }: NavbarProps) => {
   const { user, isAuthenticated, logout } = useAuthStore();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -25,14 +27,21 @@ const Navbar = ({ isOpen = false, onClose }: NavbarProps) => {
 
   if (!isAuthenticated) {
     return (
-      <nav className="fixed top-0 left-0 right-0 h-14 bg-primary-600 z-50 flex items-center px-6">
+      <nav className="fixed top-0 left-0 right-0 h-14 bg-primary-600 dark:bg-slate-900 z-50 flex items-center px-6">
         <Link to="/" className="flex items-center space-x-2">
           <div className="w-7 h-7 bg-accent-500 rounded flex items-center justify-center">
             <Video className="w-4 h-4 text-white" />
           </div>
           <span className="text-white font-bold text-lg">Multicentro</span>
         </Link>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all text-white"
+            aria-label="Cambiar tema"
+          >
+            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
           <Link to="/login" className="px-4 py-2 bg-accent-500 text-white rounded font-medium hover:bg-accent-600">
             Iniciar Sesión
           </Link>
@@ -123,25 +132,35 @@ const Navbar = ({ isOpen = false, onClose }: NavbarProps) => {
       </nav>
 
       {/* User section */}
-      <div className="border-t border-primary-600 p-4">
-        <Link
-          to="/profile"
-          onClick={handleNavClick}
-          className={`flex items-center space-x-3 mb-3 p-2 rounded-lg transition-colors ${
-            isActive('/profile') ? 'bg-primary-600' : 'hover:bg-primary-600/50'
-          }`}
-        >
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-accent-400 to-accent-600 flex items-center justify-center flex-shrink-0">
-            <User className="w-5 h-5 text-white" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">{user?.username}</p>
-            <p className="text-xs text-primary-300">{user?.role?.name || 'Sin rol'}</p>
-          </div>
-        </Link>
+      <div className="border-t border-primary-600 dark:border-slate-700 p-4">
+        <div className="flex items-center justify-between mb-3">
+          <Link
+            to="/profile"
+            onClick={handleNavClick}
+            className={`flex items-center space-x-3 p-2 rounded-lg transition-colors flex-1 ${
+              isActive('/profile') ? 'bg-primary-600 dark:bg-slate-700' : 'hover:bg-primary-600/50 dark:hover:bg-slate-700'
+            }`}
+          >
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-accent-400 to-accent-600 flex items-center justify-center flex-shrink-0">
+              <User className="w-5 h-5 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-white truncate">{user?.username}</p>
+              <p className="text-xs text-primary-300 dark:text-slate-400">{user?.role?.name || 'Sin rol'}</p>
+            </div>
+          </Link>
+          <button
+            onClick={toggleTheme}
+            className="ml-2 p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all text-white"
+            aria-label="Cambiar tema"
+            title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
+          >
+            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
+        </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-primary-600 hover:bg-primary-500 rounded text-sm font-medium transition-colors"
+          className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-primary-600 hover:bg-primary-500 dark:bg-slate-700 dark:hover:bg-slate-600 rounded text-sm font-medium transition-colors"
         >
           <LogOut className="w-4 h-4" />
           <span>Cerrar Sesión</span>
