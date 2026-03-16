@@ -4,6 +4,8 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
+import logger from './config/logger';
+import { errorHandler } from './middleware/errorHandler.middleware';
 
 import authRoutes from './routes/auth.routes';
 import categoryRoutes from './routes/category.routes';
@@ -68,7 +70,7 @@ app.use('/api/', (req: express.Request, res: express.Response, next: express.Nex
 });
 
 // Logging
-app.use(morgan('dev'));
+app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
 
 // Body parser
 app.use(express.json());
@@ -93,13 +95,7 @@ app.use('/api/roles', roleRoutes);
 app.use('/api/progress', progressRoutes);
 
 // Error handling middleware
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
-    message: err.message || 'Internal Server Error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-  });
-});
+app.use(errorHandler);
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -107,12 +103,12 @@ app.use('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
+  logger.info(`🚀 Server running on port ${PORT}`);
+  logger.info(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
   const apiUrl = process.env.RAILWAY_PUBLIC_DOMAIN 
     ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
     : `http://localhost:${PORT}`;
-  console.log(`🔗 API URL: ${apiUrl}`);
+  logger.info(`🔗 API URL: ${apiUrl}`);
 });
 
 export default app;

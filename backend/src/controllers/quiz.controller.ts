@@ -1,127 +1,61 @@
-import { Request, Response } from 'express';
-import prisma from '../config/database';
+import { Request, Response, NextFunction } from 'express';
+import { QuizService } from '../services/quiz.service';
+import { BadRequestError } from '../errors/errors';
 
-export const getQuizzes = async (req: Request, res: Response) => {
+export const getQuizzes = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { topicId, isActive } = req.query;
+    const topicId = req.query.topicId as string | undefined;
+    const isActiveQuery = req.query.isActive as string | undefined;
+    const isActive = isActiveQuery !== undefined ? isActiveQuery === 'true' : undefined;
 
-    const quizzes = await prisma.quiz.findMany({
-      where: {
-        ...(topicId && { topicId: topicId as string }),
-        ...(isActive !== undefined && { isActive: isActive === 'true' })
-      },
-      include: {
-        topic: {
-          include: {
-            video: true
-          }
-        }
-      },
-      orderBy: { order: 'asc' }
-    });
-
+    const quizzes = await QuizService.getQuizzes(topicId, isActive);
     res.json(quizzes);
   } catch (error) {
-    console.error('Get quizzes error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
-export const getQuizById = async (req: Request, res: Response) => {
+export const getQuizById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-
-    const quiz = await prisma.quiz.findUnique({
-      where: { id: String(id) },
-      include: {
-        topic: {
-          include: {
-            video: true
-          }
-        }
-      }
-    });
-
-    if (!quiz) {
-      return res.status(404).json({ message: 'Quiz not found' });
-    }
-
+    const quiz = await QuizService.getQuizById(id);
     res.json(quiz);
   } catch (error) {
-    console.error('Get quiz error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
-export const createQuiz = async (req: Request, res: Response) => {
+export const createQuiz = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { topicId, question, options, correctAnswer, explanation, order, isActive } = req.body;
+    const { topicId, question, options, correctAnswer } = req.body;
 
     if (!topicId || !question || !options || !Array.isArray(options) || correctAnswer === undefined) {
-      return res.status(400).json({ message: 'TopicId, question, options array, and correctAnswer are required' });
+      throw new BadRequestError('TopicId, question, options array, and correctAnswer are required');
     }
 
-    const quiz = await prisma.quiz.create({
-      data: {
-        topicId,
-        question,
-        options,
-        correctAnswer,
-        explanation,
-        order: order || 0,
-        isActive: isActive !== undefined ? isActive : true
-      },
-      include: {
-        topic: true
-      }
-    });
-
+    const quiz = await QuizService.createQuiz(req.body);
     res.status(201).json(quiz);
   } catch (error) {
-    console.error('Create quiz error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
-export const updateQuiz = async (req: Request, res: Response) => {
+export const updateQuiz = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const { topicId, question, options, correctAnswer, explanation, order, isActive } = req.body;
-
-    const quiz = await prisma.quiz.update({
-      where: { id: String(id) },
-      data: {
-        ...(topicId && { topicId }),
-        ...(question && { question }),
-        ...(options && { options }),
-        ...(correctAnswer !== undefined && { correctAnswer }),
-        ...(explanation !== undefined && { explanation }),
-        ...(order !== undefined && { order }),
-        ...(isActive !== undefined && { isActive })
-      },
-      include: {
-        topic: true
-      }
-    });
-
+    const quiz = await QuizService.updateQuiz(id, req.body);
     res.json(quiz);
   } catch (error) {
-    console.error('Update quiz error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
-export const deleteQuiz = async (req: Request, res: Response) => {
+export const deleteQuiz = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-
-    await prisma.quiz.delete({
-      where: { id: String(id) }
-    });
-
+    await QuizService.deleteQuiz(id);
     res.status(204).send();
   } catch (error) {
-    console.error('Delete quiz error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };

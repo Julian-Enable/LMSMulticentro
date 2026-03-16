@@ -1,157 +1,57 @@
-import { Request, Response } from 'express';
-import prisma from '../config/database';
+import { Request, Response, NextFunction } from 'express';
+import { RoleService } from '../services/role.service';
+import { BadRequestError } from '../errors/errors';
 
-export const getRoles = async (req: Request, res: Response) => {
+export const getRoles = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { isActive } = req.query;
+    const isActiveQuery = req.query.isActive as string | undefined;
+    const isActive = isActiveQuery !== undefined ? isActiveQuery === 'true' : undefined;
 
-    const roles = await prisma.role.findMany({
-      where: isActive !== undefined ? { isActive: isActive === 'true' } : {},
-      orderBy: [
-        { isSystem: 'desc' }, // System roles first
-        { name: 'asc' }
-      ]
-    });
-
+    const roles = await RoleService.getRoles(isActive);
     res.json(roles);
   } catch (error) {
-    console.error('Get roles error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
-export const getRoleById = async (req: Request, res: Response) => {
+export const getRoleById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-
-    const role = await prisma.role.findUnique({
-      where: { id: String(id) },
-      include: {
-        _count: {
-          select: {
-            users: true,
-            categoryRoles: true
-          }
-        }
-      }
-    });
-
-    if (!role) {
-      return res.status(404).json({ message: 'Role not found' });
-    }
-
+    const role = await RoleService.getRoleById(id);
     res.json(role);
   } catch (error) {
-    console.error('Get role error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
-export const createRole = async (req: Request, res: Response) => {
+export const createRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { code, name, description, color, isActive } = req.body;
+    const { code, name } = req.body;
+    if (!code || !name) throw new BadRequestError('Code and name are required');
 
-    if (!code || !name) {
-      return res.status(400).json({ message: 'Code and name are required' });
-    }
-
-    // Check if code already exists
-    const existing = await prisma.role.findUnique({
-      where: { code: code.toUpperCase() }
-    });
-
-    if (existing) {
-      return res.status(400).json({ message: 'Role code already exists' });
-    }
-
-    const role = await prisma.role.create({
-      data: {
-        code: code.toUpperCase(),
-        name,
-        description,
-        color: color || '#3B82F6',
-        isActive: isActive !== undefined ? isActive : true,
-        isSystem: false
-      }
-    });
-
+    const role = await RoleService.createRole(req.body);
     res.status(201).json(role);
   } catch (error) {
-    console.error('Create role error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
-export const updateRole = async (req: Request, res: Response) => {
+export const updateRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const { code, name, description, color, isActive } = req.body;
-
-    // Check if role exists and is not system role
-    const existing = await prisma.role.findUnique({
-      where: { id: String(id) }
-    });
-
-    if (!existing) {
-      return res.status(404).json({ message: 'Role not found' });
-    }
-
-    if (existing.isSystem && code && code !== existing.code) {
-      return res.status(400).json({ message: 'Cannot change code of system role' });
-    }
-
-    const role = await prisma.role.update({
-      where: { id: String(id) },
-      data: {
-        ...(code && { code: code.toUpperCase() }),
-        ...(name && { name }),
-        ...(description !== undefined && { description }),
-        ...(color && { color }),
-        ...(isActive !== undefined && { isActive })
-      }
-    });
-
+    const role = await RoleService.updateRole(id, req.body);
     res.json(role);
   } catch (error) {
-    console.error('Update role error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
-export const deleteRole = async (req: Request, res: Response) => {
+export const deleteRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-
-    const role = await prisma.role.findUnique({
-      where: { id: String(id) },
-      include: {
-        _count: {
-          select: { users: true }
-        }
-      }
-    });
-
-    if (!role) {
-      return res.status(404).json({ message: 'Role not found' });
-    }
-
-    if (role.isSystem) {
-      return res.status(400).json({ message: 'Cannot delete system role' });
-    }
-
-    if (role._count.users > 0) {
-      return res.status(400).json({ 
-        message: `Cannot delete role with ${role._count.users} assigned users. Reassign users first.` 
-      });
-    }
-
-    await prisma.role.delete({
-      where: { id: String(id) }
-    });
-
+    await RoleService.deleteRole(id);
     res.json({ message: 'Role deleted successfully' });
   } catch (error) {
-    console.error('Delete role error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };

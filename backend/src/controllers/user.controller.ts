@@ -1,132 +1,40 @@
-import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import { Request, Response, NextFunction } from 'express';
+import { UserService } from '../services/user.service';
 
-const prisma = new PrismaClient();
-
-export const getUsers = async (req: Request, res: Response) => {
+export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        roleId: true,
-        isActive: true,
-        role: true,
-        createdAt: true,
-      },
-      orderBy: {
-        createdAt: 'asc',
-      },
-    });
-
+    const users = await UserService.getAllUsers();
     res.json(users);
   } catch (error) {
-    console.error('Error getting users:', error);
-    res.status(500).json({ message: 'Error retrieving users' });
+    next(error);
   }
 };
 
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { username, email, password, roleId, isActive } = req.body;
-
-    if (!username || !email || !password || !roleId) {
-      return res.status(400).json({ message: 'Username, email, password, and role are required' });
-    }
-
-    // Check if user already exists
-    const existingUser = await prisma.user.findFirst({
-      where: {
-        OR: [
-          { username },
-          { email },
-        ],
-      },
-    });
-
-    if (existingUser) {
-      return res.status(400).json({ message: 'Username or email already exists' });
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create user
-    const user = await prisma.user.create({
-      data: {
-        username,
-        email,
-        password: hashedPassword,
-        roleId,
-        isActive: isActive !== undefined ? isActive : true,
-      },
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        roleId: true,
-        isActive: true,
-        role: true,
-        createdAt: true,
-      },
-    });
-
+    const user = await UserService.createUser(req.body);
     res.status(201).json(user);
   } catch (error) {
-    console.error('Error creating user:', error);
-    res.status(500).json({ message: 'Error creating user' });
+    next(error);
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const { username, email, password, roleId, isActive } = req.body;
-
-    const updateData: any = {};
-    
-    if (username) updateData.username = username;
-    if (email) updateData.email = email;
-    if (roleId) updateData.roleId = roleId;
-    if (isActive !== undefined) updateData.isActive = isActive;
-    if (password) {
-      updateData.password = await bcrypt.hash(password, 10);
-    }
-
-    const user = await prisma.user.update({
-      where: { id: id as string },
-      data: updateData,
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        roleId: true,
-        isActive: true,
-        role: true,
-        createdAt: true,
-      },
-    });
-
+    const user = await UserService.updateUser(id, req.body);
     res.json(user);
   } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).json({ message: 'Error updating user' });
+    next(error);
   }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-
-    await prisma.user.delete({
-      where: { id: id as string },
-    });
-
+    await UserService.deleteUser(id);
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
-    console.error('Error deleting user:', error);
-    res.status(500).json({ message: 'Error deleting user' });
+    next(error);
   }
 };
