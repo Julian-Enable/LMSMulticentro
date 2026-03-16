@@ -1,7 +1,9 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import api from '../../services/api';
 import { Topic, Video, Tag } from '../../types';
+import toast from 'react-hot-toast';
+import ConfirmModal from '../UI/ConfirmModal';
 
 const TopicManager = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -19,6 +21,7 @@ const TopicManager = () => {
     isActive: true,
   });
   const [isCreating, setIsCreating] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
@@ -86,23 +89,23 @@ const TopicManager = () => {
       setIsCreating(false);
       setEditingId(null);
       await loadData();
+      toast.success(isCreating ? 'Tema creado exitosamente' : 'Tema actualizado exitosamente');
     } catch (error) {
       console.error('Error saving topic:', error);
-      alert('Error al guardar el tema');
+      toast.error('Error al guardar el tema');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar este tema?')) {
-      return;
-    }
-
     try {
       await api.delete(`/topics/${id}`);
+      toast.success('Tema eliminado exitosamente');
       await loadData();
     } catch (error) {
       console.error('Error deleting topic:', error);
-      alert('Error al eliminar el tema');
+      toast.error('Error al eliminar el tema');
+    } finally {
+      setDeleteTarget(null);
     }
   };
 
@@ -145,6 +148,15 @@ const TopicManager = () => {
 
   return (
     <div className="space-y-4">
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        title="Eliminar Tema"
+        message="¿Estás seguro de eliminar este tema?"
+        confirmLabel="Eliminar"
+        onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+        onCancel={() => setDeleteTarget(null)}
+      />
+
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-900">Gestión de Temas</h2>
         {!isCreating && !editingId && (
@@ -334,7 +346,7 @@ const TopicManager = () => {
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => handleDelete(topic.id)}
+                        onClick={() => setDeleteTarget(topic.id)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         title="Eliminar"
                       >

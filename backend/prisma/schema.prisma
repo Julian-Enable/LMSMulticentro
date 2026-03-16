@@ -12,15 +12,16 @@ datasource db {
 
 // Modelo de Rol (ahora dinámico y editable)
 model Role {
-  id          String   @id @default(uuid())
-  code        String   @unique // Ej: "CAJERO", "VENTAS"
-  name        String   // Nombre descriptivo: "Cajero", "Vendedor"
+  id          String    @id @default(uuid())
+  code        String    @unique
+  name        String
   description String?
-  color       String   @default("#3B82F6") // Color para badges (hex)
-  isActive    Boolean  @default(true)
-  isSystem    Boolean  @default(false) // true para ADMIN, no se puede eliminar
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  color       String    @default("#3B82F6")
+  isActive    Boolean   @default(true)
+  isSystem    Boolean   @default(false)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   users              User[]
   categoryRoles      CategoryRole[]
@@ -30,14 +31,15 @@ model Role {
 
 // Modelo de Usuario para administración
 model User {
-  id        String   @id @default(uuid())
-  username  String   @unique
+  id        String    @id @default(uuid())
+  username  String    @unique
   password  String
-  email     String?  @unique
+  email     String?   @unique
   roleId    String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isActive  Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   role         Role           @relation(fields: [roleId], references: [id])
   progress     UserProgress[]
@@ -50,13 +52,16 @@ model User {
 
 // Modelo de Categoría (Ventas, Inventario, etc.)
 model Category {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   description String?
-  order       Int      @default(0)
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  order       Int       @default(0)
+  isActive    Boolean   @default(true)
+  deletedAt   DateTime?
+  createdBy   String?
+  updatedBy   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   videos        Video[]
   categoryRoles CategoryRole[]
@@ -82,18 +87,21 @@ model CategoryRole {
 
 // Modelo de Video (contiene múltiples temas)
 model Video {
-  id          String       @id @default(uuid())
+  id          String        @id @default(uuid())
   title       String
   description String?
-  externalId  String       // ID de YouTube, Drive, etc.
-  platform    VideoPlatform // YouTube, Drive, Vimeo
-  duration    Int?         // Duración en segundos
+  externalId  String
+  platform    VideoPlatform
+  duration    Int?
   thumbnailUrl String?
   categoryId  String
-  order       Int          @default(0)
-  isActive    Boolean      @default(true)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  order       Int           @default(0)
+  isActive    Boolean       @default(true)
+  deletedAt   DateTime?
+  createdBy   String?
+  updatedBy   String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   topics   Topic[]
@@ -112,18 +120,21 @@ enum VideoPlatform {
 
 // Modelo de Tema (sección específica de un video con timestamp)
 model Topic {
-  id          String   @id @default(uuid())
-  code        String   @unique // Ej: "1.11", "1.12", "2.01"
+  id          String    @id @default(uuid())
+  code        String    @unique
   title       String
   description String?
   videoId     String
-  timestamp   Int      // Tiempo en segundos donde inicia el tema
-  duration    Int?     // Duración del tema en segundos
-  order       Int      @default(0)
-  views       Int      @default(0) // Número de vistas
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  timestamp   Int
+  duration    Int?
+  order       Int       @default(0)
+  views       Int       @default(0)
+  isActive    Boolean   @default(true)
+  deletedAt   DateTime?
+  createdBy   String?
+  updatedBy   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   video    Video          @relation(fields: [videoId], references: [id], onDelete: Cascade)
   tags     TopicTag[]
@@ -139,10 +150,11 @@ model Topic {
 
 // Modelo de Tag para búsqueda
 model Tag {
-  id        String     @id @default(uuid())
-  name      String     @unique
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id        String    @id @default(uuid())
+  name      String    @unique
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   topics TopicTag[]
 
@@ -195,16 +207,19 @@ model UserProgress {
 
 // Modelo de Quiz/Evaluación
 model Quiz {
-  id          String   @id @default(uuid())
-  topicId     String
-  question    String
-  options     String[] // Array de opciones JSON
-  correctAnswer Int    // Índice de la respuesta correcta
-  explanation String?
-  order       Int      @default(0)
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String    @id @default(uuid())
+  topicId       String
+  question      String
+  options       String[]
+  correctAnswer Int
+  explanation   String?
+  order         Int       @default(0)
+  isActive      Boolean   @default(true)
+  deletedAt     DateTime?
+  createdBy     String?
+  updatedBy     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
 

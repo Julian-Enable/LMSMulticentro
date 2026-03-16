@@ -1,7 +1,9 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import api from '../../services/api';
 import { Quiz, Topic } from '../../types';
+import toast from 'react-hot-toast';
+import ConfirmModal from '../UI/ConfirmModal';
 
 interface QuizFormData {
   topicId: string;
@@ -32,6 +34,7 @@ const QuizManager = () => {
   const [formData, setFormData] = useState<QuizFormData>(emptyForm());
   const [saving, setSaving] = useState(false);
   const [filterTopicId, setFilterTopicId] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
@@ -77,7 +80,7 @@ const QuizManager = () => {
     if (!formData.topicId || !formData.question.trim()) return;
     const filledOptions = formData.options.filter(o => o.trim());
     if (filledOptions.length < 2) {
-      alert('Debes ingresar al menos 2 opciones');
+      toast.error('Debes ingresar al menos 2 opciones');
       return;
     }
 
@@ -102,22 +105,25 @@ const QuizManager = () => {
       setIsCreating(false);
       setEditingId(null);
       await loadData();
+      toast.success(isCreating ? 'Pregunta creada exitosamente' : 'Pregunta actualizada exitosamente');
     } catch (error) {
       console.error('Error saving quiz:', error);
-      alert('Error al guardar la pregunta');
+      toast.error('Error al guardar la pregunta');
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Eliminar esta pregunta?')) return;
     try {
       await api.delete(`/quizzes/${id}`);
+      toast.success('Pregunta eliminada exitosamente');
       await loadData();
     } catch (error) {
       console.error('Error deleting quiz:', error);
-      alert('Error al eliminar la pregunta');
+      toast.error('Error al eliminar la pregunta');
+    } finally {
+      setDeleteTarget(null);
     }
   };
 
@@ -161,6 +167,15 @@ const QuizManager = () => {
 
   return (
     <div className="space-y-6">
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        title="Eliminar Pregunta"
+        message="¿Estás seguro de eliminar esta pregunta?"
+        confirmLabel="Eliminar"
+        onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+        onCancel={() => setDeleteTarget(null)}
+      />
+
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -392,7 +407,7 @@ const QuizManager = () => {
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(quiz.id)}
+                    onClick={() => setDeleteTarget(quiz.id)}
                     className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     title="Eliminar"
                   >
