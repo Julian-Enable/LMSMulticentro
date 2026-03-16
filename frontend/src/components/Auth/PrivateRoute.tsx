@@ -1,4 +1,4 @@
-﻿import { Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 
 interface PrivateRouteProps {
@@ -7,7 +7,15 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute = ({ children, roles }: PrivateRouteProps) => {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, isLoading } = useAuthStore();
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex items-center justify-center h-full bg-gray-50">
+        <div className="w-10 h-10 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

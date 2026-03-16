@@ -6,6 +6,7 @@ interface AuthStore {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   setAuth: (token: string, user: User) => void;
   logout: () => void;
   initAuth: () => void;
@@ -15,6 +16,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   token: null,
   isAuthenticated: false,
+  isLoading: true,
 
   setAuth: (token, user) => {
     localStorage.setItem(STORAGE_KEYS.TOKEN, token);
@@ -35,12 +37,15 @@ export const useAuthStore = create<AuthStore>((set) => ({
     if (token && userStr) {
       try {
         const user = JSON.parse(userStr);
-        set({ token, user, isAuthenticated: true });
+        set({ token, user, isAuthenticated: true, isLoading: false });
       } catch (error) {
         console.error('Error parsing user from localStorage:', error);
         localStorage.removeItem(STORAGE_KEYS.TOKEN);
         localStorage.removeItem(STORAGE_KEYS.USER);
+        set({ isLoading: false });
       }
+    } else {
+      set({ isLoading: false });
     }
   },
 }));
