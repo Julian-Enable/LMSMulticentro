@@ -99,6 +99,8 @@ model Video {
   topics   Topic[]
 
   @@index([categoryId])
+  @@index([title])
+  @@index([categoryId, isActive])
   @@map("videos")
 }
 
@@ -130,6 +132,8 @@ model Topic {
 
   @@index([videoId])
   @@index([code])
+  @@index([title])
+  @@index([videoId, isActive])
   @@map("topics")
 }
 

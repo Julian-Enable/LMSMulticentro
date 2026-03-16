@@ -1,7 +1,9 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import api from '../../services/api';
 import { Tag } from '../../types';
+import toast from 'react-hot-toast';
+import ConfirmModal from '../UI/ConfirmModal';
 
 const TagManager = () => {
   const [tags, setTags] = useState<Tag[]>([]);
@@ -9,6 +11,7 @@ const TagManager = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: '' });
   const [isCreating, setIsCreating] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   useEffect(() => {
     loadTags();
@@ -48,23 +51,23 @@ const TagManager = () => {
       setEditingId(null);
       setFormData({ name: '' });
       await loadTags();
+      toast.success(isCreating ? 'Tag creado exitosamente' : 'Tag actualizado exitosamente');
     } catch (error) {
       console.error('Error saving tag:', error);
-      alert('Error al guardar el tag');
+      toast.error('Error al guardar el tag');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar este tag?')) {
-      return;
-    }
-
     try {
       await api.delete(`/tags/${id}`);
+      toast.success('Tag eliminado exitosamente');
       await loadTags();
     } catch (error) {
       console.error('Error deleting tag:', error);
-      alert('Error al eliminar el tag');
+      toast.error('Error al eliminar el tag');
+    } finally {
+      setDeleteTarget(null);
     }
   };
 
@@ -84,6 +87,16 @@ const TagManager = () => {
 
   return (
     <div className="space-y-4">
+      {/* ConfirmModal for Delete */}
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        title="Eliminar Tag"
+        message="¿Estás seguro de eliminar este tag?"
+        confirmLabel="Eliminar"
+        onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+        onCancel={() => setDeleteTarget(null)}
+      />
+
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-900">Gestión de Tags</h2>
         {!isCreating && !editingId && (
@@ -158,7 +171,7 @@ const TagManager = () => {
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(tag.id)}
+                    onClick={() => setDeleteTarget(tag.id)}
                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                     title="Eliminar"
                   >

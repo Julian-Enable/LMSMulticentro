@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { getYouTubeVideoInfo } from '../services/youtube.service';
+import logger from '../config/logger';
 
 export const fetchVideoInfo = async (req: Request, res: Response) => {
   try {
@@ -12,7 +13,7 @@ export const fetchVideoInfo = async (req: Request, res: Response) => {
     const videoInfo = await getYouTubeVideoInfo(videoId as string);
     res.json(videoInfo);
   } catch (error: any) {
-    console.error('Error in fetchVideoInfo:', error);
+    logger.error('Error in fetchVideoInfo:', error);
     res.status(500).json({ message: error.message || 'Error fetching video information' });
   }
 };

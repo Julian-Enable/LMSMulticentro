@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from '../config/logger';
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY || '';
 const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
@@ -137,7 +138,7 @@ export const getYouTubeVideoInfo = async (videoId: string): Promise<YouTubeVideo
       chapters,
     };
   } catch (error: any) {
-    console.error('Error fetching YouTube video info:', error.message);
+    logger.error('Error fetching YouTube video info:', error.message);
     throw new Error('Failed to fetch video information from YouTube');
   }
 };

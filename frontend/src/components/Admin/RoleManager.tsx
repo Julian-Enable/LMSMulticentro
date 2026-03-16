@@ -1,6 +1,8 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Save, X, Plus, Edit2, Trash2 } from 'lucide-react';
 import { Role, roleService } from '../../services/role.service';
+import toast from 'react-hot-toast';
+import ConfirmModal from '../UI/ConfirmModal';
 
 const RoleManager = () => {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -14,6 +16,7 @@ const RoleManager = () => {
     color: '#3B82F6',
     isActive: true,
   });
+  const [deleteTarget, setDeleteTarget] = useState<Role | null>(null);
 
   useEffect(() => {
     loadRoles();
@@ -26,7 +29,7 @@ const RoleManager = () => {
       setRoles(data);
     } catch (error) {
       console.error('Error loading roles:', error);
-      alert('Error al cargar los roles');
+      toast.error('Error al cargar los roles');
     } finally {
       setLoading(false);
     }
@@ -45,7 +48,7 @@ const RoleManager = () => {
 
   const handleEdit = (role: Role) => {
     if (role.isSystem) {
-      alert('Los roles del sistema no se pueden editar completamente');
+      toast.error('Los roles del sistema no se pueden editar completamente');
     }
     setEditingId(role.id);
     setFormData({
@@ -60,7 +63,7 @@ const RoleManager = () => {
   const handleSave = async () => {
     try {
       if (!formData.code || !formData.name) {
-        alert('Código y nombre son requeridos');
+        toast.error('Código y nombre son requeridos');
         return;
       }
 
@@ -80,10 +83,11 @@ const RoleManager = () => {
         isActive: true,
       });
       await loadRoles();
+      toast.success(isCreating ? 'Rol creado exitosamente' : 'Rol actualizado exitosamente');
     } catch (error: any) {
       console.error('Error saving role:', error);
       const message = error.response?.data?.message || 'Error al guardar el rol';
-      alert(message);
+      toast.error(message);
     }
   };
 
@@ -101,26 +105,25 @@ const RoleManager = () => {
 
   const handleDelete = async (role: Role) => {
     if (role.isSystem) {
-      alert('Los roles del sistema no se pueden eliminar');
+      toast.error('Los roles del sistema no se pueden eliminar');
       return;
     }
 
     if (role._count && role._count.users > 0) {
-      alert(`No se puede eliminar el rol "${role.name}" porque tiene ${role._count.users} usuario(s) asignado(s). Reasigna los usuarios primero.`);
-      return;
-    }
-
-    if (!confirm(`¿Estás seguro de eliminar el rol "${role.name}"?`)) {
+      toast.error(`No se puede eliminar el rol "${role.name}" porque tiene ${role._count.users} usuario(s) asignado(s). Reasigna los usuarios primero.`);
       return;
     }
 
     try {
       await roleService.delete(role.id);
+      toast.success('Rol eliminado exitosamente');
       await loadRoles();
     } catch (error: any) {
       console.error('Error deleting role:', error);
       const message = error.response?.data?.message || 'Error al eliminar el rol';
-      alert(message);
+      toast.error(message);
+    } finally {
+      setDeleteTarget(null);
     }
   };
 
@@ -134,6 +137,16 @@ const RoleManager = () => {
 
   return (
     <div className="space-y-6">
+      {/* ConfirmModal for Delete */}
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        title="Eliminar Rol"
+        message={`¿Estás seguro de eliminar el rol "${deleteTarget?.name}"?`}
+        confirmLabel="Eliminar"
+        onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+        onCancel={() => setDeleteTarget(null)}
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -322,7 +335,7 @@ const RoleManager = () => {
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => handleDelete(role)}
+                          onClick={() => setDeleteTarget(role)}
                           disabled={role.isSystem}
                           className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                           title={role.isSystem ? 'Rol del sistema no se puede eliminar' : 'Eliminar'}

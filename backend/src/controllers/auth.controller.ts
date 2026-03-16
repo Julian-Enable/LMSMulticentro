@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import prisma from '../config/database';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { TokenService } from '../services/token.service';
+import logger from '../config/logger';
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -41,7 +42,7 @@ export const login = async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
-    console.error('Login error:', error);
+    logger.error('Login error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -112,7 +113,7 @@ export const register = async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
-    console.error('Register error:', error);
+    logger.error('Register error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -140,7 +141,7 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
 
     res.json(user);
   } catch (error) {
-    console.error('Get profile error:', error);
+    logger.error('Get profile error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -168,7 +169,7 @@ export const changePassword = async (req: AuthRequest, res: Response) => {
 
     res.json({ message: 'Password updated successfully' });
   } catch (error) {
-    console.error('Change password error:', error);
+    logger.error('Change password error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -206,7 +207,7 @@ export const makeAdmin = async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
-    console.error('Make admin error:', error);
+    logger.error('Make admin error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -235,7 +236,7 @@ export const logout = async (req: Request, res: Response) => {
     }
     res.json({ message: 'Logged out successfully' });
   } catch (error) {
-    console.error('Logout error:', error);
+    logger.error('Logout error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -248,7 +249,7 @@ export const logoutAll = async (req: AuthRequest, res: Response) => {
     await TokenService.revokeAllUserTokens(req.user.id);
     res.json({ message: 'Logged out from all sessions successfully' });
   } catch (error) {
-    console.error('Logout all error:', error);
+    logger.error('Logout all error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };

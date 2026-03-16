@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { User, Role } from '../../types';
 import { userService } from '../../services/user.service';
 import { roleService } from '../../services/role.service';
+import toast from 'react-hot-toast';
+import ConfirmModal from '../UI/ConfirmModal';
 
 const UserManager = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -9,6 +11,7 @@ const UserManager = () => {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -33,7 +36,7 @@ const UserManager = () => {
       setRoles(rolesData);
     } catch (error) {
       console.error('Error loading data:', error);
-      alert('Error al cargar los datos');
+      toast.error('Error al cargar los datos');
     } finally {
       setLoading(false);
     }
@@ -76,12 +79,12 @@ const UserManager = () => {
   const handleSave = async () => {
     try {
       if (!formData.username || !formData.email || !formData.roleId) {
-        alert('Usuario, email y rol son requeridos');
+        toast.error('Usuario, email y rol son requeridos');
         return;
       }
 
       if (isCreating && !formData.password) {
-        alert('La contraseña es requerida para crear un usuario');
+        toast.error('La contraseña es requerida para crear un usuario');
         return;
       }
 
@@ -117,24 +120,24 @@ const UserManager = () => {
         roleId: defaultRole?.id || '',
         isActive: true,
       });
+      toast.success(isCreating ? 'Usuario creado exitosamente' : 'Usuario actualizado exitosamente');
     } catch (error: any) {
       console.error('Error saving user:', error);
       const message = error.response?.data?.message || 'Error al guardar el usuario';
-      alert(message);
+      toast.error(message);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar este usuario?')) {
-      return;
-    }
-
     try {
       await userService.delete(id);
+      toast.success('Usuario eliminado exitosamente');
       await loadData();
     } catch (error) {
       console.error('Error deleting user:', error);
-      alert('Error al eliminar el usuario');
+      toast.error('Error al eliminar el usuario');
+    } finally {
+      setDeleteTarget(null);
     }
   };
 
@@ -158,6 +161,16 @@ const UserManager = () => {
 
   return (
     <div className="flex flex-col gap-6">
+      {/* ConfirmModal for Delete */}
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        title="Eliminar Usuario"
+        message="¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer."
+        confirmLabel="Eliminar"
+        onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+        onCancel={() => setDeleteTarget(null)}
+      />
+
       {/* Create/Edit Modal */}
       {(isCreating || editingId) && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
@@ -385,7 +398,7 @@ const UserManager = () => {
                           </svg>
                         </button>
                         <button
-                          onClick={() => handleDelete(user.id)}
+                          onClick={() => setDeleteTarget(user.id)}
                           className="p-2.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                           title="Eliminar usuario"
                         >
