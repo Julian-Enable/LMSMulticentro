@@ -13,12 +13,17 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
     });
   }
 
+  // Fallback if err is a generic error without specific code/details
+  const errorObj = err as any;
+  const message = errorObj.message || 'Error interno del servidor';
+  const stack = errorObj.stack;
+
   // Errores no controlados (500)
-  logger.error(`Unhandled Error: ${err.message}`, { stack: err.stack });
+  logger.error(`Unhandled Error: ${message}`, { stack });
   return res.status(500).json({
     status: 'error',
     code: 'INTERNAL_SERVER_ERROR',
-    message: 'Error interno del servidor',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    message: message,
+    ...(process.env.NODE_ENV === 'development' && { stack })
   });
 };

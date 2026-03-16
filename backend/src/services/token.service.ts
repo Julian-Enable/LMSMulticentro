@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { v4 as uuidv4 } from 'uuid';
+import crypto from 'crypto';
 import prisma from '../config/database';
 
 export class TokenService {
@@ -8,7 +8,7 @@ export class TokenService {
   }
 
   static async generateRefreshToken(userId: string) {
-    const token = uuidv4();
+    const token = crypto.randomUUID();
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
 
