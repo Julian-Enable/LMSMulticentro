@@ -35,11 +35,37 @@ app.use(cors({
 }));
 
 // Rate limiting
-const limiter = rateLimit({
+const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100 // límite de 100 peticiones por ventana
+  max: 5, // 5 intentos por 15 min
+  message: { message: 'Demasiados intentos de autenticación' },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
-app.use('/api/', limiter);
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100, // 100 solicitudes por cada 15 min IP general
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const createLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minuto
+  max: 10, // 10 creaciones por minuto
+  message: { message: 'Demasiadas solicitudes de modificación, por favor inténtalo de nuevo más tarde.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use('/api/', apiLimiter);
+
+app.use('/api/', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (['POST', 'PUT', 'DELETE'].includes(req.method) && !req.path.startsWith('/auth')) {
+    return createLimiter(req, res, next);
+  }
+  next();
+});
 
 // Logging
 app.use(morgan('dev'));
@@ -54,7 +80,7 @@ app.get('/health', (req, res) => {
 });
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/topics', topicRoutes);

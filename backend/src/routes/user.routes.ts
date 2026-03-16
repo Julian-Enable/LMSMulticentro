@@ -1,13 +1,14 @@
 import { Router } from 'express';
 import { getUsers, createUser, updateUser, deleteUser } from '../controllers/user.controller';
 import { authenticate } from '../middleware/auth.middleware';
+import { validateRequest } from '../middleware/validation.middleware';
+import { createUserSchema, updateUserSchema, userIdSchema } from '../validators/user.validator';
 
 const router = Router();
 
-// All user routes require authentication (Admin only)
 router.get('/', authenticate, getUsers);
-router.post('/', authenticate, createUser);
-router.put('/:id', authenticate, updateUser);
-router.delete('/:id', authenticate, deleteUser);
+router.post('/', authenticate, validateRequest(createUserSchema), createUser);
+router.put('/:id', authenticate, validateRequest(updateUserSchema), updateUser);
+router.delete('/:id', authenticate, validateRequest(userIdSchema), deleteUser);
 
 export default router;

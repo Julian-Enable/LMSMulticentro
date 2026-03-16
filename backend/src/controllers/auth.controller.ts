@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import prisma from '../config/database';
 import { AuthRequest } from '../middleware/auth.middleware';
+import { TokenService } from '../services/token.service';
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -27,13 +27,12 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username, roleId: user.roleId },
-      process.env.JWT_SECRET || 'secret'
-    );
+    const accessToken = TokenService.generateAccessToken({ id: user.id, username: user.username, roleId: user.roleId });
+    const refreshToken = await TokenService.generateRefreshToken(user.id);
 
     res.json({
-      token,
+      accessToken,
+      refreshToken,
       user: {
         id: user.id,
         username: user.username,
@@ -99,13 +98,12 @@ export const register = async (req: Request, res: Response) => {
       }
     });
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username, roleId: user.roleId },
-      process.env.JWT_SECRET || 'secret'
-    );
+    const accessToken = TokenService.generateAccessToken({ id: user.id, username: user.username, roleId: user.roleId });
+    const refreshToken = await TokenService.generateRefreshToken(user.id);
 
     res.status(201).json({
-      token,
+      accessToken,
+      refreshToken,
       user: {
         id: user.id,
         username: user.username,
@@ -209,6 +207,48 @@ export const makeAdmin = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Make admin error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const refresh = async (req: Request, res: Response) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ message: 'Refresh token is required' });
+    }
+
+    const user = await TokenService.validateRefreshToken(refreshToken);
+    const accessToken = TokenService.generateAccessToken({ id: user.id, username: user.username, roleId: user.roleId });
+
+    res.json({ accessToken });
+  } catch (error: any) {
+    res.status(401).json({ message: error.message || 'Invalid refresh token' });
+  }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    const { refreshToken } = req.body;
+    if (refreshToken) {
+      await TokenService.revokeRefreshToken(refreshToken);
+    }
+    res.json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const logoutAll = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    await TokenService.revokeAllUserTokens(req.user.id);
+    res.json({ message: 'Logged out from all sessions successfully' });
+  } catch (error) {
+    console.error('Logout all error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };

@@ -39,8 +39,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  role     Role           @relation(fields: [roleId], references: [id])
-  progress UserProgress[]
+  role         Role           @relation(fields: [roleId], references: [id])
+  progress     UserProgress[]
+  refreshTokens RefreshToken[]
 
   @@index([roleId])
   @@map("users")
@@ -153,6 +154,20 @@ model TopicTag {
 
   @@id([topicId, tagId])
   @@map("topic_tags")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  revoked   Boolean  @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
 }
 
 // Progreso del usuario por tema
