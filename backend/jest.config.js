@@ -9,11 +9,7 @@ module.exports = {
       tsconfig: 'tsconfig.json'
     }]
   },
-  transformIgnorePatterns: [
-    'node_modules/(?!(uuid|@types/uuid)/)'
-  ],
   moduleNameMapper: {
-    '^express-rate-limit$': '<rootDir>/src/tests/__mocks__/express-rate-limit.ts',
-    '^uuid$': '<rootDir>/src/tests/__mocks__/uuid.ts'
+    '^express-rate-limit$': '<rootDir>/src/tests/__mocks__/express-rate-limit.ts'
   }
 };

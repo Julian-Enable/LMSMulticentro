@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # ─── PostgreSQL ────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: lms-postgres
+    environment:
+      POSTGRES_USER: lms_user
+      POSTGRES_PASSWORD: lms_password
+      POSTGRES_DB: lms_multicentro
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U lms_user -d lms_multicentro']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ─── Backend ───────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lms-backend
+    environment:
+      DATABASE_URL: postgresql://lms_user:lms_password@postgres:5432/lms_multicentro
+      JWT_SECRET: dev-jwt-secret-change-in-production
+      PORT: 5000
+      NODE_ENV: development
+      CORS_ORIGIN: http://localhost:5173
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/prisma:/app/prisma
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "npx prisma db push && npm run dev"
+
+  # ─── Frontend ──────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: lms-frontend
+    environment:
+      VITE_API_URL: http://localhost:5000/api
+      VITE_USE_MOCK: 'false'
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./frontend/src:/app/src
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
