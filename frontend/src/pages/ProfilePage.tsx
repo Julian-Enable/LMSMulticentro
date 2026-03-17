@@ -70,24 +70,24 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-gray-50">
+    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
       <div className="max-w-3xl mx-auto w-full px-4 md:px-6 py-8 space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900">Mi Perfil</h1>
-          <p className="text-slate-500 mt-1">Administra tu cuenta y revisa tu progreso</p>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-slate-100">Mi Perfil</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Administra tu cuenta y revisa tu progreso</p>
         </div>
 
         {/* User Card */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex items-center gap-5">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 flex items-center gap-5">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-accent-400 to-accent-600 flex items-center justify-center flex-shrink-0">
             <span className="text-white text-2xl font-bold">
               {user?.username?.charAt(0).toUpperCase()}
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xl font-bold text-gray-900 truncate">{user?.username}</p>
-            <p className="text-slate-500 text-sm truncate">{user?.email || 'Sin correo registrado'}</p>
+            <p className="text-xl font-bold text-gray-900 dark:text-slate-100 truncate">{user?.username}</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm truncate">{user?.email || 'Sin correo registrado'}</p>
             <span className="inline-block mt-1 px-2 py-0.5 rounded text-xs font-bold"
               style={{ backgroundColor: user?.role?.color ? `${user.role.color}20` : '#e0e7ff', color: user?.role?.color || '#3730a3' }}>
               {user?.role?.name || 'Sin rol'}
@@ -96,8 +96,8 @@ const ProfilePage = () => {
         </div>
 
         {/* Recent Progress */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700">
             <h2 className="text-lg font-bold text-gray-900">Últimas lecciones completadas</h2>
           </div>
           <div className="divide-y divide-gray-100">

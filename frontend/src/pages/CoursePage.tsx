@@ -112,29 +112,29 @@ const CoursePage = () => {
       <div className="max-w-5xl mx-auto space-y-8 animate-pulse">
         {/* Header Skeleton */}
         <div>
-          <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="h-8 bg-gray-200 rounded w-1/2 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-1/4 mb-4"></div>
+          <div className="h-8 bg-gray-200 dark:bg-slate-700 rounded w-1/2 mb-2"></div>
+          <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-3/4"></div>
         </div>
         {/* Progress Card Skeleton */}
-        <div className="card space-y-4 border border-gray-100 shadow-sm">
+        <div className="card space-y-4 border border-gray-100 dark:border-slate-700 shadow-sm">
           <div className="flex justify-between">
-            <div className="h-6 bg-gray-200 rounded w-1/3"></div>
-            <div className="h-8 bg-gray-200 rounded w-16"></div>
+            <div className="h-6 bg-gray-200 dark:bg-slate-700 rounded w-1/3"></div>
+            <div className="h-8 bg-gray-200 dark:bg-slate-700 rounded w-16"></div>
           </div>
-          <div className="h-3 bg-gray-200 rounded-full w-full"></div>
+          <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded-full w-full"></div>
         </div>
         {/* Modules Skeleton */}
         <div className="space-y-6">
           {[1, 2].map((i) => (
-            <div key={i} className="card space-y-4 border border-gray-100 shadow-sm">
+            <div key={i} className="card space-y-4 border border-gray-100 dark:border-slate-700 shadow-sm">
               <div className="flex items-center space-x-3">
-                <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
-                <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+                <div className="w-6 h-6 bg-gray-200 dark:bg-slate-700 rounded-full"></div>
+                <div className="h-6 bg-gray-200 dark:bg-slate-700 rounded w-1/3"></div>
               </div>
               <div className="space-y-2">
                 {[1, 2, 3].map((j) => (
-                  <div key={j} className="h-12 bg-gray-100/80 rounded-lg w-full"></div>
+                  <div key={j} className="h-12 bg-gray-100/80 dark:bg-slate-800 rounded-lg w-full"></div>
                 ))}
               </div>
             </div>
@@ -147,7 +147,7 @@ const CoursePage = () => {
   if (!category) {
     return (
       <div className="card text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Curso no encontrado</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-4">Curso no encontrado</h2>
         <Link to="/" className="btn btn-primary">
           Volver al inicio
         </Link>
@@ -163,33 +163,33 @@ const CoursePage = () => {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4">
-          <Link to="/" className="hover:text-primary-600">
+        <nav className="flex items-center space-x-2 text-sm text-gray-600 dark:text-slate-400 mb-4">
+          <Link to="/" className="hover:text-primary-600 dark:hover:text-primary-400">
             Inicio
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">{category.name}</span>
+          <span className="text-gray-900 dark:text-slate-100 font-medium">{category.name}</span>
         </nav>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">{category.name}</h1>
-        {category.description && <p className="text-gray-600">{category.description}</p>}
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-2">{category.name}</h1>
+        {category.description && <p className="text-gray-600 dark:text-slate-400">{category.description}</p>}
       </div>
 
       {/* Progress Card */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Progreso del Curso</h2>
-            <p className="text-gray-600">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Progreso del Curso</h2>
+            <p className="text-gray-600 dark:text-slate-400">
               {completedTopics.size} de {allTopics.length} temas completados
             </p>
           </div>
           <div className="text-right">
-            <div className="text-3xl font-bold text-primary-600">{progress}%</div>
+            <div className="text-3xl font-bold text-primary-600 dark:text-primary-400">{progress}%</div>
           </div>
         </div>
 
-        <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+        <div className="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
           <div
             className="bg-primary-600 h-full transition-all duration-500"
             style={{ width: `${progress}%` }}
@@ -197,8 +197,8 @@ const CoursePage = () => {
         </div>
 
         {nextTopic && (
-          <div className="mt-4 pt-4 border-t">
-            <p className="text-sm text-gray-600 mb-2">Siguiente tema:</p>
+          <div className="mt-4 pt-4 border-t dark:border-slate-700">
+            <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">Siguiente tema:</p>
             <Link
               to={`/topic/${nextTopic.id}`}
               className="btn btn-primary flex items-center justify-center space-x-2"
@@ -227,13 +227,13 @@ const CoursePage = () => {
           <div key={video.id} className={`card transition-opacity ${isLocked ? 'opacity-60' : ''}`}>
             <div className="flex items-start mb-4">
               {isLocked
-                ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-gray-400 mr-3 flex-shrink-0 mt-1"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
-                : <PlayCircle className="w-6 h-6 text-primary-600 mr-3 flex-shrink-0 mt-1" />
+                ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-gray-400 dark:text-slate-500 mr-3 flex-shrink-0 mt-1"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                : <PlayCircle className="w-6 h-6 text-primary-600 dark:text-primary-400 mr-3 flex-shrink-0 mt-1" />
               }
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">{video.title}</h3>
-                {video.description && <p className="text-gray-600 mt-1">{video.description}</p>}
-                {isLocked && <p className="text-xs text-amber-600 font-medium mt-1">Completá el módulo anterior para desbloquear</p>}
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100">{video.title}</h3>
+                {video.description && <p className="text-gray-600 dark:text-slate-400 mt-1">{video.description}</p>}
+                {isLocked && <p className="text-xs text-amber-600 dark:text-amber-400 font-medium mt-1">Completá el módulo anterior para desbloquear</p>}
               </div>
             </div>
 
@@ -254,16 +254,16 @@ const CoursePage = () => {
                         key={topic.id}
                         className={`flex items-center justify-between p-3 rounded-lg border-2 transition-colors ${
                           isLocked
-                            ? 'border-gray-200 bg-gray-50 cursor-not-allowed'
+                            ? 'border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 cursor-not-allowed'
                             : isCompleted
-                              ? 'border-green-500 bg-green-50'
-                              : 'border-gray-200 hover:border-primary-500'
+                              ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                              : 'border-gray-200 dark:border-slate-700 hover:border-primary-500'
                         }`}
                       >
                         {isLocked ? (
                           <div className="flex-1 flex items-center space-x-3 opacity-50">
-                            <span className="inline-block px-2 py-1 text-xs font-semibold rounded bg-gray-200 text-gray-500">{topic.code}</span>
-                            <span className="font-medium text-gray-500">{topic.title}</span>
+                            <span className="inline-block px-2 py-1 text-xs font-semibold rounded bg-gray-200 dark:bg-slate-700 text-gray-500 dark:text-slate-400">{topic.code}</span>
+                            <span className="font-medium text-gray-500 dark:text-slate-400">{topic.title}</span>
                           </div>
                         ) : (
                         <Link
@@ -274,13 +274,13 @@ const CoursePage = () => {
                             className={`inline-block px-2 py-1 text-xs font-semibold rounded ${
                               isCompleted
                                 ? 'bg-green-600 text-white'
-                                : 'bg-primary-100 text-primary-700'
+                                : 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400'
                             }`}
                           >
                             {topic.code}
                           </span>
-                          <span className="font-medium text-gray-900">{topic.title}</span>
-                          <div className="flex items-center text-sm text-gray-500 ml-auto">
+                          <span className="font-medium text-gray-900 dark:text-slate-100">{topic.title}</span>
+                          <div className="flex items-center text-sm text-gray-500 dark:text-slate-400 ml-auto">
                             <Clock className="w-4 h-4 mr-1" />
                             <span>
                               {topic.duration
@@ -299,10 +299,10 @@ const CoursePage = () => {
                           disabled={isLocked}
                           className={`ml-4 p-2 rounded-full transition-colors ${
                             isLocked
-                              ? 'text-gray-300 cursor-not-allowed'
+                              ? 'text-gray-300 dark:text-slate-600 cursor-not-allowed'
                               : isCompleted
-                                ? 'text-green-600 hover:bg-green-100'
-                                : 'text-gray-400 hover:bg-gray-100'
+                                ? 'text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30'
+                                : 'text-gray-400 dark:text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-700'
                           }`}
                           title={isLocked ? 'Módulo bloqueado' : isCompleted ? 'Marcar como pendiente' : 'Marcar como completado'}
                         >
@@ -316,7 +316,7 @@ const CoursePage = () => {
                   })}
               </div>
             ) : (
-              <p className="text-gray-500 text-sm">No hay temas disponibles para este video</p>
+              <p className="text-gray-500 dark:text-slate-400 text-sm">No hay temas disponibles para este video</p>
             )}
           </div>
           );
@@ -325,10 +325,10 @@ const CoursePage = () => {
 
       {/* Completion */}
       {progress === 100 && (
-        <div className="card text-center py-8 bg-green-50 border-2 border-green-500">
-          <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">¡Curso Completado!</h3>
-          <p className="text-gray-700 mb-4">
+        <div className="card text-center py-8 bg-green-50 dark:bg-green-900/20 border-2 border-green-500">
+          <CheckCircle className="w-16 h-16 text-green-600 dark:text-green-400 mx-auto mb-4" />
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">¡Curso Completado!</h3>
+          <p className="text-gray-700 dark:text-slate-300 mb-4">
             Has completado todos los temas de este curso. ¡Excelente trabajo!
           </p>
           <Link to="/" className="btn btn-primary">

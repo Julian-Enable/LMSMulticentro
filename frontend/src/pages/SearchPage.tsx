@@ -66,31 +66,31 @@ const SearchPage = () => {
   };
 
   return (
-    <main className="flex-1 flex flex-col h-full overflow-hidden relative bg-gray-50">
+    <main className="flex-1 flex flex-col h-full overflow-hidden relative bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
       {/* Header & Search */}
       <header className="pt-8 pb-4 px-8 md:px-12 flex flex-col gap-6 shrink-0 z-10">
         <div className="flex items-end justify-between">
           <div>
-            <h2 className="text-3xl font-extrabold text-primary tracking-tight">Explorar Contenido</h2>
-            <p className="text-slate-500 mt-1">Encuentra guías, protocolos y cursos de entrenamiento.</p>
+            <h2 className="text-3xl font-extrabold text-primary dark:text-slate-100 tracking-tight">Explorar Contenido</h2>
+            <p className="text-slate-500 dark:text-slate-400 mt-1">Encuentra guías, protocolos y cursos de entrenamiento.</p>
           </div>
-          <div className="hidden md:flex items-center gap-2 text-sm text-slate-500">
+          <div className="hidden md:flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
             </svg>
-            <span>Usa <kbd className="font-mono bg-slate-200 px-1 rounded text-slate-700">Cmd+K</kbd> para búsqueda rápida</span>
+            <span>Usa <kbd className="font-mono bg-slate-200 dark:bg-slate-700 px-1 rounded text-slate-700 dark:text-slate-300">Cmd+K</kbd> para búsqueda rápida</span>
           </div>
         </div>
 
         {/* Search Bar */}
-        <div className="relative w-full max-w-4xl shadow-lg shadow-primary/5 rounded-xl group focus-within:shadow-primary/10 transition-shadow">
+        <div className="relative w-full max-w-4xl shadow-lg shadow-primary/5 dark:shadow-none rounded-xl group focus-within:shadow-primary/10 transition-shadow">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-slate-400 group-focus-within:text-accent-500 transition-colors">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
           </div>
           <input
-            className="block w-full pl-12 pr-28 py-4 bg-white border-0 rounded-xl text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-accent/20 focus:outline-none text-lg font-medium shadow-sm"
+            className="block w-full pl-12 pr-28 py-4 bg-white dark:bg-slate-800 border-0 rounded-xl text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:ring-2 focus:ring-accent/20 focus:outline-none text-lg font-medium shadow-sm"
             placeholder="Buscar por título, código o palabra clave..."
             type="text"
             value={searchQuery}

@@ -100,22 +100,22 @@ const TopicPage = () => {
 
   if (loading) {
     return (
-      <div className="flex-1 flex flex-col h-full bg-gray-50 animate-pulse">
-        <div className="px-6 py-4 border-b border-gray-200 bg-white">
-           <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+      <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-slate-900 animate-pulse">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+           <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-1/3"></div>
         </div>
         <div className="flex-1 overflow-y-auto max-w-[1600px] w-full mx-auto">
           <div className="flex flex-col xl:flex-row gap-6 px-4 md:px-6 py-6 pb-10">
             {/* Main Content Skeleton */}
             <div className="flex-1 min-w-0 flex flex-col gap-6">
-              <div className="w-full aspect-video bg-gray-200 rounded-xl shadow-lg"></div>
-              <div className="h-8 bg-gray-200 rounded w-3/4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-              <div className="h-32 bg-gray-200 rounded-xl w-full border border-gray-100"></div>
+              <div className="w-full aspect-video bg-gray-200 dark:bg-slate-700 rounded-xl shadow-lg"></div>
+              <div className="h-8 bg-gray-200 dark:bg-slate-700 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-1/2"></div>
+              <div className="h-32 bg-gray-200 dark:bg-slate-700 rounded-xl w-full border border-gray-100 dark:border-slate-700"></div>
             </div>
             {/* Sidebar Skeleton */}
             <div className="w-full xl:w-[380px] flex-none flex flex-col gap-6">
-               <div className="h-[400px] bg-gray-200 rounded-xl w-full border border-gray-100 shadow-sm"></div>
+               <div className="h-[400px] bg-gray-200 dark:bg-slate-700 rounded-xl w-full border border-gray-100 dark:border-slate-700 shadow-sm"></div>
             </div>
           </div>
         </div>
@@ -125,14 +125,14 @@ const TopicPage = () => {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-slate-900">
         <div className="text-center max-w-md mx-auto p-6">
-          <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-16 h-16 text-red-500 mx-auto mb-4">
+          <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-xl p-6 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-16 h-16 text-red-500 dark:text-red-400 mx-auto mb-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
             </svg>
-            <h2 className="text-xl font-bold text-red-800 mb-2">Error al cargar el tema</h2>
-            <p className="text-red-600 mb-4">{error}</p>
+            <h2 className="text-xl font-bold text-red-800 dark:text-red-300 mb-2">Error al cargar el tema</h2>
+            <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => navigate('/biblioteca')}
@@ -142,7 +142,7 @@ const TopicPage = () => {
               </button>
               <button
                 onClick={() => navigate('/administrar')}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold"
+                className="px-4 py-2 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 font-semibold"
               >
                 Administrar Contenido
               </button>

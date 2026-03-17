@@ -4,7 +4,6 @@ import { categoryService } from '../services/category.service';
 import { useAuthStore } from '../store/authStore';
 import { useProgressStore } from '../store/progressStore';
 import { CourseCardSkeleton, SkeletonBox } from '../components/UI/Skeletons';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { motion } from 'framer-motion';
 import { BookOpen, Video, Clock, TrendingUp, Award, PlayCircle } from 'lucide-react';
 
@@ -47,11 +46,11 @@ const HomePage = () => {
     ? Math.round((completedCount / allTopicIds.length) * 100) 
     : 0;
 
-  // Prepare chart data
-  const chartData = categories.slice(0, 5).map(cat => ({
-    name: cat.name.length > 15 ? cat.name.substring(0, 15) + '...' : cat.name,
+  // Prepare chart data - Videos por categoría para el resumen
+  const categorySummary = categories.slice(0, 4).map(cat => ({
+    name: cat.name,
     videos: cat.videoCount || 0,
-    full: cat.name
+    duration: cat.videos?.reduce((acc, v) => acc + (v.duration || 0), 0) || 0
   }));
 
   const stats = [
@@ -60,8 +59,6 @@ const HomePage = () => {
     { label: 'Completados', value: completedCount, icon: Award, color: 'green', change: `${progressPercentage}% progreso` },
     { label: 'Horas', value: totalHours, icon: Clock, color: 'blue', change: 'de aprendizaje' },
   ];
-
-  const COLORS = ['#232752', '#92232a', '#2c3166', '#b72c34', '#474f97'];
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
@@ -125,39 +122,39 @@ const HomePage = () => {
           ))}
         </div>
 
-        {/* Chart Section */}
+        {/* Quick Categories Summary */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm mb-8"
+          className="mb-8"
         >
           <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-4 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-primary-500" />
-            Distribución de Contenido por Curso
+            <BookOpen className="w-5 h-5 text-primary-500" />
+            Resumen de Categorías
           </h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="name" stroke="#6b7280" fontSize={12} />
-                <YAxis stroke="#6b7280" fontSize={12} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#1e293b',
-                    border: 'none',
-                    borderRadius: '12px',
-                    color: '#fff'
-                  }}
-                  cursor={{ fill: '#f3f4f6' }}
-                />
-                <Bar dataKey="videos" radius={[8, 8, 0, 0]}>
-                  {chartData.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {categorySummary.map((cat, index) => (
+              <motion.div
+                key={cat.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 + index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all cursor-pointer"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className={`h-10 w-10 rounded-lg bg-gradient-to-br ${index % 2 === 0 ? 'from-primary-100 to-primary-200 dark:from-slate-600 dark:to-slate-700' : 'from-accent-100 to-accent-200 dark:from-slate-600 dark:to-slate-700'} flex items-center justify-center`}>
+                    <BookOpen className={`w-5 h-5 ${index % 2 === 0 ? 'text-primary-600 dark:text-slate-300' : 'text-accent-600 dark:text-slate-300'}`} />
+                  </div>
+                  <span className="text-2xl font-bold text-gray-900 dark:text-slate-100">{cat.videos}</span>
+                </div>
+                <h4 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1 truncate" title={cat.name}>{cat.name}</h4>
+                <p className="text-xs text-gray-500 dark:text-slate-400">
+                  {cat.duration > 0 ? `${Math.round(cat.duration / 60)} min` : 'Sin videos'}
+                </p>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
       </div>
