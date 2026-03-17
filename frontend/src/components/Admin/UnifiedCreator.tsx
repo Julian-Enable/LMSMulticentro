@@ -230,12 +230,12 @@ export default function UnifiedCreator() {
           
           {/* Section 1: Source */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-800 border-b pb-2">1. Fuente del Contenido</h3>
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 border-b dark:border-slate-600 pb-2">1. Fuente del Contenido</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-slate-700">Pertenece al Curso (Categoría)</label>
-                <select 
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Pertenece al Curso (Categoría)</label>
+                <select
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white dark:bg-slate-700 dark:text-slate-100"
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
                   required
@@ -248,7 +248,7 @@ export default function UnifiedCreator() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-slate-700">URL del Video de YouTube</label>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">URL del Video de YouTube</label>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -280,13 +280,13 @@ export default function UnifiedCreator() {
           {/* Section 2: Video Metadata */}
           {videoTitle && (
             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <h3 className="text-lg font-semibold text-slate-800 border-b pb-2">2. Información del Video</h3>
-              <div className="flex flex-col md:flex-row gap-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 border-b dark:border-slate-600 pb-2">2. Información del Video</h3>
+              <div className="flex flex-col md:flex-row gap-6 bg-slate-50 dark:bg-slate-700/50 p-4 rounded-xl border border-slate-200 dark:border-slate-600">
                 {videoThumbnailUrl && (
                   <div className="w-full md:w-64 flex-shrink-0">
                     <img src={videoThumbnailUrl} alt="Thumbnail" className="w-full h-auto rounded-lg shadow-sm" />
                     {videoDuration && (
-                       <div className="mt-2 text-xs font-medium text-slate-500 flex items-center gap-1 justify-center bg-slate-200 py-1 rounded">
+                       <div className="mt-2 text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1 justify-center bg-slate-200 dark:bg-slate-600 py-1 rounded">
                          <Clock className="w-3 h-3" /> Duración total: {videoDuration}s
                        </div>
                     )}
@@ -294,19 +294,19 @@ export default function UnifiedCreator() {
                 )}
                 <div className="flex-1 space-y-4">
                   <div>
-                    <label className="text-sm font-medium text-slate-700 mb-1 pl-1">Título del Video</label>
-                    <input 
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 pl-1">Título del Video</label>
+                    <input
                       type="text"
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white dark:bg-slate-700 dark:text-slate-100"
                       value={videoTitle}
                       onChange={(e) => setVideoTitle(e.target.value)}
                       required
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-slate-700 mb-1 pl-1">Descripción</label>
-                    <textarea 
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm"
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 pl-1">Descripción</label>
+                    <textarea
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm bg-white dark:bg-slate-700 dark:text-slate-100"
                       rows={3}
                       value={videoDescription}
                       onChange={(e) => setVideoDescription(e.target.value)}
@@ -320,19 +320,19 @@ export default function UnifiedCreator() {
           {/* Section 3: Topics & Tags */}
           {videoTitle && (
              <div className="space-y-4 animate-in fade-in slide-in-from-bottom-8 duration-500">
-               <div className="flex items-center justify-between border-b pb-2">
-                 <h3 className="text-lg font-semibold text-slate-800">3. Temas (Topics) y Etiquetas Generadas</h3>
+               <div className="flex items-center justify-between border-b dark:border-slate-600 pb-2">
+                 <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">3. Temas (Topics) y Etiquetas Generadas</h3>
                  <button 
                   type="button" 
                   onClick={handleAddEmptyTopic}
-                  className="text-sm flex items-center gap-1 text-primary-600 font-medium hover:text-primary-700"
+                  className="text-sm flex items-center gap-1 text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300"
                  >
                    <Plus className="w-4 h-4" /> Añadir Tema Manualmente
                  </button>
                </div>
 
                {topics.length === 0 ? (
-                 <div className="text-center py-8 text-slate-500 bg-slate-50 rounded-lg border border-dashed border-slate-300">
+                 <div className="text-center py-8 text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-dashed border-slate-300 dark:border-slate-600">
                     No hay temas generados. Añade uno manualmente para segmentar el video.
                  </div>
                ) : (
@@ -340,51 +340,51 @@ export default function UnifiedCreator() {
                    {topics.map((topic, index) => {
                      const isExpanded = expandedTopicIndex === index;
                      return (
-                     <div key={topic.id} className={`bg-white rounded-xl border transition-all duration-200 overflow-hidden ${isExpanded ? 'border-primary/50 shadow-md ring-1 ring-primary/20' : 'border-slate-200 shadow-sm hover:border-primary/30'}`}>
+                     <div key={topic.id} className={`bg-white dark:bg-slate-800 rounded-xl border transition-all duration-200 overflow-hidden ${isExpanded ? 'border-primary/50 shadow-md ring-1 ring-primary/20' : 'border-slate-200 dark:border-slate-600 shadow-sm hover:border-primary/30'}`}>
                         {/* Header (Summary) */}
-                        <div 
+                        <div
                           className="flex items-center gap-3 p-3 cursor-pointer select-none"
                           onClick={() => setExpandedTopicIndex(isExpanded ? null : index)}
                         >
-                          <div className="cursor-grab text-slate-400 hover:text-slate-600" onClick={(e) => e.stopPropagation()}>
+                          <div className="cursor-grab text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400" onClick={(e) => e.stopPropagation()}>
                             <GripVertical className="w-5 h-5" />
                           </div>
-                          <div className="w-12 text-center text-xs font-bold text-slate-500 bg-slate-100 rounded py-1">{topic.code}</div>
-                          <div className="flex-1 text-sm font-semibold text-slate-800 truncate">{topic.title || 'Tema sin título'}</div>
-                          {topic.duration && <div className="text-xs text-slate-500 font-mono bg-slate-50 px-2 py-0.5 rounded">{topic.duration}s</div>}
-                          <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteTopic(index); }} className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                          <div className="w-12 text-center text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 rounded py-1">{topic.code}</div>
+                          <div className="flex-1 text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">{topic.title || 'Tema sin título'}</div>
+                          {topic.duration && <div className="text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-50 dark:bg-slate-700 px-2 py-0.5 rounded">{topic.duration}s</div>}
+                          <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteTopic(index); }} className="p-1.5 text-slate-300 dark:text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-slate-700 rounded-lg transition-colors">
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
                         
                         {/* Body (Expanded Form) */}
                         {isExpanded && (
-                          <div className="p-4 pt-0 border-t border-slate-100 bg-slate-50/50 mt-1 animate-in fade-in slide-in-from-top-2 duration-200">
+                          <div className="p-4 pt-0 border-t border-slate-100 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-700/30 mt-1 animate-in fade-in slide-in-from-top-2 duration-200">
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
                               <div className="md:col-span-2">
-                                <label className="text-xs text-slate-500 font-medium">Código</label>
-                                <input type="text" value={topic.code} onChange={(e) => handleUpdateTopic(index, 'code', e.target.value)} className="w-full text-sm border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 bg-white px-2 rounded-md shadow-sm" />
+                                <label className="text-xs text-slate-500 dark:text-slate-400 font-medium">Código</label>
+                                <input type="text" value={topic.code} onChange={(e) => handleUpdateTopic(index, 'code', e.target.value)} className="w-full text-sm border border-slate-200 dark:border-slate-600 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 bg-white dark:bg-slate-700 dark:text-slate-100 px-2 rounded-md shadow-sm" />
                               </div>
-                              
+
                               <div className="md:col-span-10">
-                                <label className="text-xs text-slate-500 font-medium">Título del Tema</label>
-                                <input type="text" value={topic.title} onChange={(e) => handleUpdateTopic(index, 'title', e.target.value)} className="w-full text-sm font-medium border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 bg-white px-2 rounded-md shadow-sm" placeholder="Ej: Introducción a React" />
+                                <label className="text-xs text-slate-500 dark:text-slate-400 font-medium">Título del Tema</label>
+                                <input type="text" value={topic.title} onChange={(e) => handleUpdateTopic(index, 'title', e.target.value)} className="w-full text-sm font-medium border border-slate-200 dark:border-slate-600 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 bg-white dark:bg-slate-700 dark:text-slate-100 px-2 rounded-md shadow-sm" placeholder="Ej: Introducción a React" />
                               </div>
 
                               <div className="md:col-span-4 flex gap-2">
                                 <div className="w-1/2">
-                                  <label className="text-xs text-slate-500 font-medium">Inicio (s)</label>
-                                  <input type="text" value={topic.timestamp} onChange={(e) => handleUpdateTopic(index, 'timestamp', e.target.value)} className="w-full text-sm border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 font-mono text-center rounded-md bg-white shadow-sm" />
+                                  <label className="text-xs text-slate-500 dark:text-slate-400 font-medium">Inicio (s)</label>
+                                  <input type="text" value={topic.timestamp} onChange={(e) => handleUpdateTopic(index, 'timestamp', e.target.value)} className="w-full text-sm border border-slate-200 dark:border-slate-600 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 font-mono text-center rounded-md bg-white dark:bg-slate-700 dark:text-slate-100 shadow-sm" />
                                 </div>
                                 <div className="w-1/2">
-                                   <label className="text-xs text-slate-500 font-medium">Dura (s)</label>
-                                   <input type="text" placeholder="auto" value={topic.duration} onChange={(e) => handleUpdateTopic(index, 'duration', e.target.value)} className="w-full text-sm border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 font-mono text-center text-slate-400 bg-white shadow-sm" />
+                                   <label className="text-xs text-slate-500 dark:text-slate-400 font-medium">Dura (s)</label>
+                                   <input type="text" placeholder="auto" value={topic.duration} onChange={(e) => handleUpdateTopic(index, 'duration', e.target.value)} className="w-full text-sm border border-slate-200 dark:border-slate-600 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 font-mono text-center text-slate-400 dark:text-slate-500 bg-white dark:bg-slate-700 shadow-sm" />
                                 </div>
                               </div>
 
                               <div className="md:col-span-8">
-                                <label className="text-xs text-slate-500 font-medium flex items-center gap-1"><TagIcon className="w-3 h-3"/> Etiquetas (sep. x coma)</label>
-                                <input type="text" value={topic.tagsString} onChange={(e) => handleUpdateTopic(index, 'tagsString', e.target.value)} className="w-full text-sm border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 text-primary-700 bg-primary/5 px-3 rounded-md shadow-sm" placeholder="ej: front, web, react" />
+                                <label className="text-xs text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1"><TagIcon className="w-3 h-3"/> Etiquetas (sep. x coma)</label>
+                                <input type="text" value={topic.tagsString} onChange={(e) => handleUpdateTopic(index, 'tagsString', e.target.value)} className="w-full text-sm border border-primary/20 dark:border-primary/30 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none py-1.5 text-primary-700 dark:text-primary-400 bg-primary/5 dark:bg-primary-900/20 px-3 rounded-md shadow-sm" placeholder="ej: front, web, react" />
                               </div>
                             </div>
                           </div>
