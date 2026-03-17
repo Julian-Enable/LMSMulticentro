@@ -150,8 +150,8 @@ const RoleManager = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Gestión de Roles</h2>
-          <p className="text-sm text-gray-500 mt-1">Crea y administra los roles del sistema</p>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Gestión de Roles</h2>
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Crea y administra los roles del sistema</p>
         </div>
         {!isCreating && !editingId && (
           <button
@@ -166,15 +166,15 @@ const RoleManager = () => {
 
       {/* Create/Edit Form */}
       {(isCreating || editingId) && (
-        <div className="card bg-primary-50">
-          <h3 className="font-bold text-gray-900 mb-4">
+        <div className="card bg-primary-50 dark:bg-slate-800">
+          <h3 className="font-bold text-gray-900 dark:text-slate-100 mb-4">
             {isCreating ? 'Crear Nuevo Rol' : 'Editar Rol'}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                 Código <span className="text-red-500">*</span>
-                <span className="text-xs text-gray-500 ml-2">(ej: CONTADOR, sin espacios, mayúsculas)</span>
+                <span className="text-xs text-gray-500 dark:text-slate-400 ml-2">(ej: CONTADOR, sin espacios, mayúsculas)</span>
               </label>
               <input
                 type="text"
@@ -187,7 +187,7 @@ const RoleManager = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                 Nombre <span className="text-red-500">*</span>
               </label>
               <input
@@ -200,7 +200,7 @@ const RoleManager = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Descripción</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -211,15 +211,15 @@ const RoleManager = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Color <span className="text-gray-500 text-xs">(para badges)</span>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
+                Color <span className="text-gray-500 dark:text-slate-400 text-xs">(para badges)</span>
               </label>
               <div className="flex gap-2">
                 <input
                   type="color"
                   value={formData.color}
                   onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                  className="h-10 w-20 rounded border border-gray-300 cursor-pointer"
+                  className="h-10 w-20 rounded border border-gray-300 dark:border-slate-600 cursor-pointer"
                 />
                 <input
                   type="text"
@@ -239,7 +239,7 @@ const RoleManager = () => {
                 onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                 className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
               />
-              <label htmlFor="isActive" className="ml-2 text-sm text-gray-700">
+              <label htmlFor="isActive" className="ml-2 text-sm text-gray-700 dark:text-slate-300">
                 Rol activo
               </label>
             </div>
@@ -266,60 +266,60 @@ const RoleManager = () => {
       )}
 
       {/* Roles Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gradient-to-r from-primary-600/5 to-purple-50 border-b-2 border-primary-600/20">
+            <thead className="bg-gradient-to-r from-primary-600/5 to-purple-50 dark:from-slate-700 dark:to-slate-800 border-b-2 border-primary-600/20 dark:border-slate-600">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 uppercase">Código</th>
-                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 uppercase">Nombre</th>
-                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 uppercase">Descripción</th>
-                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 uppercase">Color</th>
-                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 uppercase">Usuarios</th>
-                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 uppercase">Estado</th>
-                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 uppercase w-32">Acciones</th>
+                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 dark:text-slate-300 uppercase">Código</th>
+                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 dark:text-slate-300 uppercase">Nombre</th>
+                <th className="px-6 py-4 text-left text-xs font-extrabold text-primary-700 dark:text-slate-300 uppercase">Descripción</th>
+                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 dark:text-slate-300 uppercase">Color</th>
+                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 dark:text-slate-300 uppercase">Usuarios</th>
+                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 dark:text-slate-300 uppercase">Estado</th>
+                <th className="px-6 py-4 text-center text-xs font-extrabold text-primary-700 dark:text-slate-300 uppercase w-32">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
               {roles.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500 dark:text-slate-400">
                     No hay roles disponibles
                   </td>
                 </tr>
               ) : (
                 roles.map((role) => (
-                  <tr key={role.id} className="hover:bg-blue-50/30 transition-colors">
+                  <tr key={role.id} className="hover:bg-blue-50/30 dark:hover:bg-slate-700/30 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <code className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">{role.code}</code>
+                        <code className="text-sm font-mono bg-gray-100 dark:bg-slate-700 dark:text-slate-200 px-2 py-1 rounded">{role.code}</code>
                         {role.isSystem && (
-                          <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded border border-amber-300">
+                          <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 px-2 py-0.5 rounded border border-amber-300 dark:border-amber-700">
                             Sistema
                           </span>
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 font-semibold text-gray-900">{role.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{role.description || '-'}</td>
+                    <td className="px-6 py-4 font-semibold text-gray-900 dark:text-slate-100">{role.name}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-400">{role.description || '-'}</td>
                     <td className="px-6 py-4 text-center">
                       <div className="flex items-center justify-center gap-2">
                         <div
                           className="w-8 h-8 rounded border-2 shadow-sm"
                           style={{ backgroundColor: role.color, borderColor: role.color }}
                         ></div>
-                        <span className="text-xs text-gray-500 font-mono">{role.color}</span>
+                        <span className="text-xs text-gray-500 dark:text-slate-400 font-mono">{role.color}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="text-sm font-bold text-gray-700">{role._count?.users || 0}</span>
+                      <span className="text-sm font-bold text-gray-700 dark:text-slate-300">{role._count?.users || 0}</span>
                     </td>
                     <td className="px-6 py-4 text-center">
                       <span
                         className={`inline-flex px-2 py-1 rounded-full text-xs font-bold ${
                           role.isActive
-                            ? 'bg-green-100 text-green-800 border border-green-300'
-                            : 'bg-gray-100 text-gray-800 border border-gray-300'
+                            ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 border border-green-300'
+                            : 'bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-300 border border-gray-300'
                         }`}
                       >
                         {role.isActive ? 'Activo' : 'Inactivo'}
@@ -329,7 +329,7 @@ const RoleManager = () => {
                       <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => handleEdit(role)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-600 rounded-lg transition-colors"
                           title="Editar"
                         >
                           <Edit2 className="w-4 h-4" />
@@ -337,7 +337,7 @@ const RoleManager = () => {
                         <button
                           onClick={() => setDeleteTarget(role)}
                           disabled={role.isSystem}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                          className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-slate-600 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                           title={role.isSystem ? 'Rol del sistema no se puede eliminar' : 'Eliminar'}
                         >
                           <Trash2 className="w-4 h-4" />
