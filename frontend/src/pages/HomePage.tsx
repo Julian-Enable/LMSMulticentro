@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { categoryService } from '../services/category.service';
 import { useAuthStore } from '../store/authStore';
 import { useProgressStore } from '../store/progressStore';
-import { CourseCardSkeleton, SkeletonBox } from '../components/UI/Skeletons';
+import { CourseCardSkeleton } from '../components/UI/Skeletons';
 import { motion } from 'framer-motion';
 import { BookOpen, Video, Clock, Award, ArrowRight, Play, Sparkles } from 'lucide-react';
 
@@ -100,7 +100,7 @@ const HomePage = () => {
               { label: 'Videos', value: loading ? '—' : totalVideos, sub: totalTimeDisplay, icon: Video, accent: 'text-violet-500' },
               { label: 'Completados', value: loading ? '—' : completedCount, sub: `${progressPercentage}%`, icon: Award, accent: 'text-emerald-500' },
               { label: 'Tiempo', value: loading ? '—' : (totalHours > 0 ? `${totalHours}h` : `${Math.floor(totalMinutes)}m`), sub: 'de contenido', icon: Clock, accent: 'text-amber-500' },
-            ].map((stat, i) => (
+            ].map((stat) => (
               <div key={stat.label} className="px-6 py-5 flex items-center gap-4">
                 <div className={`${stat.accent} opacity-80`}>
                   <stat.icon className="w-5 h-5" />
