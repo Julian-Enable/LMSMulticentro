@@ -46,12 +46,7 @@ const HomePage = () => {
     ? Math.round((completedCount / allTopicIds.length) * 100) 
     : 0;
 
-  // Prepare chart data - Videos por categoría para el resumen
-  const categorySummary = categories.slice(0, 4).map(cat => ({
-    name: cat.name,
-    videos: cat.videoCount || 0,
-    duration: cat.videos?.reduce((acc, v) => acc + (v.duration || 0), 0) || 0
-  }));
+
 
   const stats = [
     { label: 'Total Cursos', value: categories.length, icon: BookOpen, color: 'primary', change: '+2 este mes' },
@@ -122,41 +117,7 @@ const HomePage = () => {
           ))}
         </div>
 
-        {/* Quick Categories Summary */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mb-8"
-        >
-          <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-4 flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-primary-500" />
-            Resumen de Categorías
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {categorySummary.map((cat, index) => (
-              <motion.div
-                key={cat.name}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all cursor-pointer"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className={`h-10 w-10 rounded-lg bg-gradient-to-br ${index % 2 === 0 ? 'from-primary-100 to-primary-200 dark:from-slate-600 dark:to-slate-700' : 'from-accent-100 to-accent-200 dark:from-slate-600 dark:to-slate-700'} flex items-center justify-center`}>
-                    <BookOpen className={`w-5 h-5 ${index % 2 === 0 ? 'text-primary-600 dark:text-slate-300' : 'text-accent-600 dark:text-slate-300'}`} />
-                  </div>
-                  <span className="text-2xl font-bold text-gray-900 dark:text-slate-100">{cat.videos}</span>
-                </div>
-                <h4 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1 truncate" title={cat.name}>{cat.name}</h4>
-                <p className="text-xs text-gray-500 dark:text-slate-400">
-                  {cat.duration > 0 ? `${Math.round(cat.duration / 60)} min` : 'Sin videos'}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+
       </div>
 
       {/* Scrollable Content Area */}

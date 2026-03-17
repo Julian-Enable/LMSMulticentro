@@ -197,7 +197,7 @@ export default function UnifiedCreator() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-5 border-b border-indigo-800">
         <div className="flex items-center gap-3">
@@ -213,14 +213,14 @@ export default function UnifiedCreator() {
 
       <div className="p-6">
         {errorMsg && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3 text-red-700">
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-3 text-red-700 dark:text-red-300">
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <p className="text-sm">{errorMsg}</p>
           </div>
         )}
 
         {successMsg && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3 text-green-700">
+          <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-start gap-3 text-green-700 dark:text-green-300">
             <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <p className="text-sm font-medium">{successMsg}</p>
           </div>
@@ -257,7 +257,7 @@ export default function UnifiedCreator() {
                     <input 
                       type="url"
                       placeholder="https://www.youtube.com/watch?v=..."
-                      className="w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                      className="w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white dark:bg-slate-700 dark:text-slate-100"
                       value={youtubeUrl}
                       onChange={(e) => setYoutubeUrl(e.target.value)}
                       required
@@ -267,7 +267,7 @@ export default function UnifiedCreator() {
                     type="button"
                     onClick={handleMagicExtract}
                     disabled={loading || !youtubeUrl}
-                    className="px-4 py-2 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50 flex items-center gap-2"
+                    className="px-4 py-2 bg-slate-900 dark:bg-slate-600 text-white font-medium rounded-lg hover:bg-slate-800 dark:hover:bg-slate-500 transition-colors disabled:opacity-50 flex items-center gap-2"
                   >
                     {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
                     Extraer
@@ -399,7 +399,7 @@ export default function UnifiedCreator() {
 
           {/* Actions */}
           {videoTitle && (
-            <div className="pt-6 border-t flex justify-end">
+            <div className="pt-6 border-t dark:border-slate-600 flex justify-end">
               <button
                 type="submit"
                 disabled={loading}
