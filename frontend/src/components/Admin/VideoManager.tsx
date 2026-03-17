@@ -249,7 +249,7 @@ const VideoManager = () => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl border border-slate-200 p-6 flex flex-col gap-4">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 flex flex-col gap-4">
         <TableSkeleton rows={6} />
       </div>
     );
@@ -271,16 +271,16 @@ const VideoManager = () => {
       {/* Create/Edit Modal */}
       {(isCreating || editingId) && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
-              <h3 className="text-xl font-bold text-gray-900">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-800">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100">
                 {isCreating ? 'Crear Nuevo Video' : 'Editar Video'}
               </h3>
               <button
                 onClick={handleCancel}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-gray-500 dark:text-slate-400">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -288,24 +288,24 @@ const VideoManager = () => {
 
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                   Título <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                  className="block w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   placeholder="Ej: Tutorial de Facturación Parte 1"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Descripción</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                  className="block w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   rows={3}
                   placeholder="Descripción del video..."
                 />
@@ -313,7 +313,7 @@ const VideoManager = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                     Código/ID <span className="text-red-500">*</span>
                   </label>
                   <div className="flex gap-2">
@@ -321,7 +321,7 @@ const VideoManager = () => {
                       type="text"
                       value={formData.externalId}
                       onChange={(e) => setFormData({ ...formData, externalId: e.target.value })}
-                      className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono"
+                      className="block w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono"
                       placeholder="dQw4w9WgXcQ"
                     />
                     {formData.platform === 'YOUTUBE' && (
@@ -335,24 +335,24 @@ const VideoManager = () => {
                       </button>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                     ID del video de YouTube (ej: dQw4w9WgXcQ)
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                     Duración (segundos)
                   </label>
                   <input
                     type="text"
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                    className="block w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                     placeholder="300"
                     readOnly={loadingYoutubeInfo}
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                     Se autocompleta con el botón Auto
                   </p>
                 </div>
@@ -360,20 +360,20 @@ const VideoManager = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                     URL del Video <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.url}
                     onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                    className="block w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                     placeholder="https://youtube.com/watch?v=..."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                     Plataforma <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -384,7 +384,7 @@ const VideoManager = () => {
                         platform: e.target.value as typeof formData.platform,
                       })
                     }
-                    className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                    className="block w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   >
                     <option value="YOUTUBE">YouTube</option>
                     <option value="DRIVE">Google Drive</option>
@@ -395,14 +395,14 @@ const VideoManager = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                   URL de Miniatura
                 </label>
                 <input
                   type="text"
                   value={formData.thumbnailUrl}
                   onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                  className="block w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   placeholder="https://i.ytimg.com/vi/..."
                   readOnly={loadingYoutubeInfo}
                 />
@@ -412,13 +412,13 @@ const VideoManager = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                   Curso <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={formData.categoryId}
                   onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                  className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                  className="block w-full px-3 py-2.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                 >
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
@@ -436,16 +436,16 @@ const VideoManager = () => {
                   onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                   className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500/20"
                 />
-                <label htmlFor="videoIsActive" className="ml-2 text-sm text-gray-700">
+                <label htmlFor="videoIsActive" className="ml-2 text-sm text-gray-700 dark:text-slate-300">
                   Video activo
                 </label>
               </div>
             </div>
 
-            <div className="p-6 border-t border-gray-200 flex gap-2 justify-end sticky bottom-0 bg-white">
+            <div className="p-6 border-t border-gray-200 dark:border-slate-700 flex gap-2 justify-end sticky bottom-0 bg-white dark:bg-slate-800">
               <button
                 onClick={handleCancel}
-                className="px-5 py-2.5 rounded-lg border border-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-50 transition-colors"
+                className="px-5 py-2.5 rounded-lg border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-slate-300 text-sm font-bold hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
               >
                 Cancelar
               </button>
@@ -465,9 +465,9 @@ const VideoManager = () => {
       )}
 
       {/* Main Card */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
         {/* Toolbar */}
-        <div className="p-5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-4">
+        <div className="p-5 border-b border-slate-100 dark:border-slate-700 flex flex-wrap items-center justify-between gap-4">
           {/* Left: Search & Filter */}
           <div className="flex items-center gap-3 flex-1 min-w-[280px]">
             <div className="relative flex-1 max-w-md group">
@@ -477,7 +477,7 @@ const VideoManager = () => {
                 </svg>
               </div>
               <input
-                className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-700"
+                className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-lg text-sm bg-slate-50 dark:bg-slate-700 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-slate-700 dark:text-slate-100"
                 placeholder="Buscar por título, ID o etiqueta..."
                 type="text"
                 value={searchQuery}
@@ -488,7 +488,7 @@ const VideoManager = () => {
               />
             </div>
             <button
-              className="p-2.5 text-slate-500 hover:text-primary-700 hover:bg-slate-50 rounded-lg border border-slate-200 transition-colors"
+              className="p-2.5 text-slate-500 dark:text-slate-400 hover:text-primary-700 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600 transition-colors"
               title="Filtrar"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -513,16 +513,16 @@ const VideoManager = () => {
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50/80 border-b border-slate-200">
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[100px]">Código</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider min-w-[300px]">Video</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden lg:table-cell w-[140px]">Código</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[180px]">Curso</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell text-center w-[100px]">Detalles</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center w-[120px]">Acciones</th>
+              <tr className="bg-slate-50/80 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-600">
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-[100px]">Código</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider min-w-[300px]">Video</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider hidden lg:table-cell w-[140px]">Código</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-[180px]">Curso</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider hidden sm:table-cell text-center w-[100px]">Detalles</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center w-[120px]">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
               {paginatedVideos.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center">
@@ -531,7 +531,7 @@ const VideoManager = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
                       </svg>
-                      <p className="text-gray-500 font-medium">
+                      <p className="text-gray-500 dark:text-slate-400 font-medium">
                         {searchQuery ? 'No se encontraron videos' : 'No hay videos creados'}
                       </p>
                     </div>
@@ -539,15 +539,15 @@ const VideoManager = () => {
                 </tr>
               ) : (
                 paginatedVideos.map((video) => (
-                  <tr key={video.id} className="group hover:bg-slate-50 transition-colors">
+                  <tr key={video.id} className="group hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-xs font-bold text-slate-600 font-mono bg-slate-100 px-2.5 py-1 rounded-md">
+                      <span className="text-xs font-bold text-slate-600 dark:text-slate-300 font-mono bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-md">
                         {video.externalId.split('-')[0] || 'VID'}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="h-14 w-24 bg-slate-200 rounded-lg overflow-hidden flex-shrink-0 relative shadow-sm ring-1 ring-slate-900/5">
+                        <div className="h-14 w-24 bg-slate-200 dark:bg-slate-700 rounded-lg overflow-hidden flex-shrink-0 relative shadow-sm ring-1 ring-slate-900/5">
                           {video.thumbnailUrl ? (
                             <img
                               src={video.thumbnailUrl}
@@ -564,7 +564,7 @@ const VideoManager = () => {
                           )}
                         </div>
                         <div className="flex flex-col gap-0.5">
-                          <span className="text-sm font-bold text-gray-900 group-hover:text-primary-700 transition-colors line-clamp-1">
+                          <span className="text-sm font-bold text-gray-900 dark:text-slate-100 group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors line-clamp-1">
                             {video.title}
                           </span>
                           {video.description && (
@@ -576,7 +576,7 @@ const VideoManager = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 hidden lg:table-cell">
-                      <span className="text-xs font-semibold text-slate-600 font-mono bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200">
+                      <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 font-mono bg-slate-50 dark:bg-slate-700 px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-600">
                         {video.externalId}
                       </span>
                     </td>
@@ -587,13 +587,13 @@ const VideoManager = () => {
                     </td>
                     <td className="px-6 py-4 hidden sm:table-cell">
                       <div className="flex items-center justify-center gap-4">
-                        <div className="flex items-center gap-1.5 text-slate-600">
+                        <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-slate-400">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.967 8.967 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.967 8.967 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                           </svg>
                           <span className="text-sm font-semibold">{video.topicCount || video.topics?.length || 0}</span>
                         </div>
-                        <div className="flex items-center gap-1.5 text-slate-600">
+                        <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-slate-400">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
@@ -640,9 +640,9 @@ const VideoManager = () => {
 
         {/* Pagination Footer */}
         {filteredVideos.length > 0 && (
-          <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-sm text-slate-500">
-              Mostrando <span className="font-bold text-slate-700">{startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredVideos.length)}</span> de <span className="font-bold text-slate-700">{filteredVideos.length}</span> videos
+          <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between">
+            <span className="text-sm text-slate-500 dark:text-slate-400">
+              Mostrando <span className="font-bold text-slate-700 dark:text-slate-200">{startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredVideos.length)}</span> de <span className="font-bold text-slate-700 dark:text-slate-200">{filteredVideos.length}</span> videos
             </span>
             <div className="flex items-center gap-1">
               <button
@@ -662,7 +662,7 @@ const VideoManager = () => {
                   className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium transition-colors ${
                     page === currentPage
                       ? 'bg-primary-600 text-white font-bold'
-                      : 'text-slate-600 hover:bg-slate-100'
+                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
                   }`}
                 >
                   {page}

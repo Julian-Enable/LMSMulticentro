@@ -1,4 +1,4 @@
-﻿import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Search, Library, LogOut, User, Settings, Home, Video, Moon, Sun } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useTheme } from '../../context/ThemeContext';
@@ -51,11 +51,11 @@ const Navbar = ({ isOpen = false, onClose }: NavbarProps) => {
   }
 
   return (
-    <aside className={`fixed left-0 top-0 h-screen w-64 bg-primary-700 text-white flex flex-col z-40 transition-transform duration-300 ${
+    <aside className={`fixed left-0 top-0 h-screen w-64 bg-primary-700 dark:bg-slate-800 text-white flex flex-col z-40 transition-all duration-300 ${
       isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
     }`}>
       {/* Logo */}
-      <div className="h-14 flex items-center justify-between px-6 border-b border-primary-600">
+      <div className="h-14 flex items-center justify-between px-6 border-b border-primary-600 dark:border-slate-700">
         <Link to="/" className="flex items-center space-x-2" onClick={handleNavClick}>
           <div className="w-7 h-7 bg-accent-500 rounded flex items-center justify-center">
             <Video className="w-4 h-4 text-white" />

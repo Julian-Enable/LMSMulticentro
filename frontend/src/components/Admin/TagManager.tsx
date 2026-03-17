@@ -98,7 +98,7 @@ const TagManager = () => {
       />
 
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">Gestión de Tags</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Gestión de Tags</h2>
         {!isCreating && !editingId && (
           <button onClick={handleCreate} className="btn btn-primary flex items-center space-x-2">
             <Plus className="w-5 h-5" />
@@ -109,13 +109,13 @@ const TagManager = () => {
 
       {/* Create/Edit Form */}
       {(isCreating || editingId) && (
-        <div className="card bg-primary-50">
-          <h3 className="font-semibold text-gray-900 mb-4">
+        <div className="card bg-primary-50 dark:bg-slate-800/50">
+          <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-4">
             {isCreating ? 'Crear Nuevo Tag' : 'Editar Tag'}
           </h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                 Nombre <span className="text-red-500">*</span>
               </label>
               <input
@@ -125,7 +125,7 @@ const TagManager = () => {
                 className="input"
                 placeholder="Ej: error_404, factura_anulada"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                 Usa snake_case para tags de error: error_404, error_conexion, etc.
               </p>
             </div>
@@ -151,28 +151,28 @@ const TagManager = () => {
       {/* Tags List */}
       <div className="flex flex-wrap gap-3">
         {tags.length === 0 ? (
-          <div className="card w-full text-center py-8 text-gray-500">No hay tags creados</div>
+          <div className="card w-full text-center py-8 text-gray-500 dark:text-slate-400">No hay tags creados</div>
         ) : (
           tags.map((tag) => (
             <div
               key={tag.id}
-              className="flex items-center space-x-2 px-4 py-2 bg-white border-2 border-gray-200 rounded-full hover:shadow-md transition-shadow"
+              className="flex items-center space-x-2 px-4 py-2 bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-600 rounded-full hover:shadow-md transition-shadow"
             >
-              <span className="font-medium text-gray-900">{tag.name}</span>
-              <span className="text-xs text-gray-500">({tag.topicCount || 0})</span>
+              <span className="font-medium text-gray-900 dark:text-slate-100">{tag.name}</span>
+              <span className="text-xs text-gray-500 dark:text-slate-400">({tag.topicCount || 0})</span>
 
               {editingId !== tag.id && (
                 <div className="flex space-x-1 ml-2">
                   <button
                     onClick={() => handleEdit(tag)}
-                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                    className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                     title="Editar"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => setDeleteTarget(tag.id)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                     title="Eliminar"
                   >
                     <Trash2 className="w-4 h-4" />

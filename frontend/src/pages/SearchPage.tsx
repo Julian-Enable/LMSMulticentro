@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { categoryService } from '../services/category.service';
 import { videoService } from '../services/video.service';
@@ -104,10 +104,10 @@ const SearchPage = () => {
         </div>
 
         {/* Active Filters / Meta */}
-        <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-4">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-slate-700">Resultados: {filteredVideos.length}</span>
-            <span className="h-4 w-px bg-slate-300 mx-2"></span>
+            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Resultados: {filteredVideos.length}</span>
+            <span className="h-4 w-px bg-slate-300 dark:bg-slate-600 mx-2"></span>
             <div className="flex gap-2">
               {selectedCategories.map(catId => {
                 const category = categories.find(c => c.id === catId);
@@ -125,11 +125,11 @@ const SearchPage = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-500 mr-2">Ordenar por:</span>
+            <span className="text-sm text-slate-500 dark:text-slate-400 mr-2">Ordenar por:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="border-0 bg-transparent text-sm font-medium text-slate-700 focus:ring-0 cursor-pointer pr-8 py-0"
+              className="border-0 bg-transparent text-sm font-medium text-slate-700 dark:text-slate-300 focus:ring-0 cursor-pointer pr-8 py-0"
             >
               <option value="relevance">Relevancia</option>
               <option value="recent">Más recientes</option>
@@ -149,7 +149,7 @@ const SearchPage = () => {
               <div className="sticky top-0 flex flex-col gap-8 pb-10">
                 {/* Filter Group: Category */}
                 <div>
-                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Curso</h3>
+                  <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Curso</h3>
                   <div className="flex flex-col gap-2">
                     {categories.map(category => (
                       <label key={category.id} className="flex items-center gap-3 cursor-pointer group">
@@ -157,10 +157,10 @@ const SearchPage = () => {
                           type="checkbox"
                           checked={selectedCategories.includes(category.id)}
                           onChange={() => toggleCategory(category.id)}
-                          className="rounded w-4 h-4 text-primary focus:ring-accent/20 border-slate-300 transition-colors"
+                          className="rounded w-4 h-4 text-primary focus:ring-accent/20 border-slate-300 dark:border-slate-600 dark:bg-slate-700 transition-colors"
                         />
-                        <span className="text-sm text-slate-600 group-hover:text-primary-700 transition-colors">{category.name}</span>
-                        <span className="ml-auto text-xs text-slate-400">{category.videoCount || 0}</span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300 group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">{category.name}</span>
+                        <span className="ml-auto text-xs text-slate-400 dark:text-slate-500">{category.videoCount || 0}</span>
                       </label>
                     ))}
                   </div>
@@ -168,22 +168,22 @@ const SearchPage = () => {
 
                 {/* Filter Group: Type */}
                 <div>
-                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Tipo de Contenido</h3>
+                  <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Tipo de Contenido</h3>
                   <div className="flex flex-col gap-2">
                     <label className="flex items-center gap-3 cursor-pointer group">
-                      <input type="checkbox" className="rounded w-4 h-4 text-primary focus:ring-accent/20 border-slate-300" />
+                      <input type="checkbox" className="rounded w-4 h-4 text-primary focus:ring-accent/20 border-slate-300 dark:border-slate-600 dark:bg-slate-700" />
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-slate-400">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
                       </svg>
-                      <span className="text-sm text-slate-600 group-hover:text-primary-700 transition-colors">Video</span>
+                      <span className="text-sm text-slate-600 dark:text-slate-300 group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Video</span>
                     </label>
                     <label className="flex items-center gap-3 cursor-pointer group">
-                      <input type="checkbox" className="rounded w-4 h-4 text-primary focus:ring-accent/20 border-slate-300" />
+                      <input type="checkbox" className="rounded w-4 h-4 text-primary focus:ring-accent/20 border-slate-300 dark:border-slate-600 dark:bg-slate-700" />
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-slate-400">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                       </svg>
-                      <span className="text-sm text-slate-600 group-hover:text-primary-700 transition-colors">Documento</span>
+                      <span className="text-sm text-slate-600 dark:text-slate-300 group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Documento</span>
                     </label>
                   </div>
                 </div>
@@ -201,14 +201,14 @@ const SearchPage = () => {
             <div className="flex-1 flex flex-col gap-4">
               {loading ? (
                 <div className="flex items-center justify-center py-20">
-                  <div className="w-16 h-16 border-4 border-gray-200 border-t-primary-600 rounded-full animate-spin"></div>
+                  <div className="w-16 h-16 border-4 border-gray-200 dark:border-slate-700 border-t-primary-600 rounded-full animate-spin"></div>
                 </div>
               ) : filteredVideos.length === 0 ? (
-                <div className="bg-white rounded-xl p-12 text-center border border-dashed border-gray-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-16 h-16 text-gray-300 mx-auto mb-3">
+                <div className="bg-white dark:bg-slate-800 rounded-xl p-12 text-center border border-dashed border-gray-300 dark:border-slate-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-16 h-16 text-gray-300 dark:text-slate-600 mx-auto mb-3">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
-                  <p className="text-gray-600 font-medium">No se encontraron resultados</p>
+                  <p className="text-gray-600 dark:text-slate-400 font-medium">No se encontraron resultados</p>
                 </div>
               ) : (
                 <>
@@ -224,13 +224,13 @@ const SearchPage = () => {
                             alert('Este video aún no tiene temas. Ve a Administrar → Temas para crear temas para este video.');
                           }
                         }}
-                        className="group bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col sm:flex-row gap-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer relative overflow-hidden"
+                        className="group bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-4 flex flex-col sm:flex-row gap-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer relative overflow-hidden"
                       >
                         {/* Selection Highlight */}
                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
                         {/* Thumbnail */}
-                        <div className="relative w-full sm:w-56 shrink-0 aspect-video rounded-lg overflow-hidden bg-slate-100">
+                        <div className="relative w-full sm:w-56 shrink-0 aspect-video rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700">
                         {video.thumbnailUrl ? (
                           <img
                             src={video.thumbnailUrl}
@@ -254,25 +254,25 @@ const SearchPage = () => {
                       {/* Content */}
                       <div className="flex flex-col flex-1 min-w-0">
                         <div className="flex items-center gap-3 mb-1">
-                          <span className="font-mono text-xs font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded border border-slate-300">
+                          <span className="font-mono text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded border border-slate-300 dark:border-slate-600">
                             {video.externalId}
                           </span>
                           {index === 0 && (
                             <span className="text-xs font-bold tracking-wide uppercase text-white bg-accent-500 px-2 py-1 rounded">Obligatorio</span>
                           )}
                         </div>
-                        <h3 className="text-lg font-bold text-primary-700 group-hover:text-accent-500 transition-colors leading-tight mb-2">
+                        <h3 className="text-lg font-bold text-primary-700 dark:text-slate-100 group-hover:text-accent-500 transition-colors leading-tight mb-2">
                           {video.title}
                         </h3>
-                        <p className="text-sm text-slate-500 line-clamp-2 mb-3 leading-relaxed">
+                        <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-3 leading-relaxed">
                           {video.description || 'Contenido de capacitación disponible.'}
                         </p>
                         <div className="mt-auto flex items-center justify-between">
                           <div className="flex flex-wrap gap-2">
-                            <span className="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-primary-100 text-primary-700 border border-primary-200">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
                               {video.category?.name || 'General'}
                             </span>
-                            <span className="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-slate-200 text-slate-700 border border-slate-300">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600">
                               {video.topicCount || video.topics?.length || 0} Temas
                             </span>
                           </div>
@@ -299,7 +299,7 @@ const SearchPage = () => {
 
                   {/* Load More */}
                   <div className="flex justify-center mt-4">
-                    <button className="px-6 py-3 bg-gray-50 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-primary-700 transition-colors text-sm font-semibold shadow-sm w-full">
+                    <button className="px-6 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-primary-700 dark:hover:text-primary-400 transition-colors text-sm font-semibold shadow-sm w-full">
                       Cargar más resultados
                     </button>
                   </div>

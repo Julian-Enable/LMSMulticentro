@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -20,7 +20,7 @@ const Layout = () => {
 
       <div className="flex-1 flex flex-col lg:ml-64">
         {/* Mobile top bar */}
-        <div className="lg:hidden h-14 bg-primary-700 flex items-center px-4 z-20 sticky top-0">
+        <div className="lg:hidden h-14 bg-primary-700 dark:bg-slate-800 flex items-center px-4 z-20 sticky top-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-lg text-white hover:bg-primary-600 transition-colors"

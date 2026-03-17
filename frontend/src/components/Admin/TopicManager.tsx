@@ -158,7 +158,7 @@ const TopicManager = () => {
       />
 
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">Gestión de Temas</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Gestión de Temas</h2>
         {!isCreating && !editingId && (
           <button onClick={handleCreate} className="btn btn-primary flex items-center space-x-2">
             <Plus className="w-5 h-5" />
@@ -169,14 +169,14 @@ const TopicManager = () => {
 
       {/* Create/Edit Form */}
       {(isCreating || editingId) && (
-        <div className="card bg-primary-50">
-          <h3 className="font-semibold text-gray-900 mb-4">
+        <div className="card bg-primary-50 dark:bg-slate-800/50">
+          <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-4">
             {isCreating ? 'Crear Nuevo Tema' : 'Editar Tema'}
           </h3>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                   Código <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -189,7 +189,7 @@ const TopicManager = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                   Timestamp <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -218,7 +218,7 @@ const TopicManager = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Descripción</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -246,7 +246,7 @@ const TopicManager = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Tags</label>
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag) => (
                   <button
@@ -255,8 +255,8 @@ const TopicManager = () => {
                     onClick={() => toggleTag(tag.id)}
                     className={`px-3 py-1 text-sm rounded-full border-2 transition-colors ${
                       formData.tagIds.includes(tag.id)
-                        ? 'border-primary-600 bg-primary-100 text-primary-700'
-                        : 'border-gray-300 text-gray-700 hover:border-gray-400'
+                        ? 'border-primary-600 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300'
+                        : 'border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:border-gray-400 dark:hover:border-slate-500'
                     }`}
                   >
                     {tag.name}
@@ -273,7 +273,7 @@ const TopicManager = () => {
                 onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                 className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
               />
-              <label htmlFor="topicIsActive" className="ml-2 text-sm text-gray-700">
+              <label htmlFor="topicIsActive" className="ml-2 text-sm text-gray-700 dark:text-slate-300">
                 Tema activo
               </label>
             </div>
@@ -299,7 +299,7 @@ const TopicManager = () => {
       {/* Topics List */}
       <div className="space-y-2">
         {topics.length === 0 ? (
-          <div className="card text-center py-8 text-gray-500">No hay temas creados</div>
+          <div className="card text-center py-8 text-gray-500 dark:text-slate-400">No hay temas creados</div>
         ) : (
           topics
             .sort((a, b) => {
@@ -313,24 +313,24 @@ const TopicManager = () => {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-1">
-                      <span className="px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded">
+                      <span className="px-2 py-1 text-xs font-semibold bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded">
                         {topic.code}
                       </span>
-                      <h3 className="font-semibold text-gray-900">{topic.title}</h3>
+                      <h3 className="font-semibold text-gray-900 dark:text-slate-100">{topic.title}</h3>
                       <span
                         className={`px-2 py-1 text-xs font-medium rounded ${
                           topic.isActive
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-800'
+                            ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                            : 'bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-300'
                         }`}
                       >
                         {topic.isActive ? 'Activo' : 'Inactivo'}
                       </span>
                     </div>
                     {topic.description && (
-                      <p className="text-sm text-gray-600 mb-2">{topic.description}</p>
+                      <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">{topic.description}</p>
                     )}
-                    <div className="flex items-center space-x-4 text-xs text-gray-500">
+                    <div className="flex items-center space-x-4 text-xs text-gray-500 dark:text-slate-400">
                       <span>Video: {topic.video?.title}</span>
                       <span>Timestamp: {formatTimestampInput(topic.timestamp)}</span>
                     </div>
@@ -340,14 +340,14 @@ const TopicManager = () => {
                     <div className="flex space-x-2 ml-4">
                       <button
                         onClick={() => handleEdit(topic)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                         title="Editar"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setDeleteTarget(topic.id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                         title="Eliminar"
                       >
                         <Trash2 className="w-4 h-4" />
