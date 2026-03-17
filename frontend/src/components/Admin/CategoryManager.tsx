@@ -134,10 +134,10 @@ const CategoryManager = () => {
         onCancel={() => setItemToDelete(null)}
         isLoading={deleteMutation.isPending}
       />
-      
+
       <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">Gestión de Cursos</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Gestión de Cursos</h2>
         {!isCreating && !editingId && (
           <button onClick={handleCreate} className="btn btn-primary flex items-center space-x-2">
             <Plus className="w-5 h-5" />
@@ -148,13 +148,13 @@ const CategoryManager = () => {
 
       {/* Create/Edit Form */}
       {(isCreating || editingId) && (
-        <div className="card bg-primary-50">
-          <h3 className="font-semibold text-gray-900 mb-4">
+        <div className="card bg-primary-50 dark:bg-slate-800">
+          <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-4">
             {isCreating ? 'Crear Nuevo Curso' : 'Editar Curso'}
           </h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                 Nombre <span className="text-red-500">*</span>
               </label>
               <input
@@ -167,7 +167,7 @@ const CategoryManager = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Descripción</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -178,29 +178,29 @@ const CategoryManager = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Roles Permitidos <span className="text-gray-500 text-xs">(selecciona los roles que pueden ver este curso)</span>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                Roles Permitidos <span className="text-gray-500 dark:text-slate-400 text-xs">(selecciona los roles que pueden ver este curso)</span>
               </label>
               <div className="grid grid-cols-2 gap-2">
                 {roles.map(role => (
-                  <label key={role.id} className="flex items-center space-x-2 p-2 border rounded hover:bg-gray-50 cursor-pointer">
+                  <label key={role.id} className="flex items-center space-x-2 p-2 border dark:border-slate-600 rounded hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData.allowedRoles.includes(role.id)}
                       onChange={() => toggleRole(role.id)}
                       className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                     />
-                    <span className="text-sm text-gray-700">{role.name}</span>
+                    <span className="text-sm text-gray-700 dark:text-slate-300">{role.name}</span>
                   </label>
                 ))}
               </div>
               {formData.allowedRoles.length === 0 ? (
-                <p className="text-xs text-green-600 mt-2 flex items-start">
+                <p className="text-xs text-green-600 dark:text-green-400 mt-2 flex items-start">
                   <span className="mr-1">✓</span>
                   <span>Sin roles seleccionados = <strong>TODOS los usuarios podrán ver este curso</strong> (ideal para contenido general como errores comunes y soluciones)</span>
                 </p>
               ) : (
-                <p className="text-xs text-blue-600 mt-2">
+                <p className="text-xs text-blue-600 dark:text-blue-400 mt-2">
                   ℹ️ Solo usuarios con los roles seleccionados podrán ver este curso
                 </p>
               )}
@@ -214,7 +214,7 @@ const CategoryManager = () => {
                 onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                 className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
               />
-              <label htmlFor="isActive" className="ml-2 text-sm text-gray-700">
+              <label htmlFor="isActive" className="ml-2 text-sm text-gray-700 dark:text-slate-300">
                 Curso activo
               </label>
             </div>
@@ -240,42 +240,42 @@ const CategoryManager = () => {
       {/* Categories List */}
       <div className="space-y-2">
         {categories.length === 0 ? (
-          <div className="card text-center py-8 text-gray-500">No hay cursos creados</div>
+          <div className="card text-center py-8 text-gray-500 dark:text-slate-400">No hay cursos creados</div>
         ) : (
           categories.map((category) => (
             <div key={category.id} className="card hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-1">
-                    <h3 className="font-semibold text-gray-900">{category.name}</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-slate-100">{category.name}</h3>
                     <span
                       className={`px-2 py-1 text-xs font-medium rounded ${
                         category.isActive
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400'
+                          : 'bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-300'
                       }`}
                     >
                       {category.isActive ? 'Activa' : 'Inactiva'}
                     </span>
                   </div>
                   {category.description && (
-                    <p className="text-sm text-gray-600 mb-2">{category.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">{category.description}</p>
                   )}
-                  <p className="text-xs text-gray-500">{category.videoCount || 0} videos</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400">{category.videoCount || 0} videos</p>
                 </div>
 
                 {editingId !== category.id && (
                   <div className="flex space-x-2 ml-4">
                     <button
                       onClick={() => handleEdit(category)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-lg transition-colors"
                       title="Editar"
                     >
                       <Edit className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteClick(category.id)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-slate-700 rounded-lg transition-colors"
                       title="Eliminar"
                     >
                       <Trash2 className="w-4 h-4" />

@@ -28,19 +28,19 @@ const AdminPage = () => {
   ];
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
       {/* Scrollable Area */}
       <div className="flex-1 overflow-y-auto">
         <div className="container mx-auto max-w-7xl p-6 lg:p-10 flex flex-col gap-8">
           {/* Page Header & Tabs */}
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-1">
-              <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Gestión de Contenido</h1>
-              <p className="text-slate-500">Administra los videos, cursos y materiales de entrenamiento de la plataforma.</p>
+              <h1 className="text-3xl font-extrabold text-gray-900 dark:text-slate-100 tracking-tight">Gestión de Contenido</h1>
+              <p className="text-slate-500 dark:text-slate-400">Administra los videos, cursos y materiales de entrenamiento de la plataforma.</p>
             </div>
 
             {/* Tabs */}
-            <div className="border-b border-slate-200">
+            <div className="border-b border-slate-200 dark:border-slate-700">
               <div className="flex gap-8 overflow-x-auto">
                 {tabs.map((tab) => {
                   const isActive = activeTab === tab.id;
@@ -49,8 +49,8 @@ const AdminPage = () => {
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
                       className={`pb-3 text-sm whitespace-nowrap border-b-2 transition-colors ${isActive
-                        ? 'font-bold text-primary border-primary'
-                        : 'font-medium text-slate-500 hover:text-primary-700 border-transparent hover:border-slate-300'
+                        ? 'font-bold text-primary dark:text-primary-400 border-primary'
+                        : 'font-medium text-slate-500 dark:text-slate-400 hover:text-primary-700 dark:hover:text-primary-300 border-transparent hover:border-slate-300 dark:hover:border-slate-600'
                         }`}
                     >
                       {tab.label}
