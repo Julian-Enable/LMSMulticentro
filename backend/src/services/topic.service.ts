@@ -158,9 +158,8 @@ export class TopicService {
     const exists = await prisma.topic.findUnique({ where: { id } });
     if (!exists) throw new NotFoundError('Tema');
 
-    await prisma.topic.update({
-      where: { id },
-      data: { isActive: false }
+    await prisma.topic.delete({
+      where: { id }
     });
   }
 

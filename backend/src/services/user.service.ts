@@ -82,9 +82,8 @@ export class UserService {
       throw new NotFoundError('User');
     }
 
-    await prisma.user.update({
-      where: { id },
-      data: { isActive: false }
+    await prisma.user.delete({
+      where: { id }
     });
   }
 }
