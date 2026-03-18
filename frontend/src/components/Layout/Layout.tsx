@@ -1,10 +1,32 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Outlet, Navigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { useAuthStore } from '../../store/authStore';
+import { useProgressStore } from '../../store/progressStore';
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isAuthenticated, isLoading } = useAuthStore();
+  const { initAllProgress } = useProgressStore();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      initAllProgress();
+    }
+  }, [isAuthenticated, initAllProgress]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900">
+        <div className="w-10 h-10 border-4 border-gray-200 border-t-primary-600 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div className="min-h-screen flex">

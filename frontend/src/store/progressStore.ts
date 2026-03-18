@@ -8,6 +8,7 @@ interface ProgressStore {
   
   // Actions
   initProgress: (categoryId: string) => Promise<void>;
+  initAllProgress: () => Promise<void>;
   markComplete: (categoryId: string, topicId: string) => Promise<void>;
   unmarkComplete: (categoryId: string, topicId: string) => Promise<void>;
   toggleComplete: (categoryId: string, topicId: string) => Promise<void>;
@@ -49,6 +50,46 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       },
       loading: { ...state.loading, [categoryId]: false },
     }));
+  },
+
+  initAllProgress: async () => {
+    // We can use a special "all" key for loading state
+    if (get().loading['all']) return;
+    
+    set((state) => ({ loading: { ...state.loading, all: true } }));
+
+    try {
+      const allProgress = await progressService.getAllProgress();
+      
+      const newProgressByCourse: Record<string, Set<string>> = {};
+      
+      allProgress.forEach(record => {
+        const categoryId = record.topic?.video?.category?.id;
+        if (categoryId) {
+          if (!newProgressByCourse[categoryId]) {
+            newProgressByCourse[categoryId] = new Set<string>();
+          }
+          newProgressByCourse[categoryId].add(record.topicId);
+        }
+      });
+
+      // Update local storage for each category
+      Object.keys(newProgressByCourse).forEach(categoryId => {
+        const idsArray = Array.from(newProgressByCourse[categoryId]);
+        localStorage.setItem(`course-progress-${categoryId}`, JSON.stringify(idsArray));
+      });
+
+      set((state) => ({
+        progressByCourse: {
+          ...state.progressByCourse,
+          ...newProgressByCourse
+        },
+        loading: { ...state.loading, all: false }
+      }));
+    } catch (error) {
+      console.error('Failed to fetch all progress', error);
+      set((state) => ({ loading: { ...state.loading, all: false } }));
+    }
   },
 
   markComplete: async (categoryId: string, topicId: string) => {
