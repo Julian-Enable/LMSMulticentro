@@ -12,7 +12,7 @@ export const createCategorySchema = z.object({
 
 export const updateCategorySchema = z.object({
   params: z.object({
-    id: z.string().uuid("ID de categoría inválido")
+    id: z.string()
   }),
   body: z.object({
     name: z.string().min(2).max(100).optional(),
@@ -25,6 +25,6 @@ export const updateCategorySchema = z.object({
 
 export const categoryIdSchema = z.object({
   params: z.object({
-    id: z.string().uuid("ID de categoría inválido")
+    id: z.string()
   })
 });

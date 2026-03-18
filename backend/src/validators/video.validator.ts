@@ -19,7 +19,7 @@ export const createVideoSchema = z.object({
     platform: z.enum(['YOUTUBE', 'GOOGLE_DRIVE', 'VIMEO']),
     duration: z.union([z.number(), z.string()]).optional().nullable(),
     thumbnailUrl: z.string().url().optional().nullable(),
-    categoryId: z.string().uuid("ID de categoría inválido"),
+    categoryId: z.string(),
     order: z.number().int().nonnegative().optional(),
     isActive: z.boolean().optional(),
     topics: z.array(topicSchema).optional()
@@ -28,7 +28,7 @@ export const createVideoSchema = z.object({
 
 export const updateVideoSchema = z.object({
   params: z.object({
-    id: z.string().uuid("ID de video inválido")
+    id: z.string()
   }),
   body: z.object({
     title: z.string().min(2).max(200).optional(),
@@ -37,7 +37,7 @@ export const updateVideoSchema = z.object({
     platform: z.enum(['YOUTUBE', 'GOOGLE_DRIVE', 'VIMEO']).optional(),
     duration: z.union([z.number(), z.string()]).optional().nullable(),
     thumbnailUrl: z.string().url().optional().nullable(),
-    categoryId: z.string().uuid().optional(),
+    categoryId: z.string().optional(),
     order: z.number().int().nonnegative().optional(),
     isActive: z.boolean().optional(),
   })
@@ -45,6 +45,6 @@ export const updateVideoSchema = z.object({
 
 export const videoIdSchema = z.object({
   params: z.object({
-    id: z.string().uuid("ID de video inválido")
+    id: z.string()
   })
 });
