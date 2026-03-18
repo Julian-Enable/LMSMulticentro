@@ -4,7 +4,7 @@ import prisma from '../config/database';
 
 export class TokenService {
   static generateAccessToken(payload: any) {
-    return jwt.sign(payload, process.env.JWT_SECRET || 'secret', { expiresIn: '15m' });
+    return jwt.sign(payload, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
   }
 
   static async generateRefreshToken(userId: string) {
