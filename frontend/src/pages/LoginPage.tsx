@@ -1,4 +1,4 @@
-﻿import { useState, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/auth.service';
 import { useAuthStore } from '../store/authStore';
@@ -25,7 +25,10 @@ const LoginPage = () => {
 
     try {
       const response = await authService.login({ username, password });
-      setAuth(response.token, response.user);
+      setAuth(response.accessToken, response.user);
+      if (response.refreshToken) {
+        localStorage.setItem('lms_refresh_token', response.refreshToken);
+      }
       navigate('/');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Error al iniciar sesión');
